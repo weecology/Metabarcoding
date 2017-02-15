@@ -12,9 +12,9 @@ library(ggplot2)
 ########################
 # LOAD FILES
 
-data <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/Data/fecal_sample_collection.csv", header = TRUE)
+data <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/Plants/trnL_fecal_samples.csv", header = TRUE)
 
-samples <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/Data/fecal_sample_collection.csv", header = TRUE)
+samples <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/CollectionData/fecal_sample_collection.csv", header = TRUE)
 
 ########################
 # CLEAN DATA
