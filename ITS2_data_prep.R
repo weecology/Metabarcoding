@@ -11,13 +11,13 @@ library(ggplot2)
 ########################
 # LOAD FILES
 
-#blast <- read.csv("~bleds22e/Documents/Git/Metagenomics/Plants/ITS_blast.csv", header = TRUE, na.strings = "")
-#no_blast <- read.csv("~bleds22e/Documents/Git/Metagenomics/Plants/ITS_no_blast.csv", header = TRUE, na.strings = "")
-#plants <- read.csv("~bleds22e/Documents/Git/Metagenomics/CollectionData/plant_voucher_collection.csv", header = TRUE)
+blast <- read.csv("~bleds22e/Documents/Git/Metagenomics/Plants/ITS_blast.csv", header = TRUE, na.strings = "")
+no_blast <- read.csv("~bleds22e/Documents/Git/Metagenomics/Plants/ITS_no_blast.csv", header = TRUE, na.strings = "")
+plants <- read.csv("~bleds22e/Documents/Git/Metagenomics/CollectionData/plant_voucher_collection.csv", header = TRUE)
 
-blast <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/Plants/ITS_blast.csv", header = TRUE, na.strings = "")
-no_blast <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/Plants/ITS_no_blast.csv", header = TRUE, na.strings = "")
-plants <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/CollectionData/plant_voucher_collection.csv", header = TRUE)
+#blast <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/Plants/ITS_blast.csv", header = TRUE, na.strings = "")
+#no_blast <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/Plants/ITS_no_blast.csv", header = TRUE, na.strings = "")
+#plants <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/CollectionData/plant_voucher_collection.csv", header = TRUE)
 
 ########################
 # CLEAN DATA
@@ -55,7 +55,7 @@ all_ITS <- tidyr::separate(all_ITS, Sample, into = c("Sample", "Wisely")) %>%
 
 vouchers <- select(plants, vial_barcode, sci_name_profID) %>% 
             rename(Sample = vial_barcode)
-vouchers_its <- left_join(all_ITS, vouchers, by = "Sample")
+vouchers_its <- right_join(all_ITS, vouchers, by = "Sample")
 
 # fecal sample dataframe
 
@@ -65,9 +65,10 @@ fecal <- anti_join(all_ITS, vouchers, by = "Sample")
 # UNIQUE OTUs for VOUCHERS
 
 best_match <- select(vouchers_its, OTU.ID, Sample, Reads, sci_name_profID) %>% group_by(Sample) %>% filter(Reads == max(Reads))
-match_OTU <- left_join(best_match, taxa, by = "OTU.ID")
+best_match <- filter(best_match, Reads >= 1000)
 
-length(unique(match$OTU.ID))
+length(unique(best_match$OTU.ID))
+count_OTU <- best_match %>% ungroup() %>% count(OTU.ID)
 
 ###########################
 # WORK AREA
