@@ -10,16 +10,8 @@
 
 # TODO: read & extract OTUS from noblast file - DONE
 # TODO: extract noblast OTU sequences from ITS .fna file - DONE
-# TODO: put OTUname and sequence together in a FASTA format - PARTIAL
-#           current status: for millet (OTU1), I paste the info
-#           together in a fasta consistent fashion that can be
-#           fed to blastSequences(). Currently this is a one
-#           sequence at a time affair. It needs to be automated
-#           for multiple sequences
-# TODO: figure out how to submit those sequences to GenBank - PARTIAL
-#         SKME: currently it can submit the sequence for OTU1 and
-#               provides the results in a data.frame. It IDs
-#               Panicum millaceum, as we found using the BLAST GUI
+# TODO: put OTUname and sequence together in a FASTA format - DONE
+# TODO: figure out how to submit those sequences to GenBank - DONE
 # TODO: figure out what to do with the output - NOT EVEN CLOSE
 #         SKME: I have no idea what any of that output means. I also
 #               have no idea how we're going to extract the taxon name
@@ -72,6 +64,5 @@ for(i in 1:num_seq){
   file = rbind(file,output)
   print(paste(OTU1$OTU_its[i], "complete", sep = " "))
   }
-
-
+write.csv(file, "Blast_Results_ITS.csv")
 
