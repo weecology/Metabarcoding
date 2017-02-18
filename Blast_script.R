@@ -32,7 +32,6 @@
 #######################   Main Code
 
 library(dplyr)
-#library(RCurl)
 # to run this script, you will need to download bioconductor first:
 
 
@@ -49,20 +48,25 @@ noblast_OTUs = allITSseqs %>% filter(OTU_its %in% OTUs$OTU.ID)
 
 ### Before working with all 451, I'm testing out the code with
 ###  just OTU1, which we know is millet
-OTU1 = noblast_OTUs %>% filter(OTU_its == "OTU1")
+OTU1 = noblast_OTUs %>% filter(OTU_its %in% c("OTU1","OTU101"))
 
 ### These packages seem to fight with dplyr, 
 ###   so I don't load them until I need them
+
 source("https://bioconductor.org/biocLite.R")
 biocLite("annotate")
 library(annotate)
 
-### Pastes everything together for a fasta format
-
-header = paste(">",OTU1$OTU_its, sep="")
-data = as.character(paste(header,OTU1$sequence_its,sep='\n'))
-
 ### Queries BLAST
-output = blastSequences(x=data,
-                        hitListSize = 20, as='data.frame')
+### Pastes everything together for a fasta format
+file = c()
+for(i in 1:nrow(OTU1)){
+  header = as.character(paste(">",OTU1$OTU_its[i], sep=""))
+  data = as.character(paste(header,OTU1$sequence_its[i],sep="\n"))
+  output = blastSequences(x=data,
+                          hitListSize = 20, as='data.frame')
+  file = rbind(file,output)
+  }
+
+
 
