@@ -67,7 +67,7 @@ for(i in 1:num_seq){
   print(paste("Number of sequences remaining:",num_seq-(i-1),sep=" "))
   header = as.character(paste(">",OTU1$OTU_its[i], sep=""))
   data = as.character(paste(header,OTU1$sequence_its[i],sep="\n"))
-  output = blastSequences(x=data,
+  output = blastSequences(x=data,timeout = 220,
                           hitListSize = 20, as='data.frame')
   file = rbind(file,output)
   print(paste(OTU1$OTU_its[i], "complete", sep = " "))
