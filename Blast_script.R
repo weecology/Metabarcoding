@@ -14,7 +14,8 @@
 # TODO: figure out how to submit those sequences to GenBank - DONE
 # TODO: figure out what to do with the output - DONE
 # TODO: Write script to only BLAST OTUs not already in
-#       NoBlast_blastoutput.csv 
+#       NoBlast_blastoutput.csv - DONE
+# TODO: Run for the full noblast_OTUs set?
         
 #######################   Main Code
 
@@ -33,12 +34,23 @@ OTUs = noblast %>% select(OTU.ID)
 allITSseqs = read.csv("./Plants/ITS_from_fna.csv", stringsAsFactors = FALSE) 
 noblast_OTUs = allITSseqs %>% filter(OTU_its %in% OTUs$OTU.ID)
 
-### Before working with all 451, I'm testing out the code with
-###  just OTU1, which we know is millet
-OTU1 = noblast_OTUs %>% filter(OTU_its %in% c("OTU1","OTU101"))
+### REF_SET creation
+### the refset is a test set created for code development 
+
+OTU_refset = noblast_OTUs %>% filter(OTU_its %in% c("OTU1","OTU101", "OTU3"))
+
+### Filter noblast OTUs 
+###   Reduces the full set of noblast OTUS 
+###   to just those we haven't run through BLAST yet.
+###   BLAST runs can be long, so this speeds things up.
+
+completed_blasts = read.csv("NoBlast_blastoutput.csv", stringsAsFactors = FALSE)
+completed_OTUs = unique(completed_blasts$OTU.ID)
+OTUs_forBLAST = OTU_refset %>% filter(!(OTU_its %in% completed_OTUs))
 
 ### These packages seem to fight with dplyr, 
 ###   so I don't load them until I need them
+
 
 source("https://bioconductor.org/biocLite.R")
 biocLite("annotate")
@@ -49,15 +61,15 @@ library(annotate)
 ###   Submits to BLAST and records output
  
 file = c()
-num_seq = nrow(OTU1)
+num_seq = nrow(OTUs_forBLAST)
 for(i in 1:num_seq){
   print(paste("Number of sequences remaining:",num_seq-(i-1),sep=" "))
-  header = as.character(paste(">",OTU1$OTU_its[i], sep=""))
-  data = as.character(paste(header,OTU1$sequence_its[i],sep="\n"))
+  header = as.character(paste(">",OTUs_forBLAST$OTU_its[i], sep=""))
+  data = as.character(paste(header,OTUs_forBLAST$sequence_its[i],sep="\n"))
   output = blastSequences(x=data,timeout = 220,
                           hitListSize = 20, as='data.frame')
   file = rbind(file,output)
-  print(paste(OTU1$OTU_its[i], "complete", sep = " "))
+  print(paste(OTUs_forBLAST$OTU_its[i], "complete", sep = " "))
   }
 
 ### Formats and Write table from BLAST
@@ -77,4 +89,6 @@ clean.file = clean.file %>% mutate_each_(funs(as.numeric), "Hsp_evalue")
   
 clean.file = clean.file %>% mutate(identity_percent = 100* (Hsp_identity/Hsp.length),
                                    Query.cover = 100* (Hsp.length/Query.length))
-write.csv(clean.file, "NoBlast_blastoutput.csv")
+completed_blasts = rbind(completed_blasts,clean.file)
+
+write.csv(completed_blasts, "NoBlast_blastoutput.csv", row.names=FALSE)
