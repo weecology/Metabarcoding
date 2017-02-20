@@ -12,15 +12,10 @@
 # TODO: extract noblast OTU sequences from ITS .fna file - DONE
 # TODO: put OTUname and sequence together in a FASTA format - DONE
 # TODO: figure out how to submit those sequences to GenBank - DONE
-# TODO: figure out what to do with the output - NOT EVEN CLOSE
-#         SKME: I have no idea what any of that output means. I also
-#               have no idea how we're going to extract the taxon name
-#               because the species name is embedded with info on where
-#               the species came from.
-# TODO: extract 98% match taxonomies - MAYBE
-#         SKME: I think blastSequence() can be used to specify match level
-#               if we know what the match metric to use is.
-
+# TODO: figure out what to do with the output - DONE
+# TODO: Write script to only BLAST OTUs not already in
+#       NoBlast_blastoutput.csv 
+        
 #######################   Main Code
 
 library(dplyr)
@@ -64,5 +59,22 @@ for(i in 1:num_seq){
   file = rbind(file,output)
   print(paste(OTU1$OTU_its[i], "complete", sep = " "))
   }
-write.csv(file, "Blast_Results_ITS.csv")
 
+### Formats and Write table from BLAST
+### Selects & formats only relevant columns
+### Calculates Identity% & Query Coverage
+
+names(file)[3] = 'OTU.ID'
+names(file)[4] = 'Query.length'
+names(file)[25] = 'Hsp.length'
+
+clean.file = dplyr::select(file, OTU.ID, Query.length, Hit_id, Hit_def,
+                           Hit_len, Hsp_evalue, 
+                           Hsp_identity, Hsp.length)
+clean.file = clean.file %>% mutate_each_(funs(as.integer), c("Query.length","Hit_len",
+                                         "Hsp_identity","Hsp.length"))
+clean.file = clean.file %>% mutate_each_(funs(as.numeric), "Hsp_evalue")
+  
+clean.file = clean.file %>% mutate(identity_percent = 100* (Hsp_identity/Hsp.length),
+                                   Query.cover = 100* (Hsp.length/Query.length))
+write.csv(clean.file, "NoBlast_blastoutput.csv")
