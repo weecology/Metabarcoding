@@ -9,7 +9,8 @@ library(dplyr)
 library(stringr)
 library(ggplot2)
 
-setwd("c:/Users/ellen.bledsoe/Desktop/Git/Metagenomics")
+# wherever your Metagenomics folder resides
+setwd()
 
 ########################
 # LOAD FILES
