@@ -9,22 +9,23 @@ library(dplyr)
 library(stringr)
 library(ggplot2)
 
+setwd("c:/Users/ellen.bledsoe/Desktop/Git/Metagenomics")
+
 ########################
 # LOAD FILES
 
-data <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/Plants/trnL_fecal_samples.csv", header = TRUE)
-
-samples <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/CollectionData/fecal_sample_collection.csv", header = TRUE)
+trnL <- read.csv("./Plants/trnL_fecal_samples.csv", header = TRUE)
+samples <- read.csv("./CollectionData/fecal_sample_collection.csv", header = TRUE)
 
 ########################
 # CLEAN DATA
 
-data <- data[-(c(452:453)),]
+trnL <- trnL[-(c(452:453)),]
 
 # taxonomy dataframe
 
-taxa <- select(data, ï...OTU.ID, ConsensusLineage) %>% 
-  rename(OTU.ID = ï...OTU.ID)
+taxa <- select(trnL, OTU_ID, ConsensusLineage) %>% 
+  rename(OTU.ID = OTU_ID)
 
 for(this_level in c('d','k','p','c','o','f','g','s')){
   # separate taxa into columns
@@ -35,7 +36,7 @@ for(this_level in c('d','k','p','c','o','f','g','s')){
 
 # reads dataframe
 
-reads <- data[,c(1,8:54)] %>% rename(OTU.ID = ï...OTU.ID)
+reads <- trnL[,c(1,8:54)] %>% rename(OTU.ID = OTU_ID)
 reads <- tidyr::gather(reads, "Sample", "Proportion", 2:48) %>% 
   filter(Proportion != 0)
 
