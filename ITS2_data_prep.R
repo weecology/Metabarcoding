@@ -8,16 +8,15 @@
 library(dplyr)
 library(ggplot2)
 
+# wherever your metagenomics folder is:
+setwd("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics") 
+
 ########################
 # LOAD FILES
 
-blast <- read.csv("~bleds22e/Documents/Git/Metagenomics/Plants/ITS_blast.csv", header = TRUE, na.strings = "")
-no_blast <- read.csv("~bleds22e/Documents/Git/Metagenomics/Plants/ITS_no_blast.csv", header = TRUE, na.strings = "")
-plants <- read.csv("~bleds22e/Documents/Git/Metagenomics/CollectionData/plant_voucher_collection.csv", header = TRUE)
-
-#blast <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/Plants/ITS_blast.csv", header = TRUE, na.strings = "")
-#no_blast <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/Plants/ITS_no_blast.csv", header = TRUE, na.strings = "")
-#plants <- read.csv("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics/CollectionData/plant_voucher_collection.csv", header = TRUE)
+blast <- read.csv("./Plants/ITS_blast.csv", header = TRUE, na.strings = "")
+no_blast <- read.csv("./Plants/ITS_no_blast.csv", header = TRUE, na.strings = "")
+plants <- read.csv("./CollectionData/plant_voucher_collection.csv", header = TRUE)
 
 ########################
 # CLEAN DATA
@@ -69,8 +68,5 @@ best_match <- filter(best_match, Reads >= 1000)
 
 length(unique(best_match$OTU.ID))
 count_OTU <- best_match %>% ungroup() %>% count(OTU.ID)
-
-###########################
-# WORK AREA
 
 
