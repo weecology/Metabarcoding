@@ -38,8 +38,8 @@ for(this_level in c('d','k','p','c','o','f','g','s')){
 # reads dataframe
 
 reads <- trnL[,c(1,8:54)] %>% rename(OTU.ID = OTU_ID)
-reads <- tidyr::gather(reads, "Sample", "Proportion", 2:48) %>% 
-  filter(Proportion != 0)
+reads <- tidyr::gather(reads, "Sample", "Reads", 2:48) %>% 
+  filter(Reads != 0)
 
 # samples dataframe
 
