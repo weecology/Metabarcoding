@@ -126,6 +126,7 @@ sum_by_family <- function(taxa, samples, reads, sp = c('PP', 'DM', 'DO'), cut_of
   ggplot(data = family_sum, aes(x = reorder(Family, desc(sum)), y = sum)) +
     geom_col() +
     labs(x = "Plant Family", y = "Total Reads", title = "Reads by Family (> 0.001)") +
+    geom_text(aes(label = round((sum/sum(sum)), 3)), vjust = -0.2) +
     theme_bw() +
     theme(axis.text.x = element_text(
       angle = 45,
