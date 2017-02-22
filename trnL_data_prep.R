@@ -33,6 +33,7 @@ for(this_level in c('d','k','p','c','o','f','g','s')){
 }
 
 taxa_trnL <- rename(taxa_trnL, Family = o, Genus = g, Species = s)
+
 # reads dataframe
 
 reads <- trnL[,c(1,8:54)] %>% rename(OTU.ID = OTU_ID)
