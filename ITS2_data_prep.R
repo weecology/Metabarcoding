@@ -36,6 +36,7 @@ for(this_level in c('k','p','c','o','f','g','s')){
 }
 
 taxa_its <- select(taxa_its, OTU.ID, k:s) %>% distinct(OTU.ID, .keep_all = TRUE) %>% arrange(OTU.ID)
+taxa_its <- rename(taxa_its, Family = f, Genus = g, Species = s)
 
 # Restructure and combine
 
