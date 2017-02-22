@@ -27,7 +27,7 @@ rank_abundance <- function(samples, reads, sp, cut_off = 0.001) {
       ymin = mean - sd,
       ymax = mean + sd
     )) +
-    labs(x = "OTU.ID", y = "Mean Reads", title = paste(c(species))) +
+    labs(x = "OTU.ID", y = "Mean Reads") +
     theme_bw() +
     theme(axis.text.x = element_text(
       angle = 45,
