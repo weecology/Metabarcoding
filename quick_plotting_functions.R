@@ -112,7 +112,7 @@ control_vs_krat <- function(samples, reads, sp, sample_type, cut_off = 0.005) {
     ))
 }
 
-sum_by_family <- function(taxa, reads, cut_off > 0.001) {
+sum_by_family <- function(taxa, reads, cut_off = 0.001) {
   # plot of all reads by (plant) family
   family <- select(taxa, OTU.ID, o) %>% group_by(o)
   otu_reads <- select(reads, OTU.ID, Reads) %>%
