@@ -8,9 +8,6 @@
 library(dplyr)
 library(ggplot2)
 
-# wherever your metagenomics folder is:
-setwd("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics") 
-
 ########################
 # LOAD FILES
 
@@ -29,16 +26,16 @@ no_blast <- select(no_blast, -Sum)
 
 # Pull out ConsensusLineage
 
-taxa <- select(blast, OTU.ID, ConsensusLineage)
+taxa_its <- select(blast, OTU.ID, ConsensusLineage)
 
 for(this_level in c('k','p','c','o','f','g','s')){
   # separate taxa into columns
-  step_one=sapply(strsplit(as.character(taxa$ConsensusLineage), paste0(this_level,'__')), '[', 2)
+  step_one=sapply(strsplit(as.character(taxa_its$ConsensusLineage), paste0(this_level,'__')), '[', 2)
   step_two=sapply(strsplit(step_one, ';'), '[', 1)
-  taxa[,this_level]=step_two
+  taxa_its[,this_level]=step_two
 }
 
-taxa <- select(taxa, OTU.ID, k:s) %>% distinct(OTU.ID, .keep_all = TRUE) %>% arrange(OTU.ID)
+taxa_its <- select(taxa_its, OTU.ID, k:s) %>% distinct(OTU.ID, .keep_all = TRUE) %>% arrange(OTU.ID)
 
 # Restructure and combine
 
