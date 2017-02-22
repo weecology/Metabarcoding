@@ -112,19 +112,18 @@ control_vs_krat <- function(samples, reads, sp = c('PP', 'DM', 'DO'), sample_typ
     ))
 }
 
-sum_by_family <- function(taxa, reads, sp = c('PP', 'DM', 'DO'), cut_off = 0.001) {
+sum_by_family <- function(taxa, samples, reads, sp = c('PP', 'DM', 'DO'), cut_off = 0.001) {
   # plot of all reads by (plant) family
-  family <- select(taxa_trnL, OTU.ID, o) %>% group_by(o)
+  family <- select(taxa, OTU.ID, Family) %>% group_by(Family)
   otu_reads <- reads %>% group_by(OTU.ID)
   filtered_samples <- samples[samples$species %in% sp, ]
   filtered <- inner_join(filtered_samples, otu_reads, by = "Sample")
   family_sum <- inner_join(family, filtered, by = "OTU.ID") %>%
     summarise(sum = sum(Reads)) %>%
     arrange(desc(sum)) %>%
-    rename(family = o) %>%
     filter(sum > cut_off)
   
-  ggplot(data = family_sum, aes(x = reorder(family, desc(sum)), y = sum)) +
+  ggplot(data = family_sum, aes(x = reorder(Family, desc(sum)), y = sum)) +
     geom_col() +
     labs(x = "Plant Family", y = "Total Reads", title = "Reads by Family (> 0.001)") +
     theme_bw() +
@@ -137,10 +136,10 @@ sum_by_family <- function(taxa, reads, sp = c('PP', 'DM', 'DO'), cut_off = 0.001
 
 trap_vs_fresh_indv <- function(samples, reads, sp = c('PP', 'DM', 'DO'), cut_off = 0.01) {
   # plot trap vs fresh samples by individual animal
+  filtered_samples <- samples[samples$species %in% sp, ]
   pit_tags <- samples %>% group_by(PIT_tag) %>%
     summarise(num_samples = n_distinct(sample_type)) %>%
     filter(num_samples > 1)
-  pit_tags <- pit_tags[pit_tags$species %in% sp, ]
   both_types <- semi_join(samples, pit_tags, by = "PIT_tag")
   add_reads <- inner_join(both_types, reads, by = "Sample") %>%
     tidyr::unite(col = individual, species, PIT_tag, sep = "_") %>%
