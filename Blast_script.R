@@ -25,7 +25,7 @@ library(dplyr)
 
 ### Reads no blast file, extracts the OTU.IDs
 noblast = read.csv("./Plants/ITS_no_blast.csv", stringsAsFactors = FALSE)
-OTUs = noblast %>% select(OTU.ID)
+OTUs = noblast %>% dplyr::select(OTU.ID)
 
 ### Reads the .csv of the .fna file and extracts
 ###   only the sequences for the OTUs in the no
@@ -51,9 +51,9 @@ OTUs_forBLAST = OTU_refset %>% filter(!(OTU_its %in% completed_OTUs))
 ### These packages seem to fight with dplyr, 
 ###   so I don't load them until I need them
 
-
-source("https://bioconductor.org/biocLite.R")
-biocLite("annotate")
+#Run the two commented lines if annotate not installed yet
+# source("https://bioconductor.org/biocLite.R")
+# biocLite("annotate")
 library(annotate)
 
 ### Queries BLAST
@@ -62,6 +62,7 @@ library(annotate)
  
 file = c()
 num_seq = nrow(OTUs_forBLAST)
+try(if(num_seq == 0) stop("no sequences to submit", call. = FALSE))
 for(i in 1:num_seq){
   print(paste("Number of sequences remaining:",num_seq-(i-1),sep=" "))
   header = as.character(paste(">",OTUs_forBLAST$OTU_its[i], sep=""))
@@ -70,7 +71,7 @@ for(i in 1:num_seq){
                           hitListSize = 20, as='data.frame')
   file = rbind(file,output)
   print(paste(OTUs_forBLAST$OTU_its[i], "complete", sep = " "))
-  }
+  
 
 ### Formats and Write table from BLAST
 ### Selects & formats only relevant columns
