@@ -44,9 +44,9 @@ OTU_refset = noblast_OTUs %>% filter(OTU_its %in% c("OTU1","OTU101", "OTU3"))
 ###   to just those we haven't run through BLAST yet.
 ###   BLAST runs can be long, so this speeds things up.
 
-completed_blasts = read.csv("NoBlast_blastoutput.csv", stringsAsFactors = FALSE)
+completed_blasts = read.csv("./Plants/NoBlast_blastoutput.csv", stringsAsFactors = FALSE)
 completed_OTUs = unique(completed_blasts$OTU.ID)
-OTUs_forBLAST = OTU_refset %>% filter(!(OTU_its %in% completed_OTUs))
+OTUs_forBLAST = noblast_OTUs %>% filter(!(OTU_its %in% completed_OTUs))
 
 ### These packages seem to fight with dplyr, 
 ###   so I don't load them until I need them
@@ -91,4 +91,4 @@ clean.file = clean.file %>% mutate(identity_percent = 100* (Hsp_identity/Hsp.len
                                    Query.cover = 100* (Hsp.length/Query.length))
 completed_blasts = rbind(completed_blasts,clean.file)
 
-write.csv(completed_blasts, "NoBlast_blastoutput.csv", row.names=FALSE)
+write.csv(completed_blasts, "./Plants/NoBlast_blastoutput.csv", row.names=FALSE)
