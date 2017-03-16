@@ -89,6 +89,7 @@ clean.file = clean.file %>% mutate_each_(funs(as.numeric), "Hsp_evalue")
   
 clean.file = clean.file %>% mutate(identity_percent = 100* (Hsp_identity/Hsp.length),
                                    Query.cover = 100* (Hsp.length/Query.length))
+
 completed_blasts = rbind(completed_blasts,clean.file)
 
 write.csv(completed_blasts, "./Plants/NoBlast_blastoutput.csv", row.names=FALSE)
