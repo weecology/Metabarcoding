@@ -22,6 +22,7 @@
 library(dplyr)
 # to run this script, you will need to download bioconductor first:
 
+setwd("/Users/bleds22e/Documents/Git/Metagenomics")
 
 ### Reads no blast file, extracts the OTU.IDs
 noblast = read.csv("./Plants/ITS_no_blast.csv", stringsAsFactors = FALSE)
