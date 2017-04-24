@@ -1,5 +1,5 @@
 year,month,day,season,sp_code,sci_name_fieldID,sci_name_profID,voucher,DNA,label_number,collector,location,easting,northing,elevation (m),vial_barcode,notes
-2017,1,26,,,,,,,millet,,,,,,S009063,bait
+2017,1,26,,pani mili,Panicum miliaceum,Panicum miliaceum,N,Y,millet,,,,,,S009063,bait
 2016,3,20,winter,cass bauh,Cassia bauhinoides,Senna bauhinoides,Y,Y,SKME_001,EKB,ramada,681200.79,3535287.25,1315,S009007,
 2016,3,20,winter,spha hast,Sphaeralcea coccinea,Sphaeralcea hastulata,Y,Y,SKME_002,EKB,"Plot 23, stake 65",681706.89,3535024.91,1315,S009904,
 2016,3,20,winter,amsi tess,Amsinckia tessellata,Amsinckia tessellata,Y,Y,SKME_003,EKB,"Plot 22, stake 67",681645.78,3534990.26,1316,S009037,
