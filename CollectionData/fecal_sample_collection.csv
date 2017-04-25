@@ -116,7 +116,7 @@ month,day,year,period,vial_barcode,plot,stake,species,sex,sample_type,PIT_tag,no
 3,29,2017,460,S008810,17,61,PP,M,trap,B20422,
 3,29,2017,460,S008802,17,71,PP,M,trap,B21151,
 3,29,2017,460,S010055,17,71,PP,M,fresh,B21151,
-4,1,2017,-460,S010000,4,23,DO,M,trap,B20072,clean millet
+4,1,2017,-460,S010000,4,23,DO,M,trap,DO8,clean millet
 4,1,2017,-460,S010086,4,35,DM,M,trap,B1FECD,clean millet
 4,1,2017,-460,S010087,4,43,DO,F,trap,DO1,clean millet
 4,1,2017,-460,S010090,4,67,DO,F,trap,B20227,clean millet
