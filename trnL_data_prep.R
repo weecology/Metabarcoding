@@ -9,9 +9,6 @@ library(dplyr)
 library(stringr)
 library(ggplot2)
 
-# wherever your Metagenomics folder resides
-setwd()
-
 ########################
 # LOAD FILES
 
@@ -25,15 +22,17 @@ trnL <- trnL[-(c(452:453)),]
 
 # taxonomy dataframe
 
-taxa <- select(trnL, OTU_ID, ConsensusLineage) %>% 
+taxa_trnL <- select(trnL, OTU_ID, ConsensusLineage) %>% 
   rename(OTU.ID = OTU_ID)
 
 for(this_level in c('d','k','p','c','o','f','g','s')){
   # separate taxa into columns
-  step_one=sapply(strsplit(as.character(taxa$ConsensusLineage), paste0(this_level,'__')), '[', 2)
+  step_one=sapply(strsplit(as.character(taxa_trnL$ConsensusLineage), paste0(this_level,'__')), '[', 2)
   step_two=sapply(strsplit(step_one, ';'), '[', 1)
-  taxa[,this_level]=step_two
+  taxa_trnL[,this_level]=step_two
 }
+
+taxa_trnL <- rename(taxa_trnL, Family = o, Genus = g, Species = s)
 
 # reads dataframe
 

@@ -22,6 +22,7 @@
 library(dplyr)
 # to run this script, you will need to download bioconductor first:
 
+setwd("/Users/bleds22e/Documents/Git/Metagenomics")
 
 ### Reads no blast file, extracts the OTU.IDs
 noblast = read.csv("./Plants/ITS_no_blast.csv", stringsAsFactors = FALSE)
@@ -44,7 +45,7 @@ noblast_OTUs = allITSseqs %>% filter(OTU_its %in% OTUs$OTU.ID)
 ###   to just those we haven't run through BLAST yet.
 ###   BLAST runs can be long, so this speeds things up.
 
-completed_blasts = read.csv("NoBlast_blastoutput.csv", stringsAsFactors = FALSE)
+completed_blasts = read.csv("./Plants/NoBlast_blastoutput.csv", stringsAsFactors = FALSE)
 completed_OTUs = unique(completed_blasts$OTU.ID)
 OTUs_forBLAST = noblast_OTUs %>% filter(!(OTU_its %in% completed_OTUs))
 
@@ -91,6 +92,7 @@ clean.file = clean.file %>% mutate_each_(funs(as.numeric), "Hsp_evalue")
   
 clean.file = clean.file %>% mutate(identity_percent = 100* (Hsp_identity/Hsp.length),
                                    Query.cover = 100* (Hsp.length/Query.length))
+
 completed_blasts = rbind(completed_blasts,clean.file)
 
-write.csv(completed_blasts, "NoBlast_blastoutput.csv", row.names=FALSE)
+write.csv(completed_blasts, "./Plants/NoBlast_blastoutput.csv", row.names=FALSE)

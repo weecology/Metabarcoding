@@ -6,10 +6,6 @@
 # LIBRARIES
 
 library(dplyr)
-library(ggplot2)
-
-# wherever your metagenomics folder is:
-setwd("C:/Users/ellen.bledsoe/Desktop/Git/Metagenomics") 
 
 ########################
 # LOAD FILES
@@ -29,16 +25,17 @@ no_blast <- select(no_blast, -Sum)
 
 # Pull out ConsensusLineage
 
-taxa <- select(blast, OTU.ID, ConsensusLineage)
+taxa_its <- select(blast, OTU.ID, ConsensusLineage)
 
 for(this_level in c('k','p','c','o','f','g','s')){
   # separate taxa into columns
-  step_one=sapply(strsplit(as.character(taxa$ConsensusLineage), paste0(this_level,'__')), '[', 2)
+  step_one=sapply(strsplit(as.character(taxa_its$ConsensusLineage), paste0(this_level,'__')), '[', 2)
   step_two=sapply(strsplit(step_one, ';'), '[', 1)
-  taxa[,this_level]=step_two
+  taxa_its[,this_level]=step_two
 }
 
-taxa <- select(taxa, OTU.ID, k:s) %>% distinct(OTU.ID, .keep_all = TRUE) %>% arrange(OTU.ID)
+taxa_its <- select(taxa_its, OTU.ID, k:s) %>% distinct(OTU.ID, .keep_all = TRUE) %>% arrange(OTU.ID)
+taxa_its <- rename(taxa_its, Family = f, Genus = g, Species = s)
 
 # Restructure and combine
 
@@ -52,8 +49,10 @@ all_ITS <- tidyr::separate(all_ITS, Sample, into = c("Sample", "Wisely")) %>%
 
 # vouchers dataframe
 
-vouchers <- select(plants, vial_barcode, sci_name_profID) %>% 
-            rename(Sample = vial_barcode)
+vouchers <- select(plants, vial_barcode, sci_name_profID, year) %>% 
+            filter(year != '2017') %>% 
+            rename(Sample = vial_barcode) %>% 
+            select(-year)
 vouchers_its <- right_join(all_ITS, vouchers, by = "Sample")
 
 # fecal sample dataframe
@@ -63,10 +62,10 @@ fecal <- anti_join(all_ITS, vouchers, by = "Sample")
 ########################
 # UNIQUE OTUs for VOUCHERS
 
-best_match <- select(vouchers_its, OTU.ID, Sample, Reads, sci_name_profID) %>% group_by(Sample) %>% filter(Reads == max(Reads))
-best_match <- filter(best_match, Reads >= 1000)
-
-length(unique(best_match$OTU.ID))
-count_OTU <- best_match %>% ungroup() %>% count(OTU.ID)
+# best_match <- select(vouchers_its, OTU.ID, Sample, Reads, sci_name_profID) %>% group_by(Sample) %>% filter(Reads == max(Reads))
+# best_match <- filter(best_match, Reads >= 1000)
+# 
+# length(unique(best_match$OTU.ID))
+# count_OTU <- best_match %>% ungroup() %>% count(OTU.ID)
 
 
