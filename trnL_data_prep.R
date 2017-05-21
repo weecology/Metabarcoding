@@ -60,3 +60,17 @@ trnL_fecal <- tidyr::gather(trnL_fecal, "Sample", "Proportion", 2:48) %>%
 
 #=====================================================================================
 ### VOUCHER DATA ###
+
+# remove unnecessary columns summary rows
+trnL_voucher <- trnL_voucher[-c(14205:14206), -c(2,108)]
+
+# turn into flat file with only non-zero values
+trnL_voucher <- tidyr::gather(trnL_voucher, "Sample", "Reads", 2:106) %>% 
+  filter(Reads != 0) 
+
+# split VialBarcode column and keep only vial number
+trnL_voucher <- tidyr::separate(trnL_voucher, Sample, c("Sample", "Wisely"), remove = TRUE) %>%
+  select(-Wisely)
+
+# write CSV file
+# write.csv(trnL_voucher, "./SequencedData/Plants/trnL_voucher_data.csv", row.names = FALSE)
