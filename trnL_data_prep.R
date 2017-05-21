@@ -6,13 +6,12 @@
 # LIBRARIES
 
 library(dplyr)
-library(stringr)
-library(ggplot2)
+
+# set working directory
+setwd("~bleds22e/Documents/Git/Metagenomics/")
 
 ########################
 # LOAD FILES
-
-setwd("~bleds22e/Documents/Git/Metagenomics/")
 
 trnL_fecal <- read.csv("./Plants/trnL_fecal_samples.csv", header = TRUE)
 fecal <- read.csv("./CollectionData/fecal_sample_collection.csv", header = TRUE)
@@ -44,23 +43,20 @@ trnL_link_file <- select(trnL_link_file, OTU_cluster, Type, d, k, p, c, o, f, g,
 trnL_link_file$Type <- str_replace(trnL_link_file$Type, '[*]', NA_character_)
 
 # write CSV file
-write.csv(trnL_link_file, "./SequencedData/Plants/trnL_taxa_link_file.csv", row.names = FALSE)
+# write.csv(trnL_link_file, "./SequencedData/Plants/trnL_taxa_link_file.csv", row.names = FALSE)
 
 #=====================================================================================
 ### FECAL DATA ###
 
-trnL_fecal <- trnL_fecal[-(c(452:453)),]
+# remove unnecessary columns summary rows
+trnL_fecal <- trnL_fecal[-(c(452:453)), c(1,8:54)]
 
-# reads dataframe
+# turn into flat file, keeping only non-zero numbers
+trnL_fecal <- tidyr::gather(trnL_fecal, "Sample", "Proportion", 2:48) %>% 
+  filter(Proportion != 0)
 
-reads <- trnL[,c(1,8:54)] %>% rename(OTU.ID = OTU_ID)
-reads <- tidyr::gather(reads, "Sample", "Reads", 2:48) %>% 
-  filter(Reads != 0)
-
-# samples dataframe
-
-samples <- select(samples, vial_barcode:PIT_tag) %>% 
-  rename(Sample = vial_barcode)
+# write CSV file
+# write.csv(trnL_fecal, "./SequencedData/Plants/trnL_fecal_data.csv", row.names = FALSE)
 
 #=====================================================================================
 ### VOUCHER DATA ###
