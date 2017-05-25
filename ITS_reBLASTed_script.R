@@ -2,26 +2,17 @@
 # Ellen Bledsoe
 # May 2017
 
-#########################################
-# LIBRARIES
-
 library(dplyr)
 
-#########################################
-# LOAD FILES
+################################################################################
+# GET UNIQUE OTUs for DUPLICATES in ITS BLAST FILE
 
+# load BLAST file and clean
 blast <- read.csv("./Plants/ITS_blast.csv", header = TRUE, na.strings = "")
-
-#########################################
-# GET UNIQUE OTUs for DUPLICATES
-
-# Blast and no blast files
-
 blast <- select(blast, -Sum)
 blast <- blast[-c(463:464),]
 
-# Pull out ConsensusLineage
-
+# pull out ConsensusLineage
 taxa_its <- select(blast, OTU.ID, ConsensusLineage)
 
 # make dataframe with only duplicate lineages
@@ -43,7 +34,7 @@ joined <- select(joined, -ConsensusLineage) %>%
   rename(Family = f, Genus = g, SciName = s) %>% 
   filter(k != "Viruses")
 
-#########################################
+################################################################################
 # MATCH OTU.ID w/ SEQUENCE
 
 seq <- read.csv("./SequencedData/Plants/ITS_sequences_from_fna.csv", header = T, stringsAsFactors = F)
@@ -51,55 +42,54 @@ seq <- rename(seq, OTU.ID = OTU_its)
 OTU_for_dups <- joined$OTU.ID
 seq_to_BLAST <- filter(seq, OTU.ID %in% OTU_for_dups)
 
-#########################################
-# RUN THROUGH BLAST
+################################################################################
+# RUN THROUGH BLAST 
+#   - code from SKME
 
-completed_blasts = read.csv("./SequencedData/Plants/reBlast_blastoutput.csv", stringsAsFactors = FALSE)
+# load file for completed blasts and filter out
+completed_blasts = read.csv("./SequencedData/Plants/ITS_reBlast_output.csv", stringsAsFactors = FALSE)
 completed_OTUs = unique(completed_blasts$OTU.ID)
-OTUs_forBLAST = noblast_OTUs %>% filter(!(OTU_its %in% completed_OTUs))
+OTUs_forBLAST = noblast_OTUs %>% filter(!(OTU.ID %in% completed_OTUs))
 
-### These packages seem to fight with dplyr, 
-###   so I don't load them until I need them
-
-
+# load library
 source("https://bioconductor.org/biocLite.R")
 biocLite("annotate")
 library(annotate)
 
-### Queries BLAST
-###   Pastes OTU ID and sequence together for a fasta format
-###   Submits to BLAST and records output
+# queries BLAST
+#   - Pastes OTU ID and sequence together for a fasta format
+#   - Submits to BLAST and records output
 
 file = c()
 num_seq = nrow(OTUs_forBLAST)
 for(i in 1:num_seq){
   print(paste("Number of sequences remaining:",num_seq-(i-1),sep=" "))
-  header = as.character(paste(">",OTUs_forBLAST$OTU_its[i], sep=""))
+  header = as.character(paste(">",OTUs_forBLAST$OTU.ID[i], sep=""))
   data = as.character(paste(header,OTUs_forBLAST$sequence_its[i],sep="\n"))
-  output = blastSequences(x=data,timeout = 220,
+  output = blastSequences(x=data, timeout = 220,
                           hitListSize = 20, as='data.frame')
-  file = rbind(file,output)
+  file = rbind(file, output)
   print(paste(OTUs_forBLAST$OTU_its[i], "complete", sep = " "))
 }
 
-### Formats and Write table from BLAST
-### Selects & formats only relevant columns
-### Calculates Identity% & Query Coverage
+# add desired BLAST output to .csv file with info from previous BLASTs
+#   - formats and writes table from BLAST
+#   - selects & formats only relevant columns
+#   - calculates identity% & query coverage
 
 names(file)[3] = 'OTU.ID'
 names(file)[4] = 'Query.length'
 names(file)[25] = 'Hsp.length'
 
-clean.file = dplyr::select(file, OTU.ID, Query.length, Hit_id, Hit_def,
-                           Hit_len, Hsp_evalue, 
-                           Hsp_identity, Hsp.length)
-clean.file = clean.file %>% mutate_each_(funs(as.integer), c("Query.length","Hit_len",
-                                                             "Hsp_identity","Hsp.length"))
-clean.file = clean.file %>% mutate_each_(funs(as.numeric), "Hsp_evalue")
+clean.file = dplyr::select(file, OTU.ID, Query.length, Hit_id, Hit_def, Hit_len, Hsp_evalue, Hsp_identity, Hsp.length)
+clean.file = mutate_each_(clean.file, funs(as.integer), 
+                          c("Query.length", "Hit_len", "Hsp_identity", "Hsp.length"))
+clean.file = mutate_each_(clean.file, funs(as.numeric), "Hsp_evalue")
 
-clean.file = clean.file %>% mutate(identity_percent = 100* (Hsp_identity/Hsp.length),
-                                   Query.cover = 100* (Hsp.length/Query.length))
+clean.file = mutate(clean.file, identity_percent = 100 * (Hsp_identity / Hsp.length), Query.cover = 100 * (Hsp.length / Query.length))
 
-completed_blasts = rbind(completed_blasts,clean.file)
+# append new data to old
+completed_blasts = rbind(completed_blasts, clean.file)
 
-write.csv(completed_blasts, "./Plants/NoBlast_blastoutput.csv", row.names=FALSE)
+# overwrite to include appended data
+write.csv(completed_blasts, "./SequencedData/Plants/ITS_reBLAST_output.csv", row.names = FALSE)
