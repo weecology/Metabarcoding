@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# Master Plant List and trnL/ITS Stats\n# EKB\n# May 2017\n\n# LIBRARIES\nlibrary(dplyr)\n\n# FILES\n\nplant_list <- read.csv(\"./Portal_plant_master_list.csv\")\nplant_collection <- read.csv(\"./CollectionData/plant_voucher_collection.csv\")\n\n# PORTAL PLANTS MASTER LIST\n\nunknowns <- filter(plant_list, Species %in% c('sp.', 'spp.', 'sp. 2') | Genus %in% c('unknown', 'Unknown'))\n\nplant_list <- anti_join(plant_list, unknowns)\n",
+    "created" : 1496013980408.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3321001837",
+    "id" : "4259F64",
+    "lastKnownWriteTime" : 1496080374,
+    "last_content_update" : 1496080374449,
+    "path" : "~/Documents/Git/Metagenomics/plant_species_master_list.R",
+    "project_path" : "plant_species_master_list.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
