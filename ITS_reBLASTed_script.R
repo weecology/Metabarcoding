@@ -39,7 +39,7 @@ joined <- select(joined, -ConsensusLineage) %>%
 
 seq <- read.csv("./SequencedData/Plants/ITS_sequences_from_fna.csv", header = T, stringsAsFactors = F)
 seq <- rename(seq, OTU.ID = OTU_its)
-OTU_for_dups <- joined$OTU.ID
+OTU_for_dups <- as.character(joined$OTU.ID)
 seq_to_BLAST <- filter(seq, OTU.ID %in% OTU_for_dups)
 
 ################################################################################
@@ -49,11 +49,11 @@ seq_to_BLAST <- filter(seq, OTU.ID %in% OTU_for_dups)
 # load file for completed blasts and filter out
 completed_blasts = read.csv("./SequencedData/Plants/ITS_reBlast_output.csv", stringsAsFactors = FALSE)
 completed_OTUs = unique(completed_blasts$OTU.ID)
-OTUs_forBLAST = noblast_OTUs %>% filter(!(OTU.ID %in% completed_OTUs))
+OTUs_forBLAST = seq_to_BLAST %>% filter(!(OTU.ID %in% completed_OTUs))
 
 # load library
-source("https://bioconductor.org/biocLite.R")
-biocLite("annotate")
+# source("https://bioconductor.org/biocLite.R")
+# biocLite("annotate")
 library(annotate)
 
 # queries BLAST
