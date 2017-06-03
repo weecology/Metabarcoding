@@ -34,13 +34,16 @@ for(this_level in c('k','p','c','o','f','g','s')){
   taxa_its[,this_level]=step_two
 }
 
-taxa_its <- select(taxa_its, OTU.ID, k:s) %>% distinct(OTU.ID, .keep_all = TRUE) %>% arrange(OTU.ID)
-taxa_its <- rename(taxa_its, Family = f, Genus = g, Species = s)
+taxa_its <- select(taxa_its, OTU.ID, k:s) %>% 
+  distinct(OTU.ID, .keep_all = TRUE) %>% 
+  rename(Family = f, Genus = g, SciName = s)
+
+#write.csv(taxa_its, "SequencedData/Plants/ITS_BLAST_taxa_link_file.csv", row.names = FALSE)
 
 # Restructure and combine
 
 blast <- select(blast, -ConsensusLineage)
-all_ITS <- bind_rows(blast, no_blast, .id = "DF")
+all_ITS <- bind_rows(blast, no_blast)
 
 all_ITS <- tidyr::gather(all_ITS, "Sample", "Reads", S008809.Wisely:S009099.Wisely) %>%
            filter(Reads != 0)
@@ -49,15 +52,19 @@ all_ITS <- tidyr::separate(all_ITS, Sample, into = c("Sample", "Wisely")) %>%
 
 # vouchers dataframe
 
-vouchers <- select(plants, vial_barcode, sci_name_profID, year) %>% 
+vouchers <- select(plants, vial_barcode, year) %>% 
             filter(year != '2017') %>% 
             rename(Sample = vial_barcode) %>% 
             select(-year)
-vouchers_its <- right_join(all_ITS, vouchers, by = "Sample")
+vouchers_its <- semi_join(all_ITS, vouchers, by = "Sample")
+
+#write.csv(vouchers_its, "SequencedData/Plants/ITS_voucher_data.csv", row.names = FALSE)
 
 # fecal sample dataframe
 
 fecal <- anti_join(all_ITS, vouchers, by = "Sample")
+
+#write.csv(fecal, "SequencedData/Plants/ITS_fecal_data.csv", row.names = F)
 
 ########################
 # UNIQUE OTUs for VOUCHERS
