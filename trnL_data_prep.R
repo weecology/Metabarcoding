@@ -7,13 +7,13 @@
 
 library(dplyr)
 library(stringr)
-library(ggplot2)
 
 ########################
 # LOAD FILES
 
-trnL <- read.csv("./Plants/trnL_fecal_samples.csv", header = TRUE)
-samples <- read.csv("./CollectionData/fecal_sample_collection.csv", header = TRUE)
+# load the files you need
+trnL <- read.csv("./", header = TRUE)
+samples <- read.csv("./", header = TRUE)
 
 ########################
 # CLEAN DATA
