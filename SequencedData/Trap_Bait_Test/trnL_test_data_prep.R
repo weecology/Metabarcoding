@@ -19,29 +19,29 @@ trnL <- read.csv("./SequencedData/Trap_Bait_Test/trnL_trap_and_bait_test.csv", h
 fecal <- read.csv("./CollectionData/fecal_sample_collection.csv", header = TRUE)
 plants <- read.csv("./CollectionData/plant_voucher_collection.csv", header = TRUE)
 
+trnL_voucher_data <- read.csv("./SequencedData/Plants/trnL_voucher_data.csv", header = T)
+
 ########################
 # CLEAN DATA
 
-# taxonomy dataframe
-taxa_trnL <- select(trnL, OTU_ID, ConsensusLineage) %>% 
-  rename(OTU.ID = OTU_ID)
-
-for(this_level in c('d','k','p','c','o','f','g','s')){
-  # separate taxa into columns
-  step_one=sapply(strsplit(as.character(taxa_trnL$ConsensusLineage), paste0(this_level,'__')), '[', 2)
-  step_two=sapply(strsplit(step_one, ';'), '[', 1)
-  taxa_trnL[,this_level]=step_two
-}
-
-taxa_trnL <- rename(taxa_trnL, Family = o, Genus = g, Species = s)
-
 # reads dataframe
-
-reads <- trnL[,c(1,8:54)] %>% rename(OTU.ID = OTU_ID)
-reads <- tidyr::gather(reads, "Sample", "Reads", 2:48) %>% 
+reads <- trnL[,-c(2,100)]
+reads <- tidyr::gather(reads, "Sample", "Reads", 2:98) %>% 
   filter(Reads != 0)
+reads <- tidyr::separate(reads, Sample, into = c("Sample", "Wisely")) %>%
+  select(-Wisely)
 
-# samples dataframe
+# vouchers dataframe
+vouchers <- select(plants, vial_barcode, year) %>% 
+  rename(Sample = vial_barcode) %>% 
+  select(-year)
+vouchers <- semi_join(reads, vouchers, by = "Sample")
 
-samples <- select(samples, vial_barcode:PIT_tag) %>% 
-  rename(Sample = vial_barcode)
+new_file <- rbind(trnL_voucher_data, vouchers)
+#write.csv(new_file, "SequencedData/Plants/trnL_voucher_data.csv", row.names = FALSE)
+
+# fecal sample dataframe
+
+fecal <- anti_join(all_ITS, vouchers, by = "Sample")
+
+#write.csv(fecal, "SequencedData/Plants/ITS_fecal_data.csv", row.names = F)
