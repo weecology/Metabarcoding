@@ -11,15 +11,17 @@ library(stringr)
 ########################
 # LOAD FILES
 
+# set your working directory
+setwd()
+
 # load the files you need
-trnL <- read.csv("./SequencedData/Trap_Bait_Test/trnL_trap_and_bait_test.csv", header = TRUE)
-samples <- read.csv("./CollectionData/fecal_sample_collection.csv", header = TRUE)
+trnL <- read.csv("./", header = TRUE)
+samples <- read.csv("./", header = TRUE)
 
 ########################
 # CLEAN DATA
 
 # taxonomy dataframe
-
 taxa_trnL <- select(trnL, OTU_ID, ConsensusLineage) %>% 
   rename(OTU.ID = OTU_ID)
 
