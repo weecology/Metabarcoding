@@ -6,7 +6,6 @@
 # LIBRARIES
 
 library(dplyr)
-library(stringr)
 
 ########################
 # LOAD FILES
@@ -15,7 +14,7 @@ library(stringr)
 setwd("~bleds22e/Documents/Git/Metagenomics/")
 
 # load the files you need
-trnL <- read.csv("./SequencedData/Trap_Bait_Test/trnL_trap_and_bait_test.csv", header = TRUE)
+trnL <- read.csv("./SequencedData/Trap_Bait_Test/original_data/trnL_trap_and_bait_test.csv", header = TRUE)
 fecal <- read.csv("./CollectionData/fecal_sample_collection.csv", header = TRUE)
 plants <- read.csv("./CollectionData/plant_voucher_collection.csv", header = TRUE)
 
@@ -41,7 +40,5 @@ new_file <- rbind(trnL_voucher_data, vouchers)
 #write.csv(new_file, "SequencedData/Plants/trnL_voucher_data.csv", row.names = FALSE)
 
 # fecal sample dataframe
-
-fecal <- anti_join(all_ITS, vouchers, by = "Sample")
-
-#write.csv(fecal, "SequencedData/Plants/ITS_fecal_data.csv", row.names = F)
+fecal <- anti_join(reads, vouchers, by = "Sample")
+#write.csv(fecal, "SequencedData/Trap_Bait_Test/test_trnL_fecal_data.csv", row.names = F)
