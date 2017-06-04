@@ -1,5 +1,5 @@
-# Plotting functions for quick looks at data
-# Feb 21, 2017
+# Plotting functions for trap & bait test
+# June 2017
 
 #########################
 # LIBRARIES
@@ -10,11 +10,20 @@ library(ggplot2)
 #########################
 # Plotting functions
 
-rank_abundance <- function(samples, reads, sp = c('PP', 'DM', 'DO'), cut_off = 0.001) {
+rank_abundance <- function(samples, 
+                              reads, 
+                              sp = c('PP', 'DM', 'DO'), 
+                              trap = c('clean', 'dirty'), 
+                              bait = c('millet', 'oatmeal'), 
+                              cut_off = 1) {
   # create rank-abundance plot of mean OTUs w/ error bars for a given species
+  # by species, trap type and/or bait type
   
-  filtered_samples <- samples[samples$species %in% sp,]
-  joined_reads <- inner_join(filtered_samples, reads, by = "Sample")
+  if (sp != "c('PP', 'DM', 'DO')") samples = samples[samples$species %in% sp,]  
+  if (trap != "c('clean', 'dirty')") samples = samples[samples$trap_type %in% trap,]
+  if (bait != "c('millet', 'oatmeal')") samples = samples[samples$bait_type %in% bait,]
+  
+  joined_reads <- inner_join(samples, reads, by = "Sample")
   mean_sd <- joined_reads %>% group_by(OTU.ID) %>%
     summarise_at(vars(Reads), funs(mean, sd)) %>%
     filter(mean >= cut_off) %>%
@@ -23,52 +32,40 @@ rank_abundance <- function(samples, reads, sp = c('PP', 'DM', 'DO'), cut_off = 0
   ggplot(data = mean_sd) +
     geom_col(aes(x = reorder(OTU.ID, desc(mean)), y = mean)) +
     geom_errorbar(aes(
-      x = OTU.ID,
-      ymin = mean - sd,
-      ymax = mean + sd
-    )) +
+      x = OTU.ID, ymin = mean - sd, ymax = mean + sd)) +
     labs(x = "OTU.ID", y = "Mean Reads") +
     theme_bw() +
-    theme(axis.text.x = element_text(
-      angle = 45,
-      size = 8,
-      hjust = 1
-    ))
+    theme(axis.text.x = element_text(angle = 45, size = 5, hjust = 1))
 }
 
-fresh_vs_trap <- function(samples, reads, sp = c('PP', 'DM', 'DO'), cut_off = 0.005) {
+fresh_vs_trap <- function(samples, 
+                          reads, 
+                          sp = c('PP', 'DM', 'DO'), 
+                          trap = c('clean', 'dirty'), 
+                          bait = c('millet', 'oatmeal'),
+                          cut_off = 1) {
   # plot fresh scat vs trap scat for a given species
   
-  filtered_samples <- samples[samples$species %in% sp,]
-  joined_reads <- inner_join(filtered_samples, reads, by = "Sample")
+  if (sp != "c('PP', 'DM', 'DO')") samples = samples[samples$species %in% sp,]  
+  if (trap != "c('clean', 'dirty')") samples = samples[samples$trap_type %in% trap,]
+  if (bait != "c('millet', 'oatmeal')") samples = samples[samples$bait_type %in% bait,]
+  
+  joined_reads <- inner_join(samples, reads, by = "Sample")
   mean_sd_by_type <-
     joined_reads %>% group_by(OTU.ID, sample_type) %>%
     summarise_at(vars(Reads), funs(mean, sd)) %>%
     filter(mean >= cut_off) %>%
     arrange(desc(mean))
   
-  ggplot(data = mean_sd_by_type, aes(
-    x = reorder(OTU.ID, desc(mean)),
-    y = mean,
-    fill = sample_type
-  )) +
+  ggplot(data = mean_sd_by_type, aes(x = reorder(OTU.ID, desc(mean)), y = mean, fill = sample_type)) +
     geom_bar(position = "dodge", stat = "identity") +
-    geom_errorbar(aes(
-      x = OTU.ID,
-      ymin = mean - sd,
-      ymax = mean + sd
-    ), position = position_dodge()) +
-    labs(
-      x = "OTU.ID",
-      y = "Mean Reads"
-    ) +
+    geom_errorbar(aes(x = OTU.ID, ymin = mean - sd, ymax = mean + sd), position = position_dodge(), size = 0.25) +
+    labs(x = "OTU.ID", y = "Mean Reads") +
     theme_bw() +
-    theme(axis.text.x = element_text(
-      angle = 45,
-      size = 8,
-      hjust = 1
-    ))
+    theme(axis.text.x = element_text(angle = 45, size = 5, hjust = 1))
 }
+
+#===================== edits stopped here ======================
 
 control_vs_krat <- function(samples, reads, sp = c('PP', 'DM', 'DO'), sample_type, cut_off = 0.005) {
   # plot reads by species, sample type, and plot type
