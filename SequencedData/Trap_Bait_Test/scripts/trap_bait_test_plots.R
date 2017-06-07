@@ -34,3 +34,10 @@ fresh_vs_trap_test <- grid.arrange(arrangeGrob(clean_millet, top = "Millet", lef
                                    arrangeGrob(dirty_millet, left = "Dirty"), 
                                    dirty_oatmeal, nrow = 2, ncol = 2)
 ggsave("./SequencedData/Trap_Bait_Test/figures/fresh_vs_trap_test.png", fresh_vs_trap_test)
+
+# by individual animal
+#   - try facet grid of bait and trap, but probably won't work
+#   - label each with species and plot e.g. "DO_plot4"
+#   - if this doesn't work, can maybe do multiple grid.arrange()
+#       - facet_wrap all millet/clean, millet/dirty, etc., individually
+#       - then arrange the same way as above with arrange.Grob() and labels
