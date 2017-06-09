@@ -65,6 +65,34 @@ fresh_vs_trap <- function(samples,
     theme(axis.text.x = element_text(angle = 45, size = 5, hjust = 1))
 }
 
+trap_vs_fresh_indv <- function(samples, 
+                               reads, 
+                               sp = c('PP', 'DM', 'DO'), 
+                               trap = c('clean', 'dirty'), 
+                               bait = c('millet', 'oatmeal'),
+                               cut_off = 1) {
+  # plot trap vs fresh samples by individual animal
+  
+  if (sp != "c('PP', 'DM', 'DO')") samples = samples[samples$species %in% sp,]  
+  if (trap != "c('clean', 'dirty')") samples = samples[samples$trap_type %in% trap,]
+  if (bait != "c('millet', 'oatmeal')") samples = samples[samples$bait_type %in% bait,]
+  
+  pit_tags <- samples %>% group_by(PIT_tag) %>%
+    summarise(num_samples = n_distinct(sample_type)) %>%
+    filter(num_samples > 1)
+  both_types <- semi_join(samples, pit_tags, by = "PIT_tag")
+  add_reads <- inner_join(both_types, reads, by = "Sample") %>%
+    tidyr::unite(col = individual, species, plot, PIT_tag, sep = "_") %>%
+    filter(Reads > cut_off)
+  
+  ggplot(data = add_reads, aes(x = reorder(OTU.ID, desc(Reads)), y = Reads, fill = sample_type)) +
+    geom_bar(position = "dodge", stat = "identity") +
+    facet_wrap( ~ individual) +
+    labs(x = "OTU.ID", y = "Reads") +
+    theme_bw() +
+    theme(axis.text.x = element_text(angle = 45, size = 5, hjust = 1))
+}
+
 #===================== edits stopped here ======================
 
 control_vs_krat <- function(samples, reads, sp = c('PP', 'DM', 'DO'), sample_type, cut_off = 0.005) {
@@ -143,18 +171,10 @@ trap_vs_fresh_indv <- function(samples, reads, sp = c('PP', 'DM', 'DO'), cut_off
     tidyr::unite(col = individual, species, PIT_tag, sep = "_") %>%
     filter(Reads > cut_off)
   
-  ggplot(data = add_reads, aes(
-    x = reorder(OTU.ID, desc(Reads)),
-    y = Reads,
-    fill = sample_type
-  )) +
+  ggplot(data = add_reads, aes(x = reorder(OTU.ID, desc(Reads)), y = Reads, fill = sample_type)) +
     geom_bar(position = "dodge", stat = "identity") +
     facet_wrap( ~ individual) +
     labs(x = "OTU.ID", y = "Reads") +
     theme_bw() +
-    theme(axis.text.x = element_text(
-      angle = 45,
-      size = 5,
-      hjust = 1
-    ))
+    theme(axis.text.x = element_text(angle = 45, size = 5, hjust = 1))
 }
