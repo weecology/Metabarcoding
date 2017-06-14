@@ -28,7 +28,7 @@ df_trnL <- data.frame(OTU_trnL, sequence_trnL)
 #===== WRITE CSV FILES =====#
 
 write.csv(df_its, "data/its_otus.csv")
-write.csv(df_trnL, "Plants/trnL_otus.csv", row.names=FALSE)
+write.csv(df_trnL, "Plants/trnL_from_fna.csv", row.names=FALSE)
 
 
 
