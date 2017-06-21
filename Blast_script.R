@@ -26,7 +26,7 @@ setwd("/Users/bleds22e/Documents/Git/Metagenomics")
 
 ### Reads no blast file, extracts the OTU.IDs
 noblast = read.csv("./Plants/ITS_no_blast.csv", stringsAsFactors = FALSE)
-OTUs = noblast %>% select(OTU.ID)
+OTUs = noblast %>% dplyr::select(OTU.ID)
 
 ### Reads the .csv of the .fna file and extracts
 ###   only the sequences for the OTUs in the no
@@ -38,7 +38,7 @@ noblast_OTUs = allITSseqs %>% filter(OTU_its %in% OTUs$OTU.ID)
 ### REF_SET creation
 ### the refset is a test set created for code development 
 
-OTU_refset = noblast_OTUs %>% filter(OTU_its %in% c("OTU1","OTU101", "OTU3"))
+#OTU_refset = noblast_OTUs %>% filter(OTU_its %in% c("OTU1","OTU101", "OTU3"))
 
 ### Filter noblast OTUs 
 ###   Reduces the full set of noblast OTUS 
@@ -52,9 +52,9 @@ OTUs_forBLAST = noblast_OTUs %>% filter(!(OTU_its %in% completed_OTUs))
 ### These packages seem to fight with dplyr, 
 ###   so I don't load them until I need them
 
-
-source("https://bioconductor.org/biocLite.R")
-biocLite("annotate")
+#Run the two commented lines if annotate not installed yet
+# source("https://bioconductor.org/biocLite.R")
+# biocLite("annotate")
 library(annotate)
 
 ### Queries BLAST
@@ -63,15 +63,16 @@ library(annotate)
  
 file = c()
 num_seq = nrow(OTUs_forBLAST)
+try(if(num_seq == 0) stop("no sequences to submit", call. = FALSE))
 for(i in 1:num_seq){
   print(paste("Number of sequences remaining:",num_seq-(i-1),sep=" "))
   header = as.character(paste(">",OTUs_forBLAST$OTU_its[i], sep=""))
   data = as.character(paste(header,OTUs_forBLAST$sequence_its[i],sep="\n"))
-  output = blastSequences(x=data,timeout = 220,
+  output = blastSequences(x=data,timeout = 300,
                           hitListSize = 20, as='data.frame')
   file = rbind(file,output)
   print(paste(OTUs_forBLAST$OTU_its[i], "complete", sep = " "))
-  }
+}
 
 ### Formats and Write table from BLAST
 ### Selects & formats only relevant columns
@@ -81,6 +82,7 @@ names(file)[3] = 'OTU.ID'
 names(file)[4] = 'Query.length'
 names(file)[25] = 'Hsp.length'
 
+clean.file = c()
 clean.file = dplyr::select(file, OTU.ID, Query.length, Hit_id, Hit_def,
                            Hit_len, Hsp_evalue, 
                            Hsp_identity, Hsp.length)
