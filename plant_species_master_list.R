@@ -3,12 +3,13 @@
 # May 2017
 
 # LIBRARIES
+library(RCurl)
 library(dplyr)
 
 # FILES
 
-plant_list <- read.csv("~bleds22e/Documents/Git/PortalData/Plants/Portal_plant_species.csv")
-plant_collection <- read.csv("./CollectionData/plant_voucher_collection.csv")
+plant_list <- read.csv(text = getURL("https://raw.githubusercontent.com/weecology/PortalData/master/Plants/Portal_plant_species.csv"))
+plant_collection <- read.csv(text = getURL("https://raw.githubusercontent.com/weecology/Metagenomics/master/CollectionData/plant_voucher_collection.csv"))
 
 # PORTAL PLANTS MASTER LIST
 
