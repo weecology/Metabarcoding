@@ -1,15 +1,15 @@
 {
     "collab_server" : "",
-    "contents" : "# Master Plant List and trnL/ITS Stats\n# EKB\n# May 2017\n\n# LIBRARIES\nlibrary(dplyr)\n\n# FILES\n\nplant_list <- read.csv(\"~bleds22e/Documents/Git/PortalData/Plants/Portal_plant_species.csv\")\nplant_collection <- read.csv(\"./CollectionData/plant_voucher_collection.csv\")\n\n# PORTAL PLANTS MASTER LIST\n\n# remove any unknowns\nunknowns <- filter(plant_list, Species %in% c('sp.', 'spp.', 'sp. 2') | Genus %in% c('unknown', 'Unknown'))\nplant_list <- anti_join(plant_list, unknowns) %>% \n  arrange(Sp.Code)\n\n# remove any species listed twice\nduplicates <- select(plant_list, Sp.Code) %>%\n  group_by(Sp.Code) %>%\n  summarise(count = n()) %>%\n  filter(count > 1)\nduplicates <- filter(plant_list, Sp.Code %in% c('xant spin', 'yucc elat', 'zinn gran', 'zinn pumi') & Community == 'Perennials')\nplant_list <- anti_join(plant_list, duplicates)\n\nfor (i in 1:length(plant_list$Sp.Code)) {\n  if (plant_list$Sp.Code[i] == 'zinn pumi'){\n    plant_list$Species[i] == 'acerosa' & plant_list$Alt.Species[i] == 'pumila'\n  } \n}  \n\n#write.csv(plant_list, \"./Portal_plant_master_list.csv\", row.names = F)\n",
+    "contents" : "# Master Plant List and trnL/ITS Stats\n# EKB\n# May 2017\n\n# LIBRARIES\nlibrary(RCurl)\nlibrary(dplyr)\n\n# FILES\n\nplant_list <- read.csv(text = getURL(\"https://raw.githubusercontent.com/weecology/PortalData/master/Plants/Portal_plant_species.csv\"))\nplant_collection <- read.csv(text = getURL(\"https://raw.githubusercontent.com/weecology/Metagenomics/master/CollectionData/plant_voucher_collection.csv\"))\n\n# PORTAL PLANTS MASTER LIST\n\n# remove any unknowns\nunknowns <- filter(plant_list, Species %in% c('sp.', 'spp.', 'sp. 2') | Genus %in% c('unknown', 'Unknown'))\nplant_list <- anti_join(plant_list, unknowns) %>% \n  arrange(Sp.Code)\n\n# remove any species listed twice\nduplicates <- select(plant_list, Sp.Code) %>%\n  group_by(Sp.Code) %>%\n  summarise(count = n()) %>%\n  filter(count > 1)\nduplicates <- filter(plant_list, Sp.Code %in% c('xant spin', 'yucc elat', 'zinn gran', 'zinn pumi') & Community == 'Perennials')\nplant_list <- anti_join(plant_list, duplicates)\n\nfor (i in 1:length(plant_list$Sp.Code)) {\n  if (plant_list$Sp.Code[i] == 'zinn pumi'){\n    plant_list$Species[i] == 'acerosa' & plant_list$Alt.Species[i] == 'pumila'\n  } \n}  \n\n#write.csv(plant_list, \"./Portal_plant_master_list.csv\", row.names = F)\n",
     "created" : 1496013980408.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "427861893",
+    "hash" : "1471716714",
     "id" : "4259F64",
-    "lastKnownWriteTime" : 1496083203,
-    "last_content_update" : 1496083203089,
-    "path" : "~/Documents/Git/Metagenomics/plant_species_master_list.R",
+    "lastKnownWriteTime" : 1499869560,
+    "last_content_update" : 1499869560,
+    "path" : "~/Dropbox (UFL)/Git/Metabarcoding/plant_species_master_list.R",
     "project_path" : "plant_species_master_list.R",
     "properties" : {
         "tempName" : "Untitled1"
