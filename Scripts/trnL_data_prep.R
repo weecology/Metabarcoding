@@ -11,12 +11,8 @@ library(stringr)
 ########################
 # LOAD FILES
 
-# set your working directory
-setwd()
-
-# load the files you need
-trnL <- read.csv("./", header = TRUE)
-samples <- read.csv("./", header = TRUE)
+trnL <- read.csv("C:/Users/ellen.bledsoe/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/Results_Jonah/Plants/March2017/otu.table.trnL.cr99.exh.jv38.tax.csv", header = T, stringsAsFactors = F)
+samples <- read.csv("CollectionData/fecal_sample_collection.csv", header = T, stringsAsFactors = F) 
 
 ########################
 # CLEAN DATA
@@ -40,7 +36,3 @@ reads <- trnL[,c(1,8:54)] %>% rename(OTU.ID = OTU_ID)
 reads <- tidyr::gather(reads, "Sample", "Reads", 2:48) %>% 
   filter(Reads != 0)
 
-# samples dataframe
-
-samples <- select(samples, vial_barcode:PIT_tag) %>% 
-  rename(Sample = vial_barcode)
