@@ -21,3 +21,30 @@
 #     even bother with that part?
 #   - might want to source some code for pulling out sample numbers, so you can 
 #     use new vial_id csv for pulling out plant voucher samples
+
+#==============================================================================
+
+# LIBRARIES #
+library(tidyverse)
+
+# PREP MATERIALS #
+
+# Prep trnL reference csv into functional dataframe #
+
+trnL <- read_csv("Data/SequencedData/Plants/RawData/JV13trnlClosedRef.csv")
+colnames(trnL) <- c("OTU_cluster", "Seed", "ConsensusLineage")
+
+# split ConsesusLineage column into usable columns
+for(this_level in c('d','k','p','c','o','f','g','s')){
+  # separate taxa into columns
+  step_one <- sapply(strsplit(as.character(trnL$ConsensusLineage), paste0(this_level,':')), '[', 2)
+  step_two <- sub(";", "", step_one)
+  step_three <- sapply(strsplit(step_two, ','), '[', 1)
+  trnL[,this_level] <- step_three
+}
+
+# split species column into two columns and filter for SEED rows
+trnL <- trnL %>%
+  select(., -g) %>% 
+  tidyr::separate(s, c("g", "s"), " ") %>% 
+  filter(Seed == "SEED")
