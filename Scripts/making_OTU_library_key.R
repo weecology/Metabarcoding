@@ -24,30 +24,6 @@
 
 #==============================================================================
 
-# LIBRARIES #
+# LIBRARIES & SOURCES #
 library(tidyverse)
-
-# PREP MATERIALS #
-
-# Prep trnL reference csv into functional dataframe #
-
-trnL <- read_csv("Data/SequencedData/Plants/RawData/trnL_ClosedRef_JV13.csv")
-colnames(trnL) <- c("OTU", "Seed", "ConsensusLineage")
-
-# split ConsesusLineage column into usable columns
-for(this_level in c('d','k','p','c','o','f','g','s')){
-  # separate taxa into columns
-  step_one <- sapply(strsplit(as.character(trnL$ConsensusLineage), paste0(this_level,':')), '[', 2)
-  step_two <- sub(";", "", step_one)
-  step_three <- sapply(strsplit(step_two, ','), '[', 1)
-  trnL[,this_level] <- step_three
-}
-
-# split species column into two columns and filter for SEED rows
-trnL_seeds <- trnL %>%
-  select(., -g) %>% 
-  tidyr::separate(s, c("g", "s"), " ") %>% 
-  filter(Seed == "SEED")
-
-# write to CSV
-write_csv(trnL_seeds, "Data/SequencedData/Plants/RawData/trnL_SEED_only.csv")
+source("Scripts/make_trnL_SEED_dataframe.R")
