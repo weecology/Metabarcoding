@@ -11,6 +11,7 @@ library(tidyverse)
 ## Plant Vial IDs ##
 vial_id <- read_csv("Data/CollectionData/vial_id.csv")
 plant_vial_id <- vial_id %>% filter(sample_type == "plant")
+fecal_vial_id <- vial_id %>% filter(sample_type == "fecal")
 
 ## trnL Fall 2016 ##
 
@@ -56,6 +57,20 @@ trnL_fall17_total_reads <- trnL_fall17[nrow(trnL_fall17),]
 trnL_fall17_OTUsum <- trnL_fall17[, c(1, length(trnL_fall17))]
 trnL_fall17 <- trnL_fall17[-(nrow(trnL_fall17)), -length(trnL_fall17)]
 
+## trnL Vouchers ##
+
+vouchers <- read_csv("Data/SequencedData/Plants/RawData/trnL_refsamples.csv")
+
+# remove extra columns
+vouchers <- vouchers[, -2]
+colnames(vouchers)[1] <- "OTU"
+colnames(vouchers) <- sub(".Wisely", "", colnames(vouchers))
+
+vouchers$Sum <- rowSums(vouchers[,-1])
+vouchers_OTUsum <- vouchers[, c(1, length(vouchers))]
+vouchers_total_reads <- vouchers[nrow(vouchers),]
+vouchers <- vouchers[-nrow(vouchers),-length(vouchers)]
+
 #==============================================================================#
 # COMBINE DATASETS: trnL #
 
@@ -79,10 +94,25 @@ trnL_fall17 <- mapply('/', trnL_fall17, trnL_fall17_total_reads)
 trnL_fall17 <- as_tibble(trnL_fall17)
 trnL_fall17 <- cbind(trnL_fall17_OTUs, trnL_fall17)
 
+# convert vouchers to proportions
+vouchers_OTUs <- vouchers[,1]
+vouchers <- vouchers %>% 
+  column_to_rownames(var = "OTU")
+vouchers_total_reads <- vouchers_total_reads[,-c(1, length(vouchers_total_reads))]
+
+vouchers <- mapply('/', vouchers, vouchers_total_reads)
+vouchers <- as_tibble(vouchers)
+vouchers <- cbind(vouchers_OTUs, vouchers)
+
 # combine dataframes
 trnL_props <- trnL_fall16 %>% 
   full_join(trnL_spring17) %>% 
-  full_join(trnL_fall17)
+  full_join(trnL_fall17) %>% 
+  full_join(vouchers)
 
 # WHERE ARE MY PLANT VOUCHERS? #
-trnL_plant_vouchers <- trnL_props %>% select(OTU, one_of(plant_vial_id$vial_id))
+# still missing ~ 27 plant vouchers
+trnL_plant_vouchers <- trnL_props %>% 
+  select(OTU, one_of(as.character(plant_vial_id$vial_id)))
+
+
