@@ -1,12 +1,14 @@
-# Get Plant Voucher Reads
-# 14 November 2019
+# Check for trnL Data for All Samples
+# 17 November 2019
 # EKB
+
+# This script is to confirm that I have trnL data for all plant and fecal samples
 
 # LIBRARIES #
 library(tidyverse)
 
 #==============================================================================#
-# DATA PREP: trnL #
+# DATA PREP 
 
 ## Plant Vial IDs ##
 vial_id <- read_csv("Data/CollectionData/vial_id.csv")
@@ -121,37 +123,10 @@ trnL_spring18 <- trnL_spring18[-(nrow(trnL_spring18)), -length(trnL_spring18)]
 
 
 #==============================================================================#
-# COMBINE DATASETS: trnL #
+# CHECK FOR SAMPLES 
 
-# # convert spring 2017 to proportions
-# trnL_spring17_OTUs <- trnL_spring17[,1]
-# trnL_spring17 <- trnL_spring17 %>% 
-#   column_to_rownames(var = "OTU")
-# trnL_spring17_total_reads <- trnL_spring17_total_reads[,-c(1, length(trnL_spring17_total_reads))]
-# 
-# trnL_spring17 <- mapply('/', trnL_spring17, trnL_spring17_total_reads)
-# trnL_spring17 <- as_tibble(trnL_spring17)
-# trnL_spring17 <- cbind(trnL_spring17_OTUs, trnL_spring17)
-# 
-# # convert fall 2017 to proportions
-# trnL_fall17_OTUs <- trnL_fall17[,1]
-# trnL_fall17 <- trnL_fall17 %>% 
-#   column_to_rownames(var = "OTU")
-# trnL_fall17_total_reads <- trnL_fall17_total_reads[, -c(1, length(trnL_fall17))]
-# 
-# trnL_fall17 <- mapply('/', trnL_fall17, trnL_fall17_total_reads)
-# trnL_fall17 <- as_tibble(trnL_fall17)
-# trnL_fall17 <- cbind(trnL_fall17_OTUs, trnL_fall17)
-# 
-# # convert vouchers to proportions
-# vouchers_OTUs <- vouchers[,1]
-# vouchers <- vouchers %>% 
-#   column_to_rownames(var = "OTU")
-# vouchers_total_reads <- vouchers_total_reads[,-c(1, length(vouchers_total_reads))]
-# 
-# vouchers <- mapply('/', vouchers, vouchers_total_reads)
-# vouchers <- as_tibble(vouchers)
-# vouchers <- cbind(vouchers_OTUs, vouchers)
+# Note: these datasets are a mixture of reads and proportions
+# I am combining them solely for the purpose of checking if I have all of them
 
 # combine dataframes
 trnL_props <- trnL_fall16 %>% 
@@ -162,9 +137,39 @@ trnL_props <- trnL_fall16 %>%
   full_join(trnL_millet) %>% 
   full_join(trnL_spring18)
 
-# WHERE ARE MY PLANT VOUCHERS? #
-# still missing ~ 27 plant vouchers
+### Plant Vouchers ###
+# all plant vouchers (except one? have been found) 
+#  - S009904 (spha hast) is missing, but we have another spha hast so we're good
 trnL_plant_vouchers <- trnL_props %>% 
   select(OTU, one_of(as.character(plant_vial_id$vial_id)))
 
+### Fecal Samples ###
 
+# not all fecal samples were sent in, so need to read in metadata sent to JV
+metadata1 <- read_csv("~bleds22e/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/metadata_jonah_2016.csv")
+metadata2 <- read_csv("~bleds22e/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/metadata_jonah_20170425.csv")
+metadata3 <- read_csv("~bleds22e/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/metadata_jonah_20171029.csv")
+metadata4 <- read_csv("~bleds22e/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/metadata_jonah_20180412.csv")
+
+meta_meta <- metadata1 %>% 
+  bind_rows(metadata2) %>% 
+  bind_rows(metadata3) %>% 
+  bind_rows(metadata4) %>% 
+  rename("Sample_Type" = "Sample Type")
+
+meta_fecal <- meta_meta %>% 
+  filter(Sample_Type == "fecal")
+setequal(meta_fecal$Sample_Barcode, fecal_vial_id$vial_id) # TRUE
+
+# missing some samples
+trnL_fecal_samples <- trnL_props %>% 
+  select(OTU, one_of(as.character(fecal_vial_id$vial_id)))
+diff <- setdiff(meta_fecal$Sample_Barcode, colnames(trnL_fecal_samples[,-1]))
+
+# looking for patterns in missing samples (I don't think all got run)
+#   - seems like the ones from 460 that are missing are all the fresh ones
+#     that we decided we didn't need based on the trap & bait tests (-460)
+#   - missing sample from 454 and samples from 466 probably had moisture in them
+# SHOULD BE GOOD TO GO HERE
+fecal_samples <- read_csv("Data/CollectionData/fecal_sample_collection.csv")
+missing <- filter(fecal_samples, vial_barcode %in% diff)
