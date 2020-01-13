@@ -146,10 +146,10 @@ trnL_plant_vouchers <- trnL_props %>%
 ### Fecal Samples ###
 
 # not all fecal samples were sent in, so need to read in metadata sent to JV
-metadata1 <- read_csv("~bleds22e/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/metadata_jonah_2016.csv")
-metadata2 <- read_csv("~bleds22e/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/metadata_jonah_20170425.csv")
-metadata3 <- read_csv("~bleds22e/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/metadata_jonah_20171029.csv")
-metadata4 <- read_csv("~bleds22e/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/metadata_jonah_20180412.csv")
+metadata1 <- read_csv("C:/Users/ellen.bledsoe/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/metadata_jonah_2016.csv")
+metadata2 <- read_csv("C:/Users/ellen.bledsoe/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/metadata_jonah_20170425.csv")
+metadata3 <- read_csv("C:/Users/ellen.bledsoe/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/metadata_jonah_20171029.csv")
+metadata4 <- read_csv("C:/Users/ellen.bledsoe/Dropbox (UFL)/Portal/PORTAL_primary_data/DNA/metadata_jonah_20180412.csv")
 
 meta_meta <- metadata1 %>% 
   bind_rows(metadata2) %>% 
@@ -164,7 +164,7 @@ setequal(meta_fecal$Sample_Barcode, fecal_vial_id$vial_id) # TRUE
 # missing some samples
 trnL_fecal_samples <- trnL_props %>% 
   select(OTU, one_of(as.character(fecal_vial_id$vial_id)))
-diff <- setdiff(meta_fecal$Sample_Barcode, colnames(trnL_fecal_samples[,-1]))
+trnL_diff <- setdiff(meta_fecal$Sample_Barcode, colnames(trnL_fecal_samples[,-1]))
 
 # looking for patterns in missing samples (I don't think all got run)
 #   - seems like the ones from 460 that are missing are all the fresh ones
@@ -172,4 +172,4 @@ diff <- setdiff(meta_fecal$Sample_Barcode, colnames(trnL_fecal_samples[,-1]))
 #   - missing sample from 454 and samples from 466 probably had moisture in them
 # SHOULD BE GOOD TO GO HERE
 fecal_samples <- read_csv("Data/CollectionData/fecal_sample_collection.csv")
-missing <- filter(fecal_samples, vial_barcode %in% diff)
+trnL_missing <- filter(fecal_samples, vial_barcode %in% trnL_diff)
