@@ -10,6 +10,9 @@ trnL_reads <- read_csv("Data/SequencedData/Plants/ProcessedData/trnL_reads.csv")
 trnL_totals <- read_csv("Data/SequencedData/Plants/ProcessedData/trnL_totals.csv")
 sample_id <- read_csv("Data/CollectionData/vial_id.csv") %>% 
   filter(sample_type == "plant")
+collection_id <- read_csv("Data/CollectionData/plant_voucher_collection.csv") %>% 
+  select(vial_barcode, sci_name_profID) %>% 
+  drop_na()
 
 # Get only plant vouchers
 trnL_reads <- filter(trnL_reads, SampleID %in% sample_id$vial_id)
@@ -18,14 +21,23 @@ trnL_totals <- filter(trnL_totals, SampleID %in% sample_id$vial_id)
 # Make Histograms
 
 voucher_ids <- unique(trnL_reads$SampleID)
+test <- voucher_ids[1:10]
 
 OTU_list <- list() # can you plyr::ldply(list, data.frame) to merge into dataframe when done
-passed_list <- list()
+p.list <- list()
+list_num = 1
+p.list_num = 1
 
-for (i in 1:length(voucher_ids)) {
+for (i in 1:length(test)) {
   
   id <- voucher_ids[i]
   id_OTUs <- trnL_reads[(trnL_reads$SampleID == id), ]
+  print(collection_id[collection_id$vial_barcode == id,])
+  readline(prompt = "Press [enter] to continue")
+  
+  print(trnL_totals[trnL_totals$SampleID == id,])
+  readline(prompt = "Press [enter] to continue")
+  
   print(id_OTUs)
   hist(id_OTUs$Reads)
   
@@ -33,21 +45,28 @@ for (i in 1:length(voucher_ids)) {
   
   rows.to.keep = readline()
   if(rows.to.keep == 0) {
-    # put NA in dataframe
-    # ## To remove a star:
-    # ws[which(ws$tag == extrastar[i, 'tag']), 'note2'] <- NA
-    # print(ws[which(ws$tag == extrastar[i, 'tag']), ])
-    # print('Remember to record on datasheet + in notebook!')
-  } else if (rows.to.keep %in% 1:20){
-    # put those OTUs in the dataframe with that sample number (list)
+    # put NA in OTU_list
+    OTU_list[[list_num]] <- data.frame(OTU = NA,
+                                       SampleID = id,
+                                       Reads = NA)
+    list_num <- list_num + 1
+  } else if (rows.to.keep %in% 1:20) {
+    # put that number of rows in OTU_list
+    OTU_list[[list_num]] <- id_OTUs[1:rows.to.keep,]
+    list_num <- list_num + 1
   } else {
-    # make list of 
+    # put that sample id in the "pass" list to revist
+    p.list[[p.list_num]] <- id
+    p.list_num <- p.list_num + 1
   }
   readline(prompt = "Press [enter] to continue")
 }
+
 
 print("You've gone through all the vouchers. Type 'Y' if you want to revisit the ones you passed")
 revisit.passed = readline()
 if (revisit.passed == 'Y') {
   for (i in 1:length(passed_list))
 }
+
+OTU_df <- plyr::ldply(OTU_list, data.frame)
