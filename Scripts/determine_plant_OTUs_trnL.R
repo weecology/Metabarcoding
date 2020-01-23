@@ -18,17 +18,17 @@ collection_id <- read_csv("Data/CollectionData/plant_voucher_collection.csv") %>
 trnL_reads <- filter(trnL_reads, SampleID %in% sample_id$vial_id)
 trnL_totals <- filter(trnL_totals, SampleID %in% sample_id$vial_id)
 
-# Make Histograms
+# Prep for loop
 
 voucher_ids <- unique(trnL_reads$SampleID)
-test <- voucher_ids[1:10]
+#test <- voucher_ids[1:10]
 
 OTU_list <- list() # can you plyr::ldply(list, data.frame) to merge into dataframe when done
 p.list <- list()
 list_num = 1
 p.list_num = 1
 
-for (i in 1:length(test)) {
+for (i in 1:length(voucher_ids)) {
   
   id <- voucher_ids[i]
   id_OTUs <- trnL_reads[(trnL_reads$SampleID == id), ]
@@ -66,7 +66,7 @@ for (i in 1:length(test)) {
 print("You've gone through all the vouchers. Type 'Y' if you want to revisit the ones you passed")
 revisit.passed = readline()
 if (revisit.passed == 'Y') {
-  for (i in 1:length(passed_list))
+  for (i in 1:length(p.list))
 }
 
 OTU_df <- plyr::ldply(OTU_list, data.frame)
