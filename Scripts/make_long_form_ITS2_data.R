@@ -7,7 +7,8 @@ library(tidyverse)
 source("Scripts/functions.R")
 
 # DATA
-df_list <- read_in_trnL_files()
+df_list <- read_in_ITS2_files()
+names(df_list) <- c("fall2017", "spring2017", "spring2018", "trapandbait")
 
 # Process Data
 
@@ -33,13 +34,14 @@ for (i in 1:length(df_list)) {
   df <-  df %>% 
     pivot_longer(cols = c(2:ncol(df)), names_to = "SampleID", values_to = "Reads") %>% 
     filter(Reads > 0)
+  df$DataFrame <- names(df_list[i])
   reads_list[[i]] <- df
   
 }
 
-trnL_reads <- plyr::ldply(reads_list, data.frame) %>% 
+ITS2_reads <- plyr::ldply(reads_list, data.frame) %>% 
   arrange(SampleID, (desc(Reads)))
-trnL_totals <- plyr::ldply(total_list, data.frame)
+ITS2_totals <- plyr::ldply(total_list, data.frame)
 
-write_csv(trnL_reads, "Data/SequencedData/Plants/ProcessedData/trnL_reads.csv")
-write_csv(trnL_totals, "Data/SequencedData/Plants/ProcessedData/trnL_totals.csv")
+write_csv(ITS2_reads, "Data/SequencedData/Plants/ProcessedData/ITS2_reads.csv")
+write_csv(ITS2_totals, "Data/SequencedData/Plants/ProcessedData/ITS2_totals.csv")
