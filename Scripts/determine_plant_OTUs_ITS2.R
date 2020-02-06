@@ -115,8 +115,8 @@ for (i in 1:length(p.list)) {
 OTU_df <- plyr::ldply(OTU_list, data.frame)
 passed_df <- plyr::ldply(p.list, data.frame)
 
-write_csv(OTU_df, "Data/SequencedData/Plants/ProcessedData/ITS2_OTUs.csv")
-write_csv(passed_df, "Data/SequencedData/Plants/ProcessedData/ITS2_passed.csv")
+#write_csv(OTU_df, "Data/SequencedData/Plants/ProcessedData/ITS2_OTUs.csv")
+#write_csv(passed_df, "Data/SequencedData/Plants/ProcessedData/ITS2_passed.csv")
 
 
 
