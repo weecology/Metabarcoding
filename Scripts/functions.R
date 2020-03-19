@@ -31,3 +31,17 @@ add_plot_type <- function(data){
   return(data)
 }
 
+add_plotting_group <- function(data){
+  # create grouping column based on species and plot
+  data$group = NA                     
+  for (i in 1:length(data$species)) {
+    if (data$species[i] %in% c('DO', 'DM')) {
+      data$group[i] = 'Krat'
+    } else if (data$plot[i] %in% c(4, 11, 14, 17)) {
+      data$group[i] = 'PP_control'
+    } else {
+      data$group[i] = 'PP_exclosure'
+    }
+  }
+  return(data)
+}
