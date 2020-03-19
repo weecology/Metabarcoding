@@ -31,4 +31,3 @@ add_plot_type <- function(data){
   return(data)
 }
 
-# convert trnL from reads to proportions #
