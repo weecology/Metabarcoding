@@ -1,5 +1,5 @@
 # FUNCTIONS #
-# 19 Nov 2019
+# April 2020
 # EKB
 
 read_in_trnL_files <- function(path = "Data/SequencedData/Plants/RawData/PreppedFiles/trnL",

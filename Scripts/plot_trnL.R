@@ -46,21 +46,21 @@ groups <- samples %>%
 # NMDS ANALYSIS #
 
 # check coefficient of variation to see if standardization is needed
-cSums <- colSums(reads_spread)
-Sdev <- sd(cSums)
-M <- mean(cSums)
-CV <- (Sdev/M)*100
-
-# scale the data (Z-standardization)
-reads_scaled <- scale(reads_spread)
-
-# detect outliers
-out<-function(x){
-  lier<-x[abs(x)>3]
-  return(lier)
-}
-
-apply(reads_scaled, 2, out)
+# cSums <- colSums(reads_spread)
+# Sdev <- sd(cSums)
+# M <- mean(cSums)
+# CV <- (Sdev/M)*100
+# 
+# # scale the data (Z-standardization)
+# reads_scaled <- scale(reads_spread)
+# 
+# # detect outliers
+# out<-function(x){
+#   lier<-x[abs(x)>3]
+#   return(lier)
+# }
+# 
+# apply(reads_scaled, 2, out)
 
 
 # PLOTTING #
@@ -69,10 +69,10 @@ apply(reads_scaled, 2, out)
 goeveg::dimcheckMDS(reads_scaled, distance = "euclidean", k = 6, trymax = 50)
 
 # use vegan package to run NMDS
-dist_trnL <- metaMDS(reads_spread, distance = "euclidean", trymax = 50, k = 3, 
-                     noshare = TRUE)
-dist_trnL <- metaMDS(reads_spread, distance = "euclidean", trymax = 50, k = 3, 
-                     noshare = TRUE, previous.best = dist_trnL)
+dist_trnL <- metaMDS(reads_spread, distance = "bray", trymax = 250, k = 3, 
+                     noshare = 0.2)
+dist_trnL <- metaMDS(reads_spread, distance = "bray", trymax = 50, k = 3, 
+                     noshare = 0.2, previous.best = dist_trnL)
 stressplot(dist_trnL)
 
 # make dataframe with with MDS values and grouping variable
