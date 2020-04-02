@@ -17,31 +17,12 @@ cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
 
 # DATA PREP #
 
-# add plot type to fecal collection data
-# add group for plotting
-# and remove samples that were part of the trap/bait test
-samples <- add_plot_type(samples) %>% 
-  add_plotting_group() %>% 
-  filter(is.na(notes), year == 2017)
+test_list_noyear <- filter_reads_data(samples, reads, totals)
+test_list_2017 <- filter_reads_data(samples, reads, totals, yr = 2017, rel_reads_min = 0.005)
+test_list_2016 <- filter_reads_data(samples, reads, totals, yr = 2016)
+test_list_noyear_0.005 <- filter_reads_data(samples, reads, totals, rel_reads_min = 0.005)
 
-# select only fecal samples
-fecal_id <- samples$vial_barcode
-
-# add totals to reads df, filter out fecal samples and small totals
-reads <- full_join(reads, totals)
-reads <- reads %>% 
-  filter(SampleID %in% fecal_id) %>% 
-  filter(Total_Reads > 2000) %>% 
-  mutate(Rel_Reads = Reads/Total_Reads)
-
-reads <- select(reads, SampleID, OTU, Rel_Reads)
-reads_spread <- pivot_wider(reads, names_from = OTU, values_from = Rel_Reads)
-reads_spread[is.na(reads_spread)] = 0
-reads_spread <- reads_spread %>% tibble::column_to_rownames("SampleID")
-
-sampleID <- intersect(reads$SampleID, samples$vial_barcode)
-groups <- samples %>% 
-  filter(vial_barcode %in% sampleID)
+test_list2 <- data_prep_for_NMDS(test_list_2017)
 
 # NMDS ANALYSIS #
 
@@ -65,13 +46,18 @@ groups <- samples %>%
 
 # PLOTTING #
 
+#### need to pull out dataframes from test_list2 (or equivalent) 
+#    and set "reads_spread" and "groups"
+
+
+
 # scree plot
-goeveg::dimcheckMDS(reads_scaled, distance = "euclidean", k = 6, trymax = 50)
+goeveg::dimcheckMDS(test_list2[[1]], distance = "euclidean", k = 6, trymax = 50)
 
 # use vegan package to run NMDS
-dist_trnL <- metaMDS(reads_spread, distance = "bray", trymax = 250, k = 3, 
+dist_trnL <- metaMDS(test_list2[[1]], distance = "euclidean", trymax = 250, k = 3, 
                      noshare = 0.2)
-dist_trnL <- metaMDS(reads_spread, distance = "bray", trymax = 50, k = 3, 
+dist_trnL <- metaMDS(test_list2[[1]], distance = "euclidean", trymax = 50, k = 3, 
                      noshare = 0.2, previous.best = dist_trnL)
 stressplot(dist_trnL)
 
