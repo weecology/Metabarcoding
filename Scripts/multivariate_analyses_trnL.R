@@ -1,8 +1,8 @@
-# First Pass at Plotting 
-# Fecal samples, trnL
-# March 2020 EKB
+# Multivariate Attempts
+# EKB
+# May 2020
 
-# LIBRARIES, SOURCE CODE & DATA #
+# LIBRARIES AND DATA #
 
 library(tidyverse)
 library(vegan)
@@ -17,56 +17,38 @@ cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
 
 # DATA PREP #
 
-test_list_noyear <- filter_reads_data(samples, reads, totals)
-test_list_2017 <- filter_reads_data(samples, reads, totals, yr = 2017)
+test_list_2017 <- filter_reads_data(samples, reads, totals, yr = 2017, rel_reads_min = 0.01)
 test_list_2016 <- filter_reads_data(samples, reads, totals, yr = 2016)
 test_list_noyear_0.005 <- filter_reads_data(samples, reads, totals, rel_reads_min = 0.005)
 
+# check this to see if it works
+test_list_2017[[1]] <- test_list2[[1]] %>% select(-OTU150)
+
 test_list2 <- data_prep_multivariate(test_list_2017)
-test_list2[[1]] <- test_list2[[1]] %>% select(-OTU150)
 
-test_list2 <- data_prep_multivariate(test_list_2016)
+# remove outlier (S013067)
+test_list2[[1]] <- test_list2$reads_spread[-105,]
+test_list2[[2]] <- test_list2$sampleID[-105]
+test_list2[[3]] <- test_list2$groups[-105,]
 
-# NMDS ANALYSIS #
+test_list2_binary <- binarize(test_list2[[1]])
 
-# check coefficient of variation to see if standardization is needed
-# cSums <- colSums(reads_spread)
-# Sdev <- sd(cSums)
-# M <- mean(cSums)
-# CV <- (Sdev/M)*100
-# 
-# # scale the data (Z-standardization)
-# reads_scaled <- scale(reads_spread)
-# 
-# # detect outliers
-# out<-function(x){
-#   lier<-x[abs(x)>3]
-#   return(lier)
-# }
-# 
-# apply(reads_scaled, 2, out)
-
-
-# PLOTTING #
-
-#### need to pull out dataframes from test_list2 (or equivalent) 
-#    and set "reads_spread" and "groups"
-
-
+#===============================================================================
+# Non-metric Dimensional Scaling (NMDS) #
+#===============================================================================
 
 # scree plot
-goeveg::dimcheckMDS(test_list2[[1]], distance = "euclidean", k = 6, trymax = 50)
+goeveg::dimcheckMDS(test_list2[[1]], distance = "bray", k = 6, trymax = 50)
 
 # use vegan package to run NMDS
-dist_trnL <- metaMDS(test_list2[[1]], distance = "bray", trymax = 250, k = 2)
-dist_trnL_converge <- run_metaMDS_til_converge(test_list2, dist_trnL, "bray", 3)
+dist_trnL <- metaMDS(test_list2[[1]], distance = "bray", trymax = 250, k = 3)
+dist_trnL_converge <- run_metaMDS_til_converge(test_list2[[1]], dist_trnL, "euclidean", 3)
 
-
-stressplot(dist_trnL_converge)
-
-groups <- test_list2[[3]]
+stressplot(dist_trnL)
 
 # make dataframe with with MDS values and grouping variable
+groups <- test_list2[[3]]
+
 NMDS <- data.frame(MDS1 = dist_trnL$points[,1], 
                    MDS2 = dist_trnL$points[,2], 
                    group = groups$group)
@@ -104,9 +86,30 @@ ggplot(data = NMDS, aes(x = MDS1, y = MDS2)) +
   theme_bw() +
   theme(legend.position = 'none')
 
-# run PERMANOVA
-group = as.matrix(groups$group)
-permtrnL <- adonis(reads_spread ~ group, permutations = 10000)
-permtrnL
-hist(permtrnL$f.perms)
-points(permtrnL$aov.tab$F.Model[1], 0 , pch = 19, col = "red", bg = "red", cex = 2)
+# NMDS NOTES
+
+# 2017 is the one providing issues
+# euclidean (maybe bray-curtis) for rel abundance; jaccard or bray for binary
+# at rel_read_abund = 0.01, k = 3 on binary 2017 data, we get convergence
+#   - with outlier (S013067) removed
+#   - it shows basically the exact same thing as rel abundance but with convergence!
+
+
+
+
+
+
+
+#===============================================================================
+# Principle Components Analysis (PCA)
+#===============================================================================
+
+
+#===============================================================================
+# Detrended Correspondance Analysis (DCA)
+#===============================================================================
+
+library("ca")
+
+ca_test <- ca(test_list2[[1]])
+plot(ca_test)
