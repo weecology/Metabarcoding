@@ -82,7 +82,7 @@ filter_reads_data <- function(samples,
   
 }
 
-data_prep_for_NMDS <- function(list){
+data_prep_multivariate <- function(list){
   
   samples <- list[[1]]
   reads <- list[[3]]
@@ -96,9 +96,27 @@ data_prep_for_NMDS <- function(list){
   sampleID <- intersect(reads$SampleID, samples$vial_barcode)
   groups <- samples %>% 
     filter(vial_barcode %in% sampleID)
+  groups <- groups[match(sampleID, groups$vial_barcode),]
   
   return_list <- list(reads_spread, sampleID, groups)
   names(return_list) <- c("reads_spread", "sampleID", "groups")
   return(return_list)
   
+}
+
+run_metaMDS_til_converge <- function(df, prev_best, dist_metric, n) {
+  repeat {
+    # do something
+    prev_best <- metaMDS(df, distance = dist_metric, 
+                         trymax = 50, k = n, 
+                         previous.best = prev_best)
+    # exit if condition is met
+    if (prev_best$converged == TRUE) break
+  }
+  return(prev_best)
+}
+
+binarize <- function(df){
+  df[df > 0] <- 1
+  return(df)
 }
