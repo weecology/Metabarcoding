@@ -29,3 +29,4 @@ taxa_data_ITS2 <- rename(taxa_data, Domain = k, Clade1 = p, Class = c,
                          Order = o, Family = f, Genus = g, Species = s) %>% 
   na_if("None")
 
+# What do we do with the "unclassified" data? Remove it?
