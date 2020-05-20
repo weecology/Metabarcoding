@@ -36,8 +36,9 @@ for(this_level in c('d','k','p','c','o','f','g','s')){
   # this only works for some data (sep = ':')
   step_one = sapply(strsplit(as.character(df2$ConsensusLineage), paste0(this_level,':')), 
                     '[', 2)
-  step_two = sapply(strsplit(step_one, ';'), '[', 1)
-  df2[,this_level] = step_two
+  step_two = sapply(strsplit(step_one, ','), '[', 1)
+  step_three = sapply(strsplit(step_two, ';'), '[', 1)
+  df2[,this_level] = step_three
 
 }
 
@@ -48,4 +49,3 @@ taxa_data_trnL <- bind_rows(df1, df2)
 taxa_data_trnL <- rename(taxa_data_trnL, Kingdom = d, Clade1 = k, Clade2 = p, 
                          Order = c, Family = o, Subfamily = f, Genus = g, Species = s) %>% 
   na_if("")
-
