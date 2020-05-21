@@ -1,5 +1,5 @@
 ---
-title: "NMDS Plotting -- trnL"
+title: "NMDS Plotting: trnL"
 author: "Ellen Bledsoe"
 date: "5/20/2020"
 output: html_document
@@ -9,10 +9,9 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-# Various Plotting Iterations of NMDS -- trnL data
-
-```{r libraries and functions}
+```{r libraries and functions, echo = FALSE, include = FALSE}
 library(tidyverse)
+library(vegan)
 source('functions.R')
 ```
 
@@ -24,4 +23,3 @@ You can also embed plots, for example:
 plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
