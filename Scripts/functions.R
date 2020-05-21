@@ -47,6 +47,94 @@ add_plotting_group <- function(data){
 }
 
 
+summarize_trnL_by_WeeTU <- function(data, col_quotes, col_no_quotes){
+  
+  # make dataframe with all unique species
+  all_species <- data %>% 
+    subset(., !duplicated(WTU.species)) %>% 
+    select(Kingdom:WTU.species)
+  
+  # select unique values to specified taxa level
+  if (col_quotes %in% c("Species", "WTU.species")) {
+    all_taxa <- all_species
+  } else if (col_quotes %in% c("Genus", "WTU.genus")) {
+    all_taxa <- all_species %>% select(-Species, -WTU.species)
+  } else if (col_quotes %in% c("Subfamily", "WTU.subfamily")) {
+    all_taxa <- all_species %>% select(-Species, -WTU.species,
+                                       -Genus, -WTU.genus)
+  } else if (col_quotes %in% c("Family", "WTU.family")) {
+    all_taxa <- all_species %>% select(-Species, -WTU.species,
+                                       -Genus, -WTU.genus,
+                                       -Subfamily, -WTU.subfamily)
+  } else if (col_quotes %in% c("Order", "WTU.order")) {
+    all_taxa <- all_species %>% select(-Species, -WTU.species,
+                                       -Genus, -WTU.genus,
+                                       -Subfamily, WTU.subfamily,
+                                       -Family, -WTU.family)
+  } else if (col_quotes %in% c("Clade2", "WTU.clade2")) {
+    all_taxa <- all_species %>% select(Kingdom, WTU.kingdom,
+                                       Clade1, WTU.clade1,
+                                       Clade2, WTU.clade2)
+  } else if (col_quotes %in% c("Clade1", "WTU.clade1")) {
+    all_taxa <- all_species %>% select(Kingdom, WTU.kingdom, Clade1, WTU.clade1)
+  } else  {
+    all_taxa <- all_species %>% select(Kingdom, WTU.kingdom)
+  }
+  
+  column <- enquo(col_no_quotes)
+  
+  sum <- data %>%
+    group_by(SampleID, !! column) %>%
+    summarise(Reads = sum(Reads))
+  sum <- left_join(sum, all_taxa) %>% distinct()
+  
+  return(sum)
+  
+}
+
+
+summarize_ITS2_by_WeeTU <- function(data, col_quotes, col_no_quotes){
+  
+  # make dataframe with all unique species
+  all_species <- data %>% 
+    subset(., !duplicated(WTU.species)) %>% 
+    select(Domain:WTU.species)
+  
+  # select unique values to specified taxa level
+  if (col_quotes %in% c("Species", "WTU.species")) {
+    all_taxa <- all_species
+  } else if (col_quotes %in% c("Genus", "WTU.genus")) {
+    all_taxa <- all_species %>% select(-Species, -WTU.species)
+  } else if (col_quotes %in% c("Family", "WTU.family")) {
+    all_taxa <- all_species %>% select(-Species, -WTU.species,
+                                       -Genus, -WTU.genus)
+  } else if (col_quotes %in% c("Order", "WTU.order")) {
+    all_taxa <- all_species %>% select(-Species, -WTU.species,
+                                       -Genus, -WTU.genus,
+                                       - Family, -WTU.family)
+  } else if (col_quotes %in% c("Class", "WTU.class")) {
+    all_taxa <- all_species %>% select(-Species, -WTU.species,
+                                       -Genus, -WTU.genus,
+                                       -Family, -WTU.family,
+                                       -Order, -WTU.order)
+  } else if (col_quotes %in% c("Clade1", "WTU.clade1")) {
+    all_taxa <- all_species %>% select(Domain, WTU.domain, Clade1, WTU.clade1)
+  } else  {
+    all_taxa <- all_species %>% select(Domain, WTU.domain)
+  }
+  
+  column <- enquo(col_no_quotes)
+  
+  sum <- data %>%
+    group_by(SampleID, !! column) %>%
+    summarise(Reads = sum(Reads))
+  sum <- left_join(sum, all_taxa) %>% distinct()
+  
+  return(sum)
+  
+}
+
+
 filter_reads_data <- function(samples,
                               reads,
                               totals,
