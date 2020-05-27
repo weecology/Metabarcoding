@@ -1,7 +1,7 @@
 ---
 title: "NMDS Plotting: trnL"
 author: "Ellen Bledsoe"
-date: "5/20/2020"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
 
@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r libraries, functions, and data, echo = FALSE, include = FALSE}
+```{r libraries_functions_data, echo = FALSE, include = FALSE}
 library(tidyverse)
 library(vegan)
 source('functions.R')
@@ -23,17 +23,17 @@ cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
 ```
 
 ## Example Plot 
-### Fall 2017 data
+### Spring 2017 data
 * total reads minimum = 2000
-* relative reads minimum = 0.01
+* relative reads minimum = 0.05
 * OTU 150 (millet) removed (probably need to remove others, too)
 * outlier also removed (SO13067)
 
 ```{r data_prep, echo = FALSE, include = FALSE}
 # DATA PREP #
 
-test_list_2017 <- filter_reads_data(samples, reads, totals, 
-                                    yr = 2017, rel_reads_min = 0.01)
+test_list_2017 <- filter_reads_data(samples, reads, totals, reads_min = 2000,
+                                    yr = 2017, rel_reads_min = 0.05)
 test_list2 <- data_prep_multivariate(test_list_2017)
 
 # remove OTU150 (millet)
@@ -48,62 +48,8 @@ test_list2[[3]] <- test_list2$groups[-105,]
 test_list2_binary <- binarize(test_list2[[1]])
 ```
 
-### 
-```{r NMDS code, include = FALSE}
-
-# scree plot
-goeveg::dimcheckMDS(test_list2_binary, distance = "bray", 
-                    k = 6, trymax = 50)
-
-# use vegan package to run NMDS
-dist_trnL <- metaMDS(test_list2_binary, distance = "bray", trymax = 250, k = 3)
-#dist_trnL_converge <- run_metaMDS_til_converge(test_list2_binary[[1]], 
-#                                               dist_trnL, "bray", 3)
-stressplot(dist_trnL)
+```{r test, include = TRUE}
+NMDS_plotting_prep(test_list2, dist_trnL) %>% 
+plot_NMDS_ggplot2()
 ```
-```{r run NMDS, include = FALSE}
-# make dataframe with with MDS values and grouping variable
-groups <- test_list2[[3]]
 
-NMDS <- data.frame(MDS1 = dist_trnL$points[,1], 
-                   MDS2 = dist_trnL$points[,2], 
-                   group = groups$group)
-
-# get mean point for each group
-NMDS.mean <- aggregate(NMDS[,1:2], list(group = groups$group), mean)
-
-# save results of ordiellipse() as an object
-plot(dist_trnL$points)
-ord <- ordiellipse(dist_trnL, 
-                   groups$group, 
-                   display = "sites", 
-                   kind = "se", 
-                   conf = 0.95, 
-                   label = T)
-
-# plot using ggplot 
-df_ell <- data.frame()
-for(g in levels(NMDS$group)) {
-  df_ell <-
-    rbind(df_ell, cbind(as.data.frame(with(
-      NMDS[NMDS$group == g,],
-      vegan:::veganCovEllipse(ord[[g]]$cov, ord[[g]]$center, ord[[g]]$scale)
-    )),
-    group = g))
-}
-```
-```{r plot NMDS in ggplot2, include = TRUE}
-ggplot(data = NMDS, aes(x = MDS1, y = MDS2)) + 
-  geom_point(aes(color = group)) +
-  geom_path(data = df_ell, aes(x = NMDS1, y = NMDS2, colour = group), 
-            size = 1) +
-  geom_text(aes(x = NMDS.mean$MDS1[1], y = NMDS.mean$MDS2[1], 
-                label = NMDS.mean$group[1], color = NMDS.mean$group[1])) +
-  geom_text(aes(x = NMDS.mean$MDS1[2], y = NMDS.mean$MDS2[2], 
-                label = NMDS.mean$group[2], color = NMDS.mean$group[2])) +
-  geom_text(aes(x = NMDS.mean$MDS1[3], y = NMDS.mean$MDS2[3], 
-                label = NMDS.mean$group[3], color = NMDS.mean$group[3])) +
-  scale_color_manual(values = cbPalette) +
-  theme_bw() +
-  theme(legend.position = 'none')
-```
