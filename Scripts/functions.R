@@ -1,6 +1,7 @@
 # FUNCTIONS #
-# April 2020
+# May 2020
 # EKB
+
 
 read_in_trnL_files <- function(path = "Data/SequencedData/Plants/RawData/PreppedFiles/trnL",
                                files = dir(path, pattern = "*.csv")){
@@ -10,6 +11,7 @@ read_in_trnL_files <- function(path = "Data/SequencedData/Plants/RawData/Prepped
   return(data)
 }
 
+
 read_in_ITS2_files <- function(path = "Data/SequencedData/Plants/RawData/PreppedFiles/ITS2",
                                files = dir(path, pattern = "*.csv")){
   # this function reads all CSV files from set path and puts them in a list
@@ -17,6 +19,7 @@ read_in_ITS2_files <- function(path = "Data/SequencedData/Plants/RawData/Prepped
     map(~ read_csv(file.path(path, .)))
   return(data)
 }
+
 
 add_plot_type <- function(data){
   # add plot type to dataset -- control or KR exclosure
@@ -30,6 +33,7 @@ add_plot_type <- function(data){
   }
   return(data)
 }
+
 
 add_plotting_group <- function(data){
   # create grouping column based on species and plot
@@ -170,7 +174,11 @@ filter_reads_data <- function(samples,
   
 }
 
+
 data_prep_multivariate <- function(list){
+  
+  # this function preps data for running NMDS
+  # list argument is output from `filter_reads_data` fxn
   
   samples <- list[[1]]
   reads <- list[[3]]
@@ -192,6 +200,7 @@ data_prep_multivariate <- function(list){
   
 }
 
+
 run_metaMDS_til_converge <- function(df, prev_best, dist_metric, n) {
   repeat {
     # do something
@@ -204,7 +213,81 @@ run_metaMDS_til_converge <- function(df, prev_best, dist_metric, n) {
   return(prev_best)
 }
 
+
 binarize <- function(df){
   df[df > 0] <- 1
   return(df)
+}
+
+
+NMDS_plotting_prep <- function(data_list, dist_matrix) {
+  
+  # this function makes ellipses for plotting and gets perMANOVA values
+  # data_list = output of `data_prep_multivariate` fxn
+  
+  # make dataframe with with MDS values and grouping variable
+  groups <- data_list[[3]]
+  NMDS <- data.frame(MDS1 = dist_matrix$points[,1], 
+                     MDS2 = dist_matrix$points[,2], 
+                     group = groups$group)
+  
+  # get mean point for each group
+  NMDS.mean <- aggregate(NMDS[,1:2], list(group = groups$group), mean)
+  
+  # save results of ordiellipse() as an object
+  plot(dist_matrix$points)
+  ord <- ordiellipse(dist_matrix, 
+                     groups$group, 
+                     display = "sites", 
+                     kind = "se", 
+                     conf = 0.95, 
+                     label = T)
+  
+  # make ellipses dataframe for ggplot2 
+  df_ell <- data.frame()
+  for(g in levels(NMDS$group)) {
+    df_ell <-
+      rbind(df_ell, cbind(as.data.frame(with(
+        NMDS[NMDS$group == g,],
+        vegan:::veganCovEllipse(ord[[g]]$cov, ord[[g]]$center, ord[[g]]$scale)
+      )),
+      group = g))
+  }
+  
+  # run perMANOVA
+  group = as.matrix(groups$group)
+  perMANOVA_output <- adonis(data_list[[1]] ~ group, permutations = 10000)
+  
+  # list of objects to return
+  return_list <- list(NMDS, NMDS.mean, df_ell, perMANOVA_output)
+  names(return_list) <- c("NMDS", "NMDS.mean", "df_ell", "perMANOVA_output")
+  return(return_list)
+  
+}
+
+
+plot_NMDS_ggplot2 <- function(NMDS_list) {
+  
+  # NMDS_list is output list from `NMDS_plotting_prep`
+  
+  # ggplot of NMDS
+  ggplot(data = NMDS_list[[1]], aes(x = MDS1, y = MDS2)) + 
+    geom_point(aes(color = group)) +
+    geom_path(data = NMDS_list[[3]], aes(x = NMDS1, y = NMDS2, colour = group), 
+              size = 1) +
+    geom_text(aes(x = NMDS_list[[2]]$MDS1[1], y = NMDS_list[[2]]$MDS2[1], 
+                  label = NMDS_list[[2]]$group[1], color = NMDS_list[[2]]$group[1])) +
+    geom_text(aes(x = NMDS_list[[2]]$MDS1[2], y = NMDS_list[[2]]$MDS2[2], 
+                  label = NMDS_list[[2]]$group[2], color = NMDS_list[[2]]$group[2])) +
+    geom_text(aes(x = NMDS_list[[2]]$MDS1[3], y = NMDS_list[[2]]$MDS2[3], 
+                  label = NMDS_list[[2]]$group[3], color = NMDS_list[[2]]$group[3])) +
+    scale_color_manual(values = cbPalette) +
+    theme_bw() +
+    theme(legend.position = 'none',
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank()) +
+    annotate(geom = "text", x = Inf, y = Inf, hjust = 1.1, vjust= 1.2,
+             label = paste("atop(' F.model = '*", round(NMDS_list[[4]]$aov.tab$F.Model[1], 2),"
+                         ,' p = '*", round(NMDS_list[[4]]$aov.tab$`Pr(>F)`[1], 4),")"), parse=T)
+  
 }
