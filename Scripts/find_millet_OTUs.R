@@ -66,3 +66,7 @@ millet_OTUs_ITS2_pani.mili.only <- reads_WTU_ITS2 %>%
 
 # no.hirt and pani.mili.only are almost identical (6095 OTUs vs. 5984 OTUs)
 # probably best to be conservative, so will go with no.hirt
+
+rm(reads_WTU, reads_WTU_ITS2, all_OTU_WTU, all_OTU_WTU_ITS2, 
+   all_species, all_species_ITS2, millet_WTU.genus, millet_WTU.sp_ITS2,
+   millet_OTUs_ITS2_pani.mili.only)
