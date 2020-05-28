@@ -162,7 +162,42 @@ filter_reads_data_trnL <- function(samples,
   # and make relative reads column
   reads <- full_join(reads, totals)
   reads <- reads %>% 
-    filter(SampleID %in% fecal_id, OTU != "OTU150") %>% 
+    filter(SampleID %in% fecal_id, !OTU %in% millet_OTUs$OTU) %>% 
+    mutate(Rel_Reads = Reads/Total_Reads)
+  
+  # filter data by minimum total reads and/or minimum relative reads
+  reads <- reads %>% 
+    filter(Total_Reads >= reads_min, Rel_Reads >= rel_reads_min)
+  
+  return_list <- list(samples, fecal_id, reads)
+  names(return_list) <- c("samples", "fecal_id", "reads")
+  return(return_list)
+  
+}
+
+filter_reads_data_ITS2 <- function(samples,
+                                   reads,
+                                   totals,
+                                   yr = c(2016, 2017),
+                                   reads_min = 2000,
+                                   rel_reads_min = 0.001){
+  
+  # add plot type to fecal collection data
+  # add group for plotting
+  # and remove samples that were part of the trap/bait test
+  samples <- add_plot_type(samples) %>% 
+    add_plotting_group() %>% 
+    filter(is.na(notes), year %in% yr) 
+  
+  # select only fecal samples
+  fecal_id <- samples$vial_barcode
+  
+  # add totals to reads df
+  # select only fecal samples and remove millet OTUs
+  # and make relative reads column
+  reads <- full_join(reads, totals)
+  reads <- reads %>% 
+    filter(SampleID %in% fecal_id, !OTU %in% millet_OTUs_ITS2_no.hirt$OTU) %>% 
     mutate(Rel_Reads = Reads/Total_Reads)
   
   # filter data by minimum total reads and/or minimum relative reads
