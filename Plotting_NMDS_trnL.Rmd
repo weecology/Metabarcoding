@@ -26,3 +26,12 @@ source('Scripts/NMDS_for_markdown_trnL.R')
 patchwork
 ```
 
+## Plot 2
+* 2016 data
+* binary (presence/absence)
+* trnL 
+* all potential millet removed
+
+```{r figure2, include = TRUE}
+patchwork_2016
+```
