@@ -12,8 +12,15 @@ knitr::opts_chunk$set(echo = FALSE)
 ```{r libraries_functions_data, echo = FALSE, include = FALSE}
 # maybe move Rmd file to general folder rather than in scripts
 # might fix some of the issues we're dealing with here
-source('NMDS_for_markdown_trnL.R')
+source('Scripts/NMDS_for_markdown_trnL.R')
+# and maybe save results as data so it doesn't have to process every time I want to try to render?
 ```
+
+## Plot 1
+* 2017 data
+* binary (presence/absence)
+* trnL 
+* all potential millet removed
 
 ```{r figure1, include = TRUE}
 patchwork
