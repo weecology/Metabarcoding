@@ -308,21 +308,24 @@ plot_NMDS_ggplot2 <- function(NMDS_list) {
   
   # ggplot of NMDS
   plot <- ggplot(data = NMDS_list[[1]], aes(x = MDS1, y = MDS2)) + 
-    geom_point(aes(color = group)) +
+    geom_point(aes(color = group), size = 0.5) +
     geom_path(data = NMDS_list[[3]], aes(x = NMDS1, y = NMDS2, colour = group), 
-              size = 1) +
+              size = 0.5) +
     geom_text(aes(x = NMDS_list[[2]]$MDS1[1], y = NMDS_list[[2]]$MDS2[1], 
-                  label = NMDS_list[[2]]$group[1], color = NMDS_list[[2]]$group[1])) +
+                  label = NMDS_list[[2]]$group[1], color = NMDS_list[[2]]$group[1]),
+              size = 1) +
     geom_text(aes(x = NMDS_list[[2]]$MDS1[2], y = NMDS_list[[2]]$MDS2[2], 
-                  label = NMDS_list[[2]]$group[2], color = NMDS_list[[2]]$group[2])) +
+                  label = NMDS_list[[2]]$group[2], color = NMDS_list[[2]]$group[2]),
+              size = 1) +
     geom_text(aes(x = NMDS_list[[2]]$MDS1[3], y = NMDS_list[[2]]$MDS2[3], 
-                  label = NMDS_list[[2]]$group[3], color = NMDS_list[[2]]$group[3])) +
+                  label = NMDS_list[[2]]$group[3], color = NMDS_list[[2]]$group[3]),
+              size = 1) +
     scale_color_manual(values = cbPalette) +
     theme_bw() +
     theme(legend.position = 'none',
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank()) +
-    annotate(geom = "text", x = Inf, y = Inf, hjust = 1.1, vjust= 1.2,
+    annotate(geom = "text", x = Inf, y = Inf, hjust = 1.1, vjust= 1.2, size = 2,
              label = paste("atop(' F.model = '*", round(NMDS_list[[4]]$aov.tab$F.Model[1], 2),"
                          ,' p = '*", round(NMDS_list[[4]]$aov.tab$`Pr(>F)`[1], 4),")"), parse=T)
   
