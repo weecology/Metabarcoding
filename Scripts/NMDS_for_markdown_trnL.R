@@ -16,27 +16,112 @@ cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
 
 # DATA PREP #
 
-test_list_2017 <- filter_reads_data(samples, reads, totals, reads_min = 2000,
-                                    yr = 2017, rel_reads_min = 0.05)
-test_list2 <- data_prep_multivariate(test_list_2017)
+# OTUs
 
-# remove OTU150 (millet)
-test_list2[[1]] <- test_list2[[1]] %>% select(-OTU150)
+# 2017, 1000, 0.01
+data_2017_1000_0.01 <- filter_reads_data_trnL(samples, reads, totals, 
+                                              reads_min = 1000, yr = 2017, 
+                                              rel_reads_min = 0.01) %>% 
+  data_prep_multivariate()
+data_2017_1000_0.01[[1]] <- binarize(data_2017_1000_0.01[[1]])
+
+dist_trnL <- metaMDS(data_2017_1000_0.01[[1]], distance = "euclidean", trymax = 250, k = 3)
+(plot_2017_1000_0.01 <- NMDS_plotting_prep(data_2017_1000_0.01, dist_trnL) %>% 
+    plot_NMDS_ggplot2())
+
+# 2017, 1000, 0.05
+data_2017_1000_0.05 <- filter_reads_data_trnL(samples, reads, totals, 
+                                              reads_min = 1000, yr = 2017, 
+                                              rel_reads_min = 0.05) %>% 
+  data_prep_multivariate()
+data_2017_1000_0.05[[1]] <- binarize(data_2017_1000_0.05[[1]])
+
+dist_trnL <- metaMDS(data_2017_1000_0.05[[1]], distance = "euclidean", trymax = 250, k = 3)
+(plot_2017_1000_0.05 <- NMDS_plotting_prep(data_2017_1000_0.05, dist_trnL) %>% 
+    plot_NMDS_ggplot2())
+
+# 2017, 1000, 0.1
+data_2017_1000_0.1 <- filter_reads_data_trnL(samples, reads, totals, 
+                                             reads_min = 1000, yr = 2017, 
+                                             rel_reads_min = 0.1) %>% 
+  data_prep_multivariate()
+data_2017_1000_0.1[[1]] <- binarize(data_2017_1000_0.1[[1]])
+
+dist_trnL <- metaMDS(data_2017_1000_0.1[[1]], distance = "euclidean", trymax = 250, k = 3)
+(plot_2017_1000_0.1 <- NMDS_plotting_prep(data_2017_1000_0.1, dist_trnL) %>% 
+    plot_NMDS_ggplot2())
+
+# 2017, 2000, 0.01
+data_2017_2000_0.01 <- filter_reads_data_trnL(samples, reads, totals, 
+                                              reads_min = 2000, yr = 2017, 
+                                              rel_reads_min = 0.01) %>% 
+  data_prep_multivariate()
+data_2017_2000_0.01[[1]] <- binarize(data_2017_2000_0.01[[1]])
+
+dist_trnL <- metaMDS(data_2017_2000_0.01[[1]], distance = "euclidean", trymax = 250, k = 3)
+(plot_2017_2000_0.01 <- NMDS_plotting_prep(data_2017_2000_0.01, dist_trnL) %>% 
+    plot_NMDS_ggplot2())
+
+# 2017, 2000, 0.05
+data_2017_2000_0.05 <- filter_reads_data_trnL(samples, reads, totals, 
+                                              reads_min = 2000, yr = 2017, 
+                                              rel_reads_min = 0.05) %>% 
+  data_prep_multivariate()
+data_2017_2000_0.05[[1]] <- binarize(data_2017_2000_0.05[[1]])
+
+dist_trnL <- metaMDS(data_2017_2000_0.05[[1]], distance = "euclidean", trymax = 250, k = 3)
+(plot_2017_2000_0.05 <- NMDS_plotting_prep(data_2017_2000_0.05, dist_trnL) %>% 
+    plot_NMDS_ggplot2())
+
+# 2017, 2000, 0.1
+data_2017_2000_0.1 <- filter_reads_data_trnL(samples, reads, totals, 
+                                              reads_min = 2000, yr = 2017, 
+                                              rel_reads_min = 0.1) %>% 
+  data_prep_multivariate()
+data_2017_2000_0.1[[1]] <- binarize(data_2017_2000_0.1[[1]])
+
+dist_trnL <- metaMDS(data_2017_2000_0.1[[1]], distance = "euclidean", trymax = 250, k = 3)
+(plot_2017_2000_0.1 <- NMDS_plotting_prep(data_2017_2000_0.1, dist_trnL) %>% 
+    plot_NMDS_ggplot2())
+
+# 2017, 5000, 0.01
+data_2017_5000_0.01 <- filter_reads_data_trnL(samples, reads, totals, 
+                                              reads_min = 5000, yr = 2017, 
+                                              rel_reads_min = 0.01) %>% 
+  data_prep_multivariate()
+data_2017_5000_0.01[[1]] <- binarize(data_2017_5000_0.01[[1]])
+
+dist_trnL <- metaMDS(data_2017_5000_0.01[[1]], distance = "euclidean", trymax = 250, k = 3)
+(plot_2017_5000_0.01 <- NMDS_plotting_prep(data_2017_5000_0.01, dist_trnL) %>% 
+    plot_NMDS_ggplot2())
+
+# 2017, 5000, 0.05
+data_2017_5000_0.05 <- filter_reads_data_trnL(samples, reads, totals, 
+                                              reads_min = 5000, yr = 2017, 
+                                              rel_reads_min = 0.05) %>% 
+  data_prep_multivariate()
+data_2017_5000_0.05[[1]] <- binarize(data_2017_5000_0.05[[1]])
+
+dist_trnL <- metaMDS(data_2017_5000_0.05[[1]], distance = "euclidean", trymax = 250, k = 3)
+(plot_2017_5000_0.05 <- NMDS_plotting_prep(data_2017_5000_0.05, dist_trnL) %>% 
+    plot_NMDS_ggplot2())
+
+# 2017, 5000, 0.1
+data_2017_5000_0.1 <- filter_reads_data_trnL(samples, reads, totals, 
+                                             reads_min = 5000, yr = 2017, 
+                                             rel_reads_min = 0.1) %>% 
+  data_prep_multivariate()
+data_2017_5000_0.1[[1]] <- binarize(data_2017_5000_0.1[[1]])
+
+dist_trnL <- metaMDS(data_2017_5000_0.1[[1]], distance = "euclidean", trymax = 250, k = 3)
+(plot_2017_5000_0.1 <- NMDS_plotting_prep(data_2017_5000_0.1, dist_trnL) %>% 
+    plot_NMDS_ggplot2())
+
+
+
+# WORKING AREA ================================================================#
 
 # remove outlier (S013067)
-test_list2[[1]] <- test_list2$reads_spread[-105,]
-test_list2[[2]] <- test_list2$sampleID[-105]
-test_list2[[3]] <- test_list2$groups[-105,]
-
-# make binary
-test_list2[[1]] <- binarize(test_list2[[1]])
-
-# RUN NMDS #
-dist_trnL <- metaMDS(test_list2[[1]], distance = "bray", trymax = 250, k = 2)
-# dist_trnL_converge <- run_metaMDS_til_converge(test_list2, dist_trnL, "bray", 2)
-stressplot(dist_trnL)
-
-# PLOT NMDS # 
-NMDS_list <- NMDS_plotting_prep(test_list2, dist_trnL) 
-plot_NMDS_ggplot2(NMDS_list)
-
+# data_2017_2000_0.05[[1]] <- data_2017_2000_0.05$reads_spread[-99,]
+# data_2017_2000_0.05[[2]] <- data_2017_2000_0.05$sampleID[-99]
+# data_2017_2000_0.05[[3]] <- data_2017_2000_0.05$groups[-99,]
