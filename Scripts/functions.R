@@ -2,6 +2,7 @@
 # May 2020
 # EKB
 
+source('Scripts/find_millet_OTUs.R')
 
 read_in_trnL_files <- function(path = "Data/SequencedData/Plants/RawData/PreppedFiles/trnL",
                                files = dir(path, pattern = "*.csv")){
@@ -139,7 +140,7 @@ summarize_ITS2_by_WeeTU <- function(data, col_quotes, col_no_quotes){
 }
 
 
-filter_reads_data <- function(samples,
+filter_reads_data_trnL <- function(samples,
                               reads,
                               totals,
                               yr = c(2016, 2017),
@@ -157,11 +158,11 @@ filter_reads_data <- function(samples,
   fecal_id <- samples$vial_barcode
   
   # add totals to reads df
-  # select only fecal samples
+  # select only fecal samples and remove millet OTUs
   # and make relative reads column
   reads <- full_join(reads, totals)
   reads <- reads %>% 
-    filter(SampleID %in% fecal_id) %>% 
+    filter(SampleID %in% fecal_id, OTU != "OTU150") %>% 
     mutate(Rel_Reads = Reads/Total_Reads)
   
   # filter data by minimum total reads and/or minimum relative reads
@@ -271,7 +272,7 @@ plot_NMDS_ggplot2 <- function(NMDS_list) {
   # NMDS_list is output list from `NMDS_plotting_prep`
   
   # ggplot of NMDS
-  ggplot(data = NMDS_list[[1]], aes(x = MDS1, y = MDS2)) + 
+  plot <- ggplot(data = NMDS_list[[1]], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group)) +
     geom_path(data = NMDS_list[[3]], aes(x = NMDS1, y = NMDS2, colour = group), 
               size = 1) +
@@ -289,5 +290,7 @@ plot_NMDS_ggplot2 <- function(NMDS_list) {
     annotate(geom = "text", x = Inf, y = Inf, hjust = 1.1, vjust= 1.2,
              label = paste("atop(' F.model = '*", round(NMDS_list[[4]]$aov.tab$F.Model[1], 2),"
                          ,' p = '*", round(NMDS_list[[4]]$aov.tab$`Pr(>F)`[1], 4),")"), parse=T)
+  
+  return(plot)
   
 }
