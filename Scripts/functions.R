@@ -435,12 +435,13 @@ prep_2017_allsp_relabund_ITS2 <- function(samples, reads, totals, reads_min, yr,
   data[[1]] <- binarize(data[[1]])
   
   # remove outliers
+  # "S008810", "S010014"
   data[[1]] <- 
-    data[[1]][!(row.names(data[[1]]) %in% c("S010044", "S008810", "S010014")),]
+    data[[1]][!(row.names(data[[1]]) %in% c("S010044", "S013041")),]
   data[[2]] <- 
-    data[[2]][!data[[2]] %in% c("S010044", "S008810", "S010014")]
+    data[[2]][!data[[2]] %in% c("S010044", "S013041")]
   data[[3]] <- 
-    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010044", "S008810", "S010014"),]
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010044", "S013041"),]
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
@@ -526,6 +527,23 @@ prep_2016_allsp_relabund_ITS2 <- function(samples, reads, totals, reads_min, yr,
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate()
   data[[1]] <- binarize(data[[1]])
+  
+  if (rel_reads_min  <= 0.025){
+    data[[1]] <- 
+      data[[1]][!(row.names(data[[1]]) %in% c("S008824")),]
+    data[[2]] <- 
+      data[[2]][!data[[2]] %in% c("S008824")]
+    data[[3]] <- 
+      data[[3]][!(data[[3]]$vial_barcode) %in% c("S008824"),]
+  } else {
+    data[[1]] <- 
+      data[[1]][!(row.names(data[[1]]) %in% c("S008824", "S008844", "S008847")),]
+    data[[2]] <- 
+      data[[2]][!data[[2]] %in% c("S008824", "S008844", "S008847")]
+    data[[3]] <- 
+      data[[3]][!(data[[3]]$vial_barcode) %in% c("S008824", "S008844", "S008847"),]
+  }
+  
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 

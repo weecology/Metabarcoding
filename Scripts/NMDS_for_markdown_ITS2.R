@@ -9,7 +9,7 @@ library(vegan)
 library(patchwork)
 source('Scripts/functions.R')
 
-reads <- read_csv("Data/SequencedData/Plants/ProcessedData/ITS2_reads_WeeTU.csv.csv")
+reads <- read_csv("Data/SequencedData/Plants/ProcessedData/ITS2_reads_WeeTU.csv")
 totals <- read_csv("Data/SequencedData/Plants/ProcessedData/ITS2_totals.csv")
 samples <- read_csv("Data/CollectionData/fecal_sample_collection.csv")
 
@@ -18,17 +18,20 @@ cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
 
 # DATA PREP #
 
+# get plant OTUs only
+reads <- filter(reads, WTU.clade1 == 4) %>% 
+  select(OTU:DataFrame)
+
 # only PPs
 samples_PP <- samples %>% filter(species == 'PP')
 
 
-# !!! Need to filter out unclassified and bacteria reads !!!
-#     Do this before using the data. Will need to remove taxa columns afterwards
-
 # Plot 1 #
 # OTUs, 2017 ------------------------------------------------------------------#
 
-dat1 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.01)
+# outliers are proving to be confusing
+
+dat1 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.01)
 dat2 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.05)
 dat3 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.005)
 dat4 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.001)
@@ -80,18 +83,18 @@ plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) +
 # PLOT 2 #
 # OTUs, 2016 ------------------------------------------------------------------#
 
-dat1 <- prep_2016_allsp_relabund(samples, reads, totals, 1000, 2016, 0.01)
-dat2 <- prep_2016_allsp_relabund(samples, reads, totals, 1000, 2016, 0.05)
-dat3 <- prep_2016_allsp_relabund(samples, reads, totals, 1000, 2016, 0.005)
-dat4 <- prep_2016_allsp_relabund(samples, reads, totals, 1000, 2016, 0.001)
-dat5 <- prep_2016_allsp_relabund(samples, reads, totals, 2000, 2016, 0.01)
-dat6 <- prep_2016_allsp_relabund(samples, reads, totals, 2000, 2016, 0.05)
-dat7 <- prep_2016_allsp_relabund(samples, reads, totals, 2000, 2016, 0.005)
-dat8 <- prep_2016_allsp_relabund(samples, reads, totals, 2000, 2016, 0.001)
-dat9 <- prep_2016_allsp_relabund(samples, reads, totals, 5000, 2016, 0.01)
-dat10 <- prep_2016_allsp_relabund(samples, reads, totals, 5000, 2016, 0.05)
-dat11 <- prep_2016_allsp_relabund(samples, reads, totals, 5000, 2016, 0.005)
-dat12 <- prep_2016_allsp_relabund(samples, reads, totals, 5000, 2016, 0.001)
+dat1 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 1000, 2016, 0.025)
+dat2 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 1000, 2016, 0.01)
+dat3 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 1000, 2016, 0.005)
+dat4 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 1000, 2016, 0.001)
+dat5 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 2000, 2016, 0.01)
+dat6 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 2000, 2016, 0.025)
+dat7 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 2000, 2016, 0.005)
+dat8 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 2000, 2016, 0.001)
+dat9 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 5000, 2016, 0.01)
+dat10 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 5000, 2016, 0.025)
+dat11 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 5000, 2016, 0.005)
+dat12 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 5000, 2016, 0.001)
 
 df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
                 dat7, dat8, dat9, dat10, dat11, dat12)
@@ -122,32 +125,30 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
                                 "\n p = ", round(.data$pval, 4))),
               hjust = 1.1, vjust= 1.2, size = 2) +
     scale_color_manual(values = cbPalette) +
-    ggtitle("trnL: Fall 2016") +
+    ggtitle("ITS2: Fall 2016") +
     theme_bw() +
     theme(legend.position = 'bottom',
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
-#ggsave("Plots/trnL_2016_allsp_totalreads_relabund.png", plot2, device = "png")
+#ggsave("Plots/ITS2_2016_allsp_totalreads_relabund.png", plot2, device = "png")
 
 
-# NOT READY! If using Bray-Curtis, there is an outlier! 
-#   - also need to add in PP to the names
 # PLOT 3 #
 # OTUs, 2016, PPs only ------------------------------------------------------------------#
 
-dat1 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 1000, 2016, 0.01)
-dat2 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 1000, 2016, 0.05)
-dat3 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 1000, 2016, 0.005)
-dat4 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 1000, 2016, 0.001)
-dat5 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 2000, 2016, 0.01)
-dat6 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 2000, 2016, 0.05)
-dat7 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 2000, 2016, 0.005)
-dat8 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 2000, 2016, 0.001)
-dat9 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 5000, 2016, 0.01)
-dat10 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 5000, 2016, 0.05)
-dat11 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 5000, 2016, 0.005)
-dat12 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 5000, 2016, 0.001)
+dat1 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2016, 0.01)
+dat2 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2016, 0.05)
+dat3 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2016, 0.005)
+dat4 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2016, 0.001)
+dat5 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2016, 0.01)
+dat6 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2016, 0.05)
+dat7 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2016, 0.005)
+dat8 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2016, 0.001)
+dat9 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2016, 0.01)
+dat10 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2016, 0.05)
+dat11 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2016, 0.005)
+dat12 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2016, 0.001)
 
 df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
                 dat7, dat8, dat9, dat10, dat11, dat12)
@@ -173,7 +174,7 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
                                 "\n p = ", round(.data$pval, 4))),
               hjust = 1.1, vjust= 1.2, size = 2) +
     scale_color_manual(values = cbPalette) +
-    ggtitle("trnL: Fall 2016, PP only") +
+    ggtitle("ITS2: Fall 2016, PP only") +
     theme_bw() +
     theme(legend.position = 'bottom',
           panel.grid.major = element_blank(), 
@@ -184,18 +185,18 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
 # PLOT 4 #
 # OTUs, 2017, PPs only ------------------------------------------------------------------#
 
-dat1 <- prep_2017_allsp_relabund(samples_PP, reads, totals, 1000, 2017, 0.01)
-dat2 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 1000, 2017, 0.05)
-dat3 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 1000, 2017, 0.005)
-dat4 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 1000, 2017, 0.001)
-dat5 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 2000, 2017, 0.01)
-dat6 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 2000, 2017, 0.05)
-dat7 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 2000, 2017, 0.005)
-dat8 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 2000, 2017, 0.001)
-dat9 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 5000, 2017, 0.01)
-dat10 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 5000, 2017, 0.05)
-dat11 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 5000, 2017, 0.005)
-dat12 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 5000, 2017, 0.001)
+dat1 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2017, 0.01)
+dat2 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2017, 0.05)
+dat3 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2017, 0.005)
+dat4 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2017, 0.001)
+dat5 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2017, 0.01)
+dat6 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2017, 0.05)
+dat7 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2017, 0.005)
+dat8 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2017, 0.001)
+dat9 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2017, 0.01)
+dat10 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2017, 0.05)
+dat11 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2017, 0.005)
+dat12 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2017, 0.001)
 
 df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
                 dat7, dat8, dat9, dat10, dat11, dat12)
@@ -236,10 +237,23 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
 data <- filter_reads_data_ITS2(samples,
                                reads,
                                totals,
-                               reads_min = 1000,
-                               yr = 2017,
-                               rel_reads_min = 0.01) %>%
+                               reads_min = 5000,
+                               yr = 2016,
+                               rel_reads_min = 0.05) %>%
   data_prep_multivariate()
+data[[1]] <- binarize(data[[1]])
+
+# remove outliers
+# "S008810", "S010014"
+data[[1]] <- 
+  data[[1]][!(row.names(data[[1]]) %in% c("S008824")),]
+data[[2]] <- 
+  data[[2]][!data[[2]] %in% c("S008824")]
+data[[3]] <- 
+  data[[3]][!(data[[3]]$vial_barcode) %in% c("S008824"),]
 
 dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
 dist_trnL$points
+
+# scree plot
+goeveg::dimcheckMDS(data[[1]], distance = "bray", k = 6, trymax = 50)
