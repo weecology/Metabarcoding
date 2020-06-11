@@ -338,6 +338,70 @@ prep_2017_allsp_relabund <- function(samples, reads, totals, reads_min, yr, rel_
   
 }
 
+prep_2017_PPonly_relabund <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
+  
+  data <- filter_reads_data_trnL(samples, 
+                                 reads, 
+                                 totals, 
+                                 reads_min = reads_min, 
+                                 yr = yr, 
+                                 rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate()
+  
+  # remove outliers
+  data[[1]] <- 
+    data[[1]][!(row.names(data[[1]]) %in% c("S010049", "S013067")),]
+  data[[2]] <- 
+    data[[2]][!data[[2]] %in% c("S010049", "S013067")]
+  data[[3]] <- 
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010049", "S013067"),]
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  
+  return(df)
+  
+}
+
+prep_2016_PPonly_relabund <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
+  
+  data <- filter_reads_data_trnL(samples, 
+                                 reads, 
+                                 totals, 
+                                 reads_min = reads_min, 
+                                 yr = yr, 
+                                 rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate()
+
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  
+  return(df)
+  
+}
+
 prep_2016_allsp_relabund <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
   
   data <- filter_reads_data_trnL(samples, 
@@ -367,33 +431,3 @@ prep_2016_allsp_relabund <- function(samples, reads, totals, reads_min, yr, rel_
   
 }
 
-plot_NMDS_ggplot2 <- function(NMDS_list) {
-  
-  # NMDS_list is output list from `NMDS_plotting_prep`
-  
-  # ggplot of NMDS
-  plot <- ggplot(data = NMDS_list[[1]], aes(x = MDS1, y = MDS2)) + 
-    geom_point(aes(color = group), size = 0.5) +
-    geom_path(data = NMDS_list[[3]], aes(x = NMDS1, y = NMDS2, colour = group), 
-              size = 0.5) +
-    geom_text(aes(x = NMDS_list[[2]]$MDS1[1], y = NMDS_list[[2]]$MDS2[1], 
-                  label = NMDS_list[[2]]$group[1], color = NMDS_list[[2]]$group[1]),
-              size = 1) +
-    geom_text(aes(x = NMDS_list[[2]]$MDS1[2], y = NMDS_list[[2]]$MDS2[2], 
-                  label = NMDS_list[[2]]$group[2], color = NMDS_list[[2]]$group[2]),
-              size = 1) +
-    geom_text(aes(x = NMDS_list[[2]]$MDS1[3], y = NMDS_list[[2]]$MDS2[3], 
-                  label = NMDS_list[[2]]$group[3], color = NMDS_list[[2]]$group[3]),
-              size = 1) +
-    scale_color_manual(values = cbPalette) +
-    theme_bw() +
-    theme(legend.position = 'none',
-          panel.grid.major = element_blank(), 
-          panel.grid.minor = element_blank()) +
-    annotate(geom = "text", x = Inf, y = Inf, hjust = 1.1, vjust= 1.2, size = 2,
-             label = paste("atop(' F.model = '*", round(NMDS_list[[4]]$aov.tab$F.Model[1], 2),"
-                         ,' p = '*", round(NMDS_list[[4]]$aov.tab$`Pr(>F)`[1], 4),")"), parse=T)
-  
-  return(plot)
-  
-}
