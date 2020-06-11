@@ -17,9 +17,9 @@ cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
 
 # DATA PREP #
 
-test_list_2017 <- filter_reads_data(samples, reads, totals, yr = 2017, rel_reads_min = 0.01)
-test_list_2016 <- filter_reads_data(samples, reads, totals, yr = 2016)
-test_list_noyear_0.005 <- filter_reads_data(samples, reads, totals, rel_reads_min = 0.005)
+test_list_2017 <- filter_reads_data_trnL(samples, reads, totals, yr = 2017, rel_reads_min = 0.01)
+test_list_2016 <- filter_reads_data_trnL(samples, reads, totals, yr = 2016)
+test_list_noyear_0.005 <- filter_reads_data_trnL(samples, reads, totals, rel_reads_min = 0.005)
 
 # check this to see if it works
 test_list_2017[[1]] <- test_list2[[1]] %>% select(-OTU150)
