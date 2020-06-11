@@ -301,7 +301,7 @@ NMDS_plotting_prep <- function(data_list, dist_matrix) {
   
 }
 
-prep_2017_allsp <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
+prep_2017_allsp_relabund <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
   
   data <- filter_reads_data_trnL(samples, 
                                  reads, 
@@ -319,6 +319,35 @@ prep_2017_allsp <- function(samples, reads, totals, reads_min, yr, rel_reads_min
     data[[2]][!data[[2]] %in% c("S010049", "S013067")]
   data[[3]] <- 
     data[[3]][!(data[[3]]$vial_barcode) %in% c("S010049", "S013067"),]
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  
+  return(df)
+  
+}
+
+prep_2016_allsp_relabund <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
+  
+  data <- filter_reads_data_trnL(samples, 
+                                 reads, 
+                                 totals, 
+                                 reads_min = reads_min, 
+                                 yr = yr, 
+                                 rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate()
+  data[[1]] <- binarize(data[[1]])
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 

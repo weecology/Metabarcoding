@@ -22,8 +22,8 @@ source('Scripts/NMDS_for_markdown_trnL.R')
 * trnL 
 * all potential millet removed
 
-```{r figure1, include = TRUE}
-patchwork
+```{r figure1, fig.height = 8.83, fig.width = 9.58, fig.align = "center", include = TRUE}
+plot1
 ```
 
 ## Plot 2
@@ -32,6 +32,6 @@ patchwork
 * trnL 
 * all potential millet removed
 
-```{r figure2, include = TRUE}
-patchwork_2016
+```{r figure2, fig.height = 8.83, fig.width = 9.58, fig.align = "center", include = TRUE}
+plot2
 ```
