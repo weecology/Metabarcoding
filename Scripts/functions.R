@@ -348,6 +348,14 @@ prep_2017_PPonly_relabund <- function(samples, reads, totals, reads_min, yr, rel
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate()
   
+  # remove outliers
+  data[[1]] <- 
+    data[[1]][!(row.names(data[[1]]) %in% c("S010049", "S013067")),]
+  data[[2]] <- 
+    data[[2]][!data[[2]] %in% c("S010049", "S013067")]
+  data[[3]] <- 
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010049", "S013067"),]
+  
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
   
