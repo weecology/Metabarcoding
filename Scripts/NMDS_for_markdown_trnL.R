@@ -6,7 +6,6 @@
 
 library(tidyverse)
 library(vegan)
-library(patchwork)
 source('Scripts/functions.R')
 
 reads <- read_csv("Data/SequencedData/Plants/ProcessedData/trnL_reads.csv")
@@ -67,6 +66,7 @@ plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) +
                               "\n p = ", round(.data$pval, 4))),
             hjust = 1.1, vjust= 1.2, size = 2) +
   scale_color_manual(values = cbPalette) +
+  ggtitle("trnL: Spring 2017") +
   theme_bw() +
   theme(legend.position = 'bottom',
         panel.grid.major = element_blank(), 
@@ -128,8 +128,6 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
 #ggsave("Plots/trnL_2016_allsp_totalreads_relabund.png", plot2, device = "png")
 
 
-# NOT READY! If using Bray-Curtis, there is an outlier! 
-#   - also need to add in PP to the names
 # PLOT 3 #
 # OTUs, 2016, PPs only ------------------------------------------------------------------#
 
@@ -218,7 +216,7 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
                                 "\n p = ", round(.data$pval, 4))),
               hjust = 1.1, vjust= 1.2, size = 2) +
     scale_color_manual(values = cbPalette) +
-    ggtitle("trnL: Fall 2017, PP only") +
+    ggtitle("trnL: Spring 2017, PP only") +
     theme_bw() +
     theme(legend.position = 'bottom',
           panel.grid.major = element_blank(), 
