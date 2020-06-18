@@ -179,7 +179,7 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
 # PLOT 4 #
 # OTUs, 2017, PPs only ------------------------------------------------------------------#
 
-dat1 <- prep_2017_allsp_relabund(samples_PP, reads, totals, 1000, 2017, 0.01)
+dat1 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 1000, 2017, 0.01)
 dat2 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 1000, 2017, 0.05)
 dat3 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 1000, 2017, 0.005)
 dat4 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 1000, 2017, 0.001)
@@ -225,15 +225,15 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
 #ggsave("Plots/trnL_2017_PPonly_totalreads_relabund.png", plot4, device = "png")
 
 # WORKING AREA ================================================================#
-
-# for finding outliers
 # 
-# data <- filter_reads_data_trnL(samples_PP, 
-#                                reads, 
-#                                totals, 
-#                                reads_min = 1000, 
-#                                yr = 2017, 
-#                                rel_reads_min = 0.01) %>% 
+# #for finding outliers
+# 
+# data <- filter_reads_data_trnL(samples_PP,
+#                                reads,
+#                                totals,
+#                                reads_min = 2000,
+#                                yr = 2017,
+#                                rel_reads_min = 0.01) %>%
 #   data_prep_multivariate()
 # 
 # dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)

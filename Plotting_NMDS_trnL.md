@@ -25,7 +25,7 @@ removed
 
 ## Plot 3
 
-  - 2017 data
+  - 2016 data
   - PP only = proportions
   - trnL
   - all potential millet
@@ -35,7 +35,7 @@ removed
 
 ## Plot 4
 
-  - 2016 data
+  - 2017 data
   - PP only = proportions
   - trnL
   - all potential millet removed
