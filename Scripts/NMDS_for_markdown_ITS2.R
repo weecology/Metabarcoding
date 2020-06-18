@@ -6,7 +6,6 @@
 
 library(tidyverse)
 library(vegan)
-library(patchwork)
 source('Scripts/functions.R')
 
 reads <- read_csv("Data/SequencedData/Plants/ProcessedData/ITS2_reads_WeeTU.csv")
@@ -73,6 +72,7 @@ plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) +
                               "\n p = ", round(.data$pval, 4))),
             hjust = 1.1, vjust= 1.2, size = 2) +
   scale_color_manual(values = cbPalette) +
+  ggtitle("ITS2: Spring 2017") +
   theme_bw() +
   theme(legend.position = 'bottom',
         panel.grid.major = element_blank(), 
@@ -222,7 +222,7 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
                                 "\n p = ", round(.data$pval, 4))),
               hjust = 1.1, vjust= 1.2, size = 2) +
     scale_color_manual(values = cbPalette) +
-    ggtitle("trnL: Fall 2017, PP only") +
+    ggtitle("ITS2: Spring 2017, PP only") +
     theme_bw() +
     theme(legend.position = 'bottom',
           panel.grid.major = element_blank(), 
@@ -233,27 +233,27 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
 # WORKING AREA ================================================================#
 
 # for finding outliers
-
-data <- filter_reads_data_ITS2(samples,
-                               reads,
-                               totals,
-                               reads_min = 5000,
-                               yr = 2016,
-                               rel_reads_min = 0.05) %>%
-  data_prep_multivariate()
-data[[1]] <- binarize(data[[1]])
-
-# remove outliers
-# "S008810", "S010014"
-data[[1]] <- 
-  data[[1]][!(row.names(data[[1]]) %in% c("S008824")),]
-data[[2]] <- 
-  data[[2]][!data[[2]] %in% c("S008824")]
-data[[3]] <- 
-  data[[3]][!(data[[3]]$vial_barcode) %in% c("S008824"),]
-
-dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
-dist_trnL$points
-
-# scree plot
-goeveg::dimcheckMDS(data[[1]], distance = "bray", k = 6, trymax = 50)
+# 
+# data <- filter_reads_data_ITS2(samples,
+#                                reads,
+#                                totals,
+#                                reads_min = 5000,
+#                                yr = 2016,
+#                                rel_reads_min = 0.05) %>%
+#   data_prep_multivariate()
+# data[[1]] <- binarize(data[[1]])
+# 
+# # remove outliers
+# # "S008810", "S010014"
+# data[[1]] <- 
+#   data[[1]][!(row.names(data[[1]]) %in% c("S008824")),]
+# data[[2]] <- 
+#   data[[2]][!data[[2]] %in% c("S008824")]
+# data[[3]] <- 
+#   data[[3]][!(data[[3]]$vial_barcode) %in% c("S008824"),]
+# 
+# dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+# dist_trnL$points
+# 
+# # scree plot
+# goeveg::dimcheckMDS(data[[1]], distance = "bray", k = 6, trymax = 50)
