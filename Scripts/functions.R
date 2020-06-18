@@ -443,13 +443,15 @@ prep_2017_allsp_relabund_ITS2 <- function(samples, reads, totals, reads_min, yr,
   data[[1]] <- binarize(data[[1]])
   
   # remove outliers
-  # "S008810", "S010014"
-  data[[1]] <- 
-    data[[1]][!(row.names(data[[1]]) %in% c("S010044", "S013041")),]
-  data[[2]] <- 
-    data[[2]][!data[[2]] %in% c("S010044", "S013041")]
-  data[[3]] <- 
-    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010044", "S013041"),]
+  # group 1: "S010044"
+  # group 2: "S010044", "S010014", "S013043", "S008810"
+  # group 3: group 2 + "S010063", "S010031", "S010012"
+  data[[1]] <-
+    data[[1]][!(row.names(data[[1]]) %in% c("S010044", "S010014", "S013043", "S008810", "S010063", "S010031", "S010012")),]
+  data[[2]] <-
+    data[[2]][!data[[2]] %in% c("S010044", "S010014", "S013043", "S008810", "S010063", "S010031", "S010012")]
+  data[[3]] <-
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010044", "S010014", "S013043", "S008810", "S010063", "S010031", "S010012"),]
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 

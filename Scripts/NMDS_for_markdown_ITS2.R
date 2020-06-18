@@ -233,27 +233,69 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
 # WORKING AREA ================================================================#
 
 # for finding outliers
-# 
-# data <- filter_reads_data_ITS2(samples,
-#                                reads,
-#                                totals,
-#                                reads_min = 5000,
-#                                yr = 2016,
-#                                rel_reads_min = 0.05) %>%
-#   data_prep_multivariate()
-# data[[1]] <- binarize(data[[1]])
-# 
-# # remove outliers
-# # "S008810", "S010014"
-# data[[1]] <- 
-#   data[[1]][!(row.names(data[[1]]) %in% c("S008824")),]
-# data[[2]] <- 
-#   data[[2]][!data[[2]] %in% c("S008824")]
-# data[[3]] <- 
-#   data[[3]][!(data[[3]]$vial_barcode) %in% c("S008824"),]
-# 
-# dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
-# dist_trnL$points
-# 
-# # scree plot
-# goeveg::dimcheckMDS(data[[1]], distance = "bray", k = 6, trymax = 50)
+
+data <- filter_reads_data_ITS2(samples,
+                               reads,
+                               totals,
+                               reads_min = 2000,
+                               yr = 2017,
+                               rel_reads_min = 0.005) %>%
+  data_prep_multivariate()
+data[[1]] <- binarize(data[[1]])
+
+# remove outliers
+# group 1: "S010044"
+# group 2: "S010044", "S010014", "S013043", "S008810"
+# group 3: group 2 + "S010063", "S010031", "S010012"
+data[[1]] <-
+  data[[1]][!(row.names(data[[1]]) %in% c("S010044", "S010014", "S013043", "S008810", "S010063", "S010031", "S010012")),]
+data[[2]] <-
+  data[[2]][!data[[2]] %in% c("S010044", "S010014", "S013043", "S008810", "S010063", "S010031", "S010012")]
+data[[3]] <-
+  data[[3]][!(data[[3]]$vial_barcode) %in% c("S010044", "S010014", "S013043", "S008810", "S010063", "S010031", "S010012"),]
+
+dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+dist_trnL$points
+
+
+groups <- data[[3]]
+
+NMDS <- data.frame(MDS1 = dist_trnL$points[,1], 
+                   MDS2 = dist_trnL$points[,2], 
+                   group = groups$group)
+
+# get mean point for each group
+NMDS.mean <- aggregate(NMDS[,1:2], list(group = groups$group), mean)
+
+# save results of ordiellipse() as an object
+plot(dist_trnL$points)
+ord <- ordiellipse(dist_trnL, 
+                   groups$group, 
+                   display = "sites", 
+                   kind = "se", 
+                   conf = 0.95, 
+                   label = T)
+
+# plot using ggplot 
+df_ell <- data.frame()
+for(g in levels(NMDS$group)) {
+  df_ell <-
+    rbind(df_ell, cbind(as.data.frame(with(
+      NMDS[NMDS$group == g,],
+      vegan:::veganCovEllipse(ord[[g]]$cov, ord[[g]]$center, ord[[g]]$scale)
+    )),
+    group = g))
+}
+
+ggplot(data = NMDS, aes(x = MDS1, y = MDS2)) + 
+  geom_point(aes(color = group)) +
+  geom_path(data = df_ell, aes(x = NMDS1, y = NMDS2, colour = group), size = 1) +
+  geom_text(aes(x = NMDS.mean$MDS1[1], y = NMDS.mean$MDS2[1], label = NMDS.mean$group[1], color = NMDS.mean$group[1])) +
+  geom_text(aes(x = NMDS.mean$MDS1[2], y = NMDS.mean$MDS2[2], label = NMDS.mean$group[2], color = NMDS.mean$group[2])) +
+  geom_text(aes(x = NMDS.mean$MDS1[3], y = NMDS.mean$MDS2[3], label = NMDS.mean$group[3], color = NMDS.mean$group[3])) +
+  scale_color_manual(values = cbPalette) +
+  theme_bw() +
+  theme(legend.position = 'none')
+
+# scree plot
+goeveg::dimcheckMDS(data[[1]], distance = "bray", k = 6, trymax = 50)
