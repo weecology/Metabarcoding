@@ -32,7 +32,7 @@ plot2
 ```
 
 ## Plot 3
-* 2017 data
+* 2016 data
 * PP only = proportions
 * all potential millet removed
 
@@ -41,7 +41,7 @@ plot3
 ```
 
 ## Plot 4
-* 2016 data
+* 2017 data
 * PP only = proportions
 * all potential millet removed
 ```{r figure4, fig.height = 8.83, fig.width = 11, fig.align = "center", include = TRUE}

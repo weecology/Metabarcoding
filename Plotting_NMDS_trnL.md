@@ -1,7 +1,7 @@
 NMDS Plotting: trnL
 ================
 Ellen Bledsoe
-10 June, 2020
+18 June, 2020
 
 ## Plot 1
 

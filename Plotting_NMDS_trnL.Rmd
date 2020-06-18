@@ -34,7 +34,7 @@ plot2
 ```
 
 ## Plot 3
-* 2017 data
+* 2016 data
 * PP only = proportions
 * trnL 
 * all potential millet removed
@@ -44,7 +44,7 @@ plot3
 ```
 
 ## Plot 4
-* 2016 data
+* 2017 data
 * PP only = proportions
 * trnL 
 * all potential millet removed
