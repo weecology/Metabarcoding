@@ -20,6 +20,7 @@ cbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
 # only PPs
 samples_PP <- samples %>% filter(species == 'PP')
 
+# OTUS #========================================================================
 
 # Plot 1 #
 # OTUs, 2017 ------------------------------------------------------------------#
@@ -223,17 +224,3 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
           panel.grid.minor = element_blank())) 
 
 #ggsave("Plots/trnL_2017_PPonly_totalreads_relabund.png", plot4, device = "png")
-
-# WORKING AREA ================================================================#
-# 
-# #for finding outliers
-# 
-# data <- filter_reads_data_trnL(samples_PP,
-#                                reads,
-#                                totals,
-#                                reads_min = 2000,
-#                                yr = 2017,
-#                                rel_reads_min = 0.01) %>%
-#   data_prep_multivariate()
-# 
-# dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
