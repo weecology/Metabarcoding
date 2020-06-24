@@ -4,7 +4,6 @@
 
 source('Scripts/find_millet_OTUs.R')
 
-
 # READING IN FILES #============================================================
 
 read_in_trnL_files <- function(path = "Data/SequencedData/Plants/RawData/PreppedFiles/trnL",
@@ -38,7 +37,6 @@ add_plot_type <- function(data){
   return(data)
 }
 
-
 add_plotting_group <- function(data){
   # create grouping column based on species and plot
   data$group = NA                     
@@ -56,7 +54,9 @@ add_plotting_group <- function(data){
 
 # SUMMARIZE DATA BY WEETU #=====================================================
 
-summarize_trnL_by_WeeTU <- function(data, col_quotes, col_no_quotes){
+summarize_trnL_by_WeeTU <- function(data, 
+                                    col_quotes, 
+                                    col_no_quotes){
   
   # make dataframe with all unique species
   all_species <- data %>% 
@@ -102,7 +102,9 @@ summarize_trnL_by_WeeTU <- function(data, col_quotes, col_no_quotes){
 }
 
 
-summarize_ITS2_by_WeeTU <- function(data, col_quotes, col_no_quotes){
+summarize_ITS2_by_WeeTU <- function(data, 
+                                    col_quotes, 
+                                    col_no_quotes){
   
   # make dataframe with all unique species
   all_species <- data %>% 
@@ -146,11 +148,11 @@ summarize_ITS2_by_WeeTU <- function(data, col_quotes, col_no_quotes){
 # PREP FOR NMDS #===============================================================
 
 filter_reads_data_trnL <- function(samples,
-                              reads,
-                              totals,
-                              yr = c(2016, 2017),
-                              reads_min = 2000,
-                              rel_reads_min = 0.001){
+                                   reads,
+                                   totals,
+                                   yr = c(2016, 2017),
+                                   reads_min = 2000,
+                                   rel_reads_min = 0.001){
   
   # add plot type to fecal collection data
   # add group for plotting
@@ -215,7 +217,6 @@ filter_reads_data_ITS2 <- function(samples,
   
 }
 
-
 data_prep_multivariate <- function(list){
   
   # this function preps data for running NMDS
@@ -241,7 +242,6 @@ data_prep_multivariate <- function(list){
   
 }
 
-
 run_metaMDS_til_converge <- function(df, prev_best, dist_metric, n) {
   repeat {
     # do something
@@ -254,12 +254,10 @@ run_metaMDS_til_converge <- function(df, prev_best, dist_metric, n) {
   return(prev_best)
 }
 
-
 binarize <- function(df){
   df[df > 0] <- 1
   return(df)
 }
-
 
 NMDS_plotting_prep <- function(data_list, dist_matrix) {
   
@@ -305,6 +303,7 @@ NMDS_plotting_prep <- function(data_list, dist_matrix) {
   return(return_list)
   
 }
+
 
 # COMBINE DATA, REMOVE OUTLIERS, & PREP FOR PLOTTING #==========================
 
@@ -606,7 +605,35 @@ prep_2016_allsp_relabund_ITS2 <- function(samples, reads, totals, reads_min, yr,
   
 }
 
+
 # FUNCTIONS FOR USING WEETUS #==================================================
+
+data_prep_multivariate_WTU <- function(list){
+  
+  # this function preps data for running NMDS
+  # list argument is output from `filter_reads_data` fxn
+  
+  samples <- list[[1]]
+  reads <- list[[3]]
+  
+  # convert to appropriate format for NMDS
+  reads <- select(reads, SampleID, WTU, Rel_Reads)
+  reads_spread <- pivot_wider(reads, names_from = WTU, values_from = Rel_Reads)
+  reads_spread[is.na(reads_spread)] = 0
+  reads_spread <- reads_spread %>% tibble::column_to_rownames("SampleID")
+  
+  sampleID <- intersect(reads$SampleID, samples$vial_barcode)
+  groups <- samples %>% 
+    filter(vial_barcode %in% sampleID)
+  groups <- groups[match(sampleID, groups$vial_barcode),]
+  
+  return_list <- list(reads_spread, sampleID, groups)
+  names(return_list) <- c("reads_spread", "sampleID", "groups")
+  return(return_list)
+  
+}
+
+# TRNL # 
 
 filter_reads_data_WeeTU_trnL <- function(samples,
                                          reads,
@@ -655,33 +682,6 @@ filter_reads_data_WeeTU_trnL <- function(samples,
   
 }
 
-data_prep_multivariate_WTU <- function(list){
-  
-  # this function preps data for running NMDS
-  # list argument is output from `filter_reads_data` fxn
-  
-  samples <- list[[1]]
-  reads <- list[[3]]
-  
-  # convert to appropriate format for NMDS
-  reads <- select(reads, SampleID, WTU, Rel_Reads)
-  reads_spread <- pivot_wider(reads, names_from = WTU, values_from = Rel_Reads)
-  reads_spread[is.na(reads_spread)] = 0
-  reads_spread <- reads_spread %>% tibble::column_to_rownames("SampleID")
-  
-  sampleID <- intersect(reads$SampleID, samples$vial_barcode)
-  groups <- samples %>% 
-    filter(vial_barcode %in% sampleID)
-  groups <- groups[match(sampleID, groups$vial_barcode),]
-  
-  return_list <- list(reads_spread, sampleID, groups)
-  names(return_list) <- c("reads_spread", "sampleID", "groups")
-  return(return_list)
-  
-}
-
-# TRNL# 
-
 prep_2017_allsp_relabund_WTU <- function(samples, reads, totals, OTU_WTU_key, sum_taxa, reads_min, yr, rel_reads_min){
   
   data <- filter_reads_data_WeeTU_trnL(samples, 
@@ -695,6 +695,8 @@ prep_2017_allsp_relabund_WTU <- function(samples, reads, totals, OTU_WTU_key, su
   data[[1]] <- binarize(data[[1]])
   
   # remove outliers
+  # group 1: "S008810", "S010014", "S013043"
+  # group 2: group 1 + "S010063", "S010044", "S010012"
   data[[1]] <-
     data[[1]][!(row.names(data[[1]]) %in% c("S010049")),]
   data[[2]] <-
@@ -721,8 +723,14 @@ prep_2017_allsp_relabund_WTU <- function(samples, reads, totals, OTU_WTU_key, su
   
 }
 
-
-prep_2017_PPonly_relabund_WTU <- function(samples, reads, totals, OTU_WTU_key, reads_min, yr, rel_reads_min){
+prep_2017_PPonly_relabund_WTU <- function(samples, 
+                                          reads, 
+                                          totals, 
+                                          OTU_WTU_key, 
+                                          sum_taxa, 
+                                          reads_min, 
+                                          yr, 
+                                          rel_reads_min){
   
   data <- filter_reads_data_WeeTU_trnL(samples, 
                                  reads, 
@@ -754,12 +762,20 @@ prep_2017_PPonly_relabund_WTU <- function(samples, reads, totals, OTU_WTU_key, r
   df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
   df$min_total <- reads_min
   df$min_rel_abund <- rel_reads_min
+  df$sum_taxa <- sum_taxa
   
   return(df)
   
 }
 
-prep_2016_PPonly_relabund_WTU <- function(samples, reads, totals, OTU_WTU_key, reads_min, yr, rel_reads_min){
+prep_2016_PPonly_relabund_WTU <- function(samples, 
+                                          reads, 
+                                          totals, 
+                                          OTU_WTU_key, 
+                                          sum_taxa,
+                                          reads_min, 
+                                          yr, 
+                                          rel_reads_min){
   
   data <- filter_reads_data_WeeTU_trnL(samples, 
                                  reads, 
@@ -783,12 +799,20 @@ prep_2016_PPonly_relabund_WTU <- function(samples, reads, totals, OTU_WTU_key, r
   df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
   df$min_total <- reads_min
   df$min_rel_abund <- rel_reads_min
+  df$sum_taxa <- sum_taxa
   
   return(df)
   
 }
 
-prep_2016_allsp_relabund_WTU <- function(samples, reads, totals, OTU_WTU_key, reads_min, yr, rel_reads_min){
+prep_2016_allsp_relabund_WTU <- function(samples, 
+                                         reads, 
+                                         totals, 
+                                         OTU_WTU_key, 
+                                         sum_taxa,
+                                         reads_min, 
+                                         yr, 
+                                         rel_reads_min){
   
   data <- filter_reads_data_WeeTU_trnL(samples, 
                                  reads, 
@@ -813,8 +837,226 @@ prep_2016_allsp_relabund_WTU <- function(samples, reads, totals, OTU_WTU_key, re
   df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
   df$min_total <- reads_min
   df$min_rel_abund <- rel_reads_min
+  df$sum_taxa <- sum_taxa
   
   return(df)
   
 }
 
+# ITS2 #
+
+filter_reads_data_WeeTU_ITS2 <- function(samples,
+                                         reads,
+                                         totals,
+                                         OTU_WTU_key,
+                                         yr = c(2016, 2017),
+                                         reads_min = 2000,
+                                         rel_reads_min = 0.001){
+  
+  # add plot type to fecal collection data
+  # add group for plotting
+  # and remove samples that were part of the trap/bait test
+  samples <- add_plot_type(samples) %>% 
+    add_plotting_group() %>% 
+    filter(is.na(notes), year %in% yr) 
+  
+  # select only fecal samples
+  fecal_id <- samples$vial_barcode
+  
+  # get millet WTUs/OTUs for taxa level
+  millet_WTUs <- left_join(millet_OTUs_ITS2_no.hirt, OTU_WTU_key)
+  millet_WTUs <- millet_WTUs[, colnames(reads[2])] %>% 
+    distinct() %>% 
+    na.omit()
+  colnames(millet_WTUs) <- c("WTU")
+  
+  # have WeeTU represent OTU
+  reads <- reads[,c(1,3,2)]
+  names(reads)[length(names(reads))] <- "WTU" 
+  
+  # add totals to reads df
+  # select only fecal samples and remove millet OTUs
+  # and make relative reads column
+  reads <- full_join(reads, totals)
+  reads <- reads %>% 
+    filter(SampleID %in% fecal_id, !WTU %in% millet_WTU$WTU) %>% 
+    mutate(Rel_Reads = Reads/Total_Reads)
+  
+  # filter data by minimum total reads and/or minimum relative reads
+  reads <- reads %>% 
+    filter(Total_Reads >= reads_min, Rel_Reads >= rel_reads_min)
+  
+  return_list <- list(samples, fecal_id, reads)
+  names(return_list) <- c("samples", "fecal_id", "reads")
+  return(return_list)
+  
+}
+
+
+prep_2017_allsp_relabund_WTU_ITS2 <- function(samples, 
+                                              reads, 
+                                              totals, 
+                                              OTU_WTU_key, 
+                                              sum_taxa, 
+                                              reads_min, 
+                                              yr, 
+                                              rel_reads_min){
+  
+  data <- filter_reads_data_WeeTU_trnL(samples, 
+                                       reads, 
+                                       totals, 
+                                       OTU_WTU_key,
+                                       reads_min = reads_min, 
+                                       yr = yr, 
+                                       rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate_WTU()
+  data[[1]] <- binarize(data[[1]])
+  
+  # remove outliers
+  # group 1: "S008810", "S010014", "S013043"
+  # group 2: group 1 + "S010063", "S010044", "S010012"
+  data[[1]] <-
+    data[[1]][!(row.names(data[[1]]) %in% c("S010049")),]
+  data[[2]] <-
+    data[[2]][!data[[2]] %in% c("S010049")]
+  data[[3]] <-
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010049"),]
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  df$sum_taxa <- sum_taxa
+  
+  return(df)
+  
+}
+
+prep_2017_PPonly_relabund_WTU_ITS2 <- function(samples, 
+                                               reads, 
+                                               totals, 
+                                               OTU_WTU_key, 
+                                               sum_taxa,
+                                               reads_min, 
+                                               yr, 
+                                               rel_reads_min){
+  
+  data <- filter_reads_data_WeeTU_trnL(samples, 
+                                       reads, 
+                                       totals, 
+                                       OTU_WTU_key,
+                                       reads_min = reads_min, 
+                                       yr = yr, 
+                                       rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate_WTU()
+  
+  # # remove outliers
+  # data[[1]] <- 
+  #   data[[1]][!(row.names(data[[1]]) %in% c("S010049", "S013067")),]
+  # data[[2]] <- 
+  #   data[[2]][!data[[2]] %in% c("S010049", "S013067")]
+  # data[[3]] <- 
+  #   data[[3]][!(data[[3]]$vial_barcode) %in% c("S010049", "S013067"),]
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  df$sum_taxa <- sum_taxa
+  
+  return(df)
+  
+}
+
+prep_2016_PPonly_relabund_WTU_ITS2 <- function(samples, 
+                                               reads, 
+                                               totals, 
+                                               OTU_WTU_key, 
+                                               sum_taxa,
+                                               reads_min, 
+                                               yr, 
+                                               rel_reads_min){
+  
+  data <- filter_reads_data_WeeTU_trnL(samples, 
+                                       reads, 
+                                       totals, 
+                                       OTU_WTU_key,
+                                       reads_min = reads_min, 
+                                       yr = yr, 
+                                       rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate_WTU()
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  df$sum_taxa <- sum_taxa
+  
+  return(df)
+  
+}
+
+prep_2016_allsp_relabund_WTU_ITS2 <- function(samples, 
+                                              reads, 
+                                              totals, 
+                                              OTU_WTU_key,
+                                              sum_taxa,
+                                              reads_min, 
+                                              yr, 
+                                              rel_reads_min){
+  
+  data <- filter_reads_data_WeeTU_trnL(samples, 
+                                       reads, 
+                                       totals, 
+                                       OTU_WTU_key,
+                                       reads_min = reads_min, 
+                                       yr = yr, 
+                                       rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate_WTU()
+  data[[1]] <- binarize(data[[1]])
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  df$sum_taxa <- sum_taxa
+  
+  return(df)
+  
+}
