@@ -30,7 +30,7 @@ samples_PP <- samples %>% filter(species == 'PP')
 
 # outliers are proving to be confusing
 
-dat1 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.01)
+dat1 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.01)
 dat2 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.05)
 dat3 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.005)
 dat4 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.001)
@@ -230,29 +230,38 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
 
 #ggsave("Plots/trnL_2017_PPonly_totalreads_relabund.png", plot4, device = "png")
 
+
+
+
+
 # WORKING AREA ================================================================#
 
 # for finding outliers
 
-data <- filter_reads_data_ITS2(samples,
+data <- filter_reads_data_ITS2(samples_PP,
                                reads,
                                totals,
-                               reads_min = 2000,
+                               reads_min = 5000,
                                yr = 2017,
                                rel_reads_min = 0.005) %>%
   data_prep_multivariate()
-data[[1]] <- binarize(data[[1]])
+#data[[1]] <- binarize(data[[1]])
 
 # remove outliers
-# group 1: "S010044"
-# group 2: "S010044", "S010014", "S013043", "S008810"
-# group 3: group 2 + "S010063", "S010031", "S010012"
+# group 1: "S008810", "S010014", "S013043"
+# group 2: group 1 + "S010063", "S010044", "S010012"
 data[[1]] <-
-  data[[1]][!(row.names(data[[1]]) %in% c("S010044", "S010014", "S013043", "S008810", "S010063", "S010031", "S010012")),]
+  data[[1]][!(row.names(data[[1]]) %in% c("S008810", "S010014", "S013043", 
+                                          "S010063", "S010044", "S010012",
+                                          "S010031")),]
 data[[2]] <-
-  data[[2]][!data[[2]] %in% c("S010044", "S010014", "S013043", "S008810", "S010063", "S010031", "S010012")]
+  data[[2]][!data[[2]] %in% c("S008810", "S010014", "S013043", 
+                              "S010063", "S010044", "S010012", 
+                              "S010031")]
 data[[3]] <-
-  data[[3]][!(data[[3]]$vial_barcode) %in% c("S010044", "S010014", "S013043", "S008810", "S010063", "S010031", "S010012"),]
+  data[[3]][!(data[[3]]$vial_barcode) %in% c("S008810", "S010014", "S013043",
+                                             "S010063", "S010044", "S010012",
+                                             "S010031"),]
 
 dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
 dist_trnL$points
