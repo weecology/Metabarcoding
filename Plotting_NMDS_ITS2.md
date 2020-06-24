@@ -1,12 +1,13 @@
 NMDS Plotting: ITS2
 ================
 Ellen Bledsoe
-18 June, 2020
+24 June, 2020
 
 ## Plot 1
 
   - 2017 data
   - binary (presence/absence)
+  - ITS2
   - all potential millet
 removed
 
@@ -16,6 +17,7 @@ removed
 
   - 2016 data
   - binary (presence/absence)
+  - ITS2
   - all potential millet
 removed
 
@@ -23,8 +25,9 @@ removed
 
 ## Plot 3
 
-  - 2017 data
+  - 2016 data
   - PP only = proportions
+  - ITS2
   - all potential millet
 removed
 
@@ -32,7 +35,8 @@ removed
 
 ## Plot 4
 
-  - 2016 data
+  - 2017 data
   - PP only = proportions
+  - ITS2
   - all potential millet removed
     <img src="Plotting_NMDS_ITS2_files/figure-gfm/figure4-1.png" style="display: block; margin: auto;" />
