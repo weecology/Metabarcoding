@@ -682,7 +682,14 @@ filter_reads_data_WeeTU_trnL <- function(samples,
   
 }
 
-prep_2017_allsp_relabund_WTU <- function(samples, reads, totals, OTU_WTU_key, sum_taxa, reads_min, yr, rel_reads_min){
+prep_2017_allsp_relabund_WTU_genus <- function(samples, 
+                                               reads, 
+                                               totals, 
+                                               OTU_WTU_key, 
+                                               sum_taxa, 
+                                               reads_min, 
+                                               yr, 
+                                               rel_reads_min){
   
   data <- filter_reads_data_WeeTU_trnL(samples, 
                                  reads, 
@@ -703,6 +710,53 @@ prep_2017_allsp_relabund_WTU <- function(samples, reads, totals, OTU_WTU_key, su
     data[[2]][!data[[2]] %in% c("S010049")]
   data[[3]] <-
     data[[3]][!(data[[3]]$vial_barcode) %in% c("S010049"),]
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  df$sum_taxa <- sum_taxa
+  
+  return(df)
+  
+}
+
+prep_2017_allsp_relabund_WTU_family <- function(samples, 
+                                                reads, 
+                                                totals, 
+                                                OTU_WTU_key, 
+                                                sum_taxa, 
+                                                reads_min, 
+                                                yr, 
+                                                rel_reads_min){
+  
+  data <- filter_reads_data_WeeTU_trnL(samples, 
+                                       reads, 
+                                       totals, 
+                                       OTU_WTU_key,
+                                       reads_min = reads_min, 
+                                       yr = yr, 
+                                       rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate_WTU()
+  data[[1]] <- binarize(data[[1]])
+  
+  # remove outliers
+  data[[1]] <-
+    data[[1]][!(row.names(data[[1]]) %in% c("S013025", "S013017", "S010074", "S008804")),]
+  data[[2]] <-
+    data[[2]][!data[[2]] %in% c("S013025", "S013017", "S010074", "S008804")]
+  data[[3]] <-
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013025", "S013017", "S010074", "S008804"),]
+  
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
