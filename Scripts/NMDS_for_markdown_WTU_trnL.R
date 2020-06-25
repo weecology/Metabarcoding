@@ -73,7 +73,7 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
-
+#ggsave("Plots/trnL_2017_allsp_relabund_WTU.png", plot1)
 
 
 # WORKING AREA ================================================================#

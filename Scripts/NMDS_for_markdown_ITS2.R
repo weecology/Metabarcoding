@@ -46,7 +46,7 @@ dat12 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 5000, 2017, 0.001
 df<- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
                dat7, dat8, dat9, dat10, dat11, dat12)
 
-plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+(plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
   geom_point(aes(color = group), size = 0.5) +
   geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
             size = 0.5) +
@@ -76,9 +76,9 @@ plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) +
   theme_bw() +
   theme(legend.position = 'bottom',
         panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank()) 
+        panel.grid.minor = element_blank())) 
 
-#ggsave("Plots/trnL_2017_allsp_totalreads_relabund.png", plot1, device = "png")
+#ggsave("Plots/ITS2_2017_allsp_totalreads_relabund.png", plot1, device = "png")
 
 # PLOT 2 #
 # OTUs, 2016 ------------------------------------------------------------------#
@@ -180,7 +180,7 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
-#ggsave("Plots/trnL_2016_allsp_totalreads_relabund.png", plot3, device = "png")
+#ggsave("Plots/ITS2_2016_PPonly_totalreads_relabund.png", plot3, device = "png")
 
 # PLOT 4 #
 # OTUs, 2017, PPs only ------------------------------------------------------------------#
@@ -228,7 +228,7 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
-#ggsave("Plots/trnL_2017_PPonly_totalreads_relabund.png", plot4, device = "png")
+#ggsave("Plots/ITS2_2017_PPonly_totalreads_relabund.png", plot4, device = "png")
 
 
 

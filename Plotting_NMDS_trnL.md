@@ -1,42 +1,49 @@
 NMDS Plotting: trnL
 ================
 Ellen Bledsoe
-18 June, 2020
+25 June, 2020
 
-## Plot 1
+## Using OTUs
+
+### Plot 1
 
   - 2017 data
   - binary (presence/absence)
-  - trnL
-  - all potential millet
-removed
-
-<img src="Plotting_NMDS_trnL_files/figure-gfm/figure1-1.png" style="display: block; margin: auto;" />
-
-## Plot 2
-
-  - 2016 data
-  - binary (presence/absence)
-  - trnL
-  - all potential millet
-removed
-
-<img src="Plotting_NMDS_trnL_files/figure-gfm/figure2-1.png" style="display: block; margin: auto;" />
-
-## Plot 3
-
-  - 2016 data
-  - PP only = proportions
-  - trnL
-  - all potential millet
-removed
-
-<img src="Plotting_NMDS_trnL_files/figure-gfm/figure3-1.png" style="display: block; margin: auto;" />
-
-## Plot 4
-
-  - 2017 data
-  - PP only = proportions
-  - trnL
   - all potential millet removed
-    <img src="Plotting_NMDS_trnL_files/figure-gfm/figure4-1.png" style="display: block; margin: auto;" />
+
+![](Plots/trnL_2017_allsp_totalreads_relabund.png)<!-- -->
+
+### Plot 2
+
+  - 2017 data
+  - PP only = proportions
+  - all potential millet removed
+
+![](Plots/trnL_2017_PPonly_totalreads_relabund.png)<!-- -->
+
+### Plot 3
+
+  - 2016 data
+  - binary (presence/absence)
+  - all potential millet removed
+
+![](Plots/trnL_2016_allsp_totalreads_relabund.png)<!-- -->
+
+### Plot 4
+
+  - 2016 data
+  - PP only = proportions
+  - all potential millet removed
+
+![](Plots/trnL_2016_PPonly_totalreads_relabund.png)<!-- -->
+
+## Using WeeTUs
+
+### Plot 1
+
+  - 2017 data
+  - all species
+  - all potential millet removed
+  - minimum total reads = 2000
+
+![](Plots/trnL_2017_allsp_relabund_WTU.png)<!-- -->
