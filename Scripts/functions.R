@@ -307,7 +307,7 @@ NMDS_plotting_prep <- function(data_list, dist_matrix) {
 
 # COMBINE DATA, REMOVE OUTLIERS, & PREP FOR PLOTTING #==========================
 
-# TRNL# 
+# TRNL # 
 
 prep_2017_allsp_relabund <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
   
@@ -502,17 +502,12 @@ prep_2017_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, yr
   # group 1: "S008810", "S010014", "S013043"
   # group 2: group 1 + "S010063", "S010044", "S010012"
   data[[1]] <-
-    data[[1]][!(row.names(data[[1]]) %in% c("S008810", "S010014", "S013043", 
-                                            "S010063", "S010044", "S010012",
-                                            "S010031")),]
+    data[[1]][!(row.names(data[[1]]) %in% c("S013067", "S012859")),]
   data[[2]] <-
-    data[[2]][!data[[2]] %in% c("S008810", "S010014", "S013043", 
-                                "S010063", "S010044", "S010012", 
-                                "S010031")]
+    data[[2]][!data[[2]] %in% c("S013067", "S012859")]
   data[[3]] <-
-    data[[3]][!(data[[3]]$vial_barcode) %in% c("S008810", "S010014", "S013043",
-                                               "S010063", "S010044", "S010012",
-                                               "S010031"),]
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013067", "S012859"),]
+  
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
   

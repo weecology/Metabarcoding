@@ -4,3 +4,6 @@
 .Ruserdata
 .DS_Store
 Metagenomics.Rproj
+bipartiteD3Script.css
+bipartiteD3Script.js
+vizjs.js
