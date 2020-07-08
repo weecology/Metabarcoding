@@ -129,6 +129,9 @@ reads_spread2 <- reads_spread %>%
   summarise_each(funs(sum)) %>% 
   column_to_rownames("group")
 
+grouplevel(reads_spread2, level = "lower") 
+  # lower is actually rodents for plotting reasons
+
 visweb(reads_spread2)
 plotweb(reads_spread2,
         method = "cca", labsize = 1, 
