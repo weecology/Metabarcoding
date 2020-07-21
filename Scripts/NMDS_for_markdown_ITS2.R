@@ -243,7 +243,7 @@ data <- filter_reads_data_ITS2(samples_PP,
                                totals,
                                reads_min = 5000,
                                yr = 2017,
-                               rel_reads_min = 0.005) %>%
+                               rel_reads_min = 0.01) %>%
   data_prep_multivariate()
 #data[[1]] <- binarize(data[[1]])
 
@@ -251,17 +251,11 @@ data <- filter_reads_data_ITS2(samples_PP,
 # group 1: "S008810", "S010014", "S013043"
 # group 2: group 1 + "S010063", "S010044", "S010012"
 data[[1]] <-
-  data[[1]][!(row.names(data[[1]]) %in% c("S008810", "S010014", "S013043", 
-                                          "S010063", "S010044", "S010012",
-                                          "S010031")),]
+  data[[1]][!(row.names(data[[1]]) %in% c("S013067", "S012859")),]
 data[[2]] <-
-  data[[2]][!data[[2]] %in% c("S008810", "S010014", "S013043", 
-                              "S010063", "S010044", "S010012", 
-                              "S010031")]
+  data[[2]][!data[[2]] %in% c("S013067", "S012859")]
 data[[3]] <-
-  data[[3]][!(data[[3]]$vial_barcode) %in% c("S008810", "S010014", "S013043",
-                                             "S010063", "S010044", "S010012",
-                                             "S010031"),]
+  data[[3]][!(data[[3]]$vial_barcode) %in% c("S013067", "S012859"),]
 
 dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
 dist_trnL$points
