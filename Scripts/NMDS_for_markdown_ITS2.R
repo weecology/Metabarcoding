@@ -238,25 +238,25 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
 
 # for finding outliers
 
-data <- filter_reads_data_ITS2(samples,
+data <- filter_reads_data_ITS2(samples_PP,
                                reads,
                                totals,
                                reads_min = 2000,
-                               yr = 2016,
+                               yr = 2017,
                                rel_reads_min = 0.01) %>%
   data_prep_multivariate()
-data[[1]] <- binarize(data[[1]])
+#data[[1]] <- binarize(data[[1]])
 
 # remove outliers
 data[[1]] <- 
-  data[[1]][!(row.names(data[[1]]) %in% c("S008824")),]
+  data[[1]][!(row.names(data[[1]]) %in% c("S013043","S010044", "S010014", "S008810", "S010012", "S010063")),]
 data[[2]] <- 
-  data[[2]][!data[[2]] %in% c("S008824")]
+  data[[2]][!data[[2]] %in% c("S013043","S010044", "S010014", "S008810", "S010012", "S010063")]
 data[[3]] <- 
-  data[[3]][!(data[[3]]$vial_barcode) %in% c("S008824"),]
+  data[[3]][!(data[[3]]$vial_barcode) %in% c("S013043","S010044", "S010014", "S008810", "S010012", "S010063"),]
 
 dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
-dist_matrix <- metaMDSredist(dist_trnL)
+#dist_matrix <- metaMDSredist(dist_trnL)
 dist_trnL$points
 
 

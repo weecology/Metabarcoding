@@ -25,6 +25,7 @@ include_graphics("Plots/ITS2_2017_allsp_totalreads_relabund.png")
 * 2017 data
 * PP only = proportions
 * all potential millet removed
+* even after removing "incremental" outliers, still overlapping, so nothing to see here
 
 ```{r figure2}
 include_graphics("Plots/ITS2_2017_PPonly_totalreads_relabund.png")
@@ -46,4 +47,26 @@ include_graphics("Plots/ITS2_2016_allsp_totalreads_relabund.png")
 
 ```{r figure4}
 include_graphics("Plots/ITS2_2016_PPonly_totalreads_relabund.png")
+```
+
+## Using WeeTUs
+
+### Plot 1
+* 2017 data
+* all species
+* all potential millet removed
+* minimum total reads = 2000
+
+```{r figure1_WTU}
+include_graphics("Plots/ITS2_2017_allsp_relabund_WTU.png")
+```
+
+### Plot 2
+* 2017 data
+* PP only = proportions
+* all potential millet removed
+* minimum total reads = 2000
+
+```{r figure2_WTU}
+include_graphics("Plots/ITS2_2017_PPonly_relabund_WTU.png")
 ```
