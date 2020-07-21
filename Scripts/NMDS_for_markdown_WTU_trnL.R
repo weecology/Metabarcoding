@@ -75,29 +75,185 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
 
 #ggsave("Plots/trnL_2017_allsp_relabund_WTU.png", plot1)
 
+# trnL, 2017, PP only
+
+reads_genus <- summarize_trnL_by_WeeTU(reads, "WTU.genus", WTU.genus)
+dat1 <- prep_2017_PPonly_relabund_WTU_genus(samples_PP, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2017, 0.01)
+dat2 <- prep_2017_PPonly_relabund_WTU_genus(samples_PP, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2017, 0.05)
+dat3 <- prep_2017_PPonly_relabund_WTU_genus(samples_PP, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2017, 0.005)
+dat4 <- prep_2017_PPonly_relabund_WTU_genus(samples_PP, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2017, 0.001)
+
+reads_family <- summarize_trnL_by_WeeTU(reads, "WTU.family", WTU.family)
+  # I think the summary is just too coarse here
+dat5 <- prep_2017_PPonly_relabund_WTU_family(samples_PP, reads_family, totals, OTU_WTU_key, "family", 2000, 2017, 0.01)
+dat6 <- prep_2017_PPonly_relabund_WTU_family(samples_PP, reads_family, totals, OTU_WTU_key, "family", 2000, 2017, 0.05)
+dat7 <- prep_2017_PPonly_relabund_WTU_family(samples_PP, reads_family, totals, OTU_WTU_key, "family", 2000, 2017, 0.005)
+dat8 <- prep_2017_PPonly_relabund_WTU_family(samples_PP, reads_family, totals, OTU_WTU_key, "family", 2000, 2017, 0.001)
+
+df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
+                dat7, dat8)
+
+(plot2 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+    geom_point(aes(color = group), size = 0.5) +
+    geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
+              size = 0.5) +
+    facet_wrap(sum_taxa ~ min_rel_abund, scales = "free", nrow = 2, ncol = 4) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "Krat",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 1) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_control",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_exclosure",],
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df %>% select(F.model, pval, sum_taxa, min_rel_abund) %>% distinct(), 
+              aes(x = Inf, y = Inf,
+                  label = paste("F.model = ", round(.data$F.model, 2),
+                                "\n p = ", round(.data$pval, 4))),
+              hjust = 1.1, vjust= 1.2, size = 2) +
+    scale_color_manual(values = cbPalette) +
+    ggtitle("trnL: Spring 2017, WTU") +
+    theme_bw() +
+    theme(legend.position = 'bottom',
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank())) 
+
+#ggsave("Plots/trnL_2017_PPonly_relabund_WTU.png", plot2)
+
+# trnL, 2016, all species 
+
+reads_genus <- summarize_trnL_by_WeeTU(reads, "WTU.genus", WTU.genus)
+dat1 <- prep_2016_allsp_relabund_WTU(samples, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2016, 0.01)
+dat2 <- prep_2016_allsp_relabund_WTU(samples, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2016, 0.05)
+dat3 <- prep_2016_allsp_relabund_WTU(samples, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2016, 0.005)
+dat4 <- prep_2016_allsp_relabund_WTU(samples, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2016, 0.001)
+
+reads_family <- summarize_trnL_by_WeeTU(reads, "WTU.family", WTU.family)
+dat5 <- prep_2016_allsp_relabund_WTU(samples, reads_family, totals, OTU_WTU_key, "family", 2000, 2016, 0.01)
+dat6 <- prep_2016_allsp_relabund_WTU(samples, reads_family, totals, OTU_WTU_key, "family", 2000, 2016, 0.05)
+dat7 <- prep_2016_allsp_relabund_WTU(samples, reads_family, totals, OTU_WTU_key, "family", 2000, 2016, 0.005)
+dat8 <- prep_2016_allsp_relabund_WTU(samples, reads_family, totals, OTU_WTU_key, "family", 2000, 2016, 0.001)
+
+df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
+                dat7, dat8)
+
+(plot3 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+    geom_point(aes(color = group), size = 0.5) +
+    geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
+              size = 0.5) +
+    facet_wrap(sum_taxa ~ min_rel_abund, scales = "free", nrow = 2, ncol = 4) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "Krat",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_control",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_exclosure",],
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df %>% select(F.model, pval, sum_taxa, min_rel_abund) %>% distinct(), 
+              aes(x = Inf, y = Inf,
+                  label = paste("F.model = ", round(.data$F.model, 2),
+                                "\n p = ", round(.data$pval, 4))),
+              hjust = 1.1, vjust= 1.2, size = 2) +
+    scale_color_manual(values = cbPalette) +
+    ggtitle("trnL: Spring 2017, WTU") +
+    theme_bw() +
+    theme(legend.position = 'bottom',
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank())) 
+
+#ggsave("Plots/trnL_2016_allsp_relabund_WTU.png", plot3)
+
+# trnL, 2016, PP only
+
+reads_genus <- summarize_trnL_by_WeeTU(reads, "WTU.genus", WTU.genus)
+dat1 <- prep_2016_PPonly_relabund_WTU(samples_PP, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2016, 0.01)
+dat2 <- prep_2016_PPonly_relabund_WTU(samples_PP, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2016, 0.05)
+dat3 <- prep_2016_PPonly_relabund_WTU(samples_PP, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2016, 0.005)
+dat4 <- prep_2016_PPonly_relabund_WTU(samples_PP, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2016, 0.001)
+
+reads_family <- summarize_trnL_by_WeeTU(reads, "WTU.family", WTU.family)
+# I think the summary is just too coarse here
+dat5 <- prep_2016_PPonly_relabund_WTU(samples_PP, reads_family, totals, OTU_WTU_key, "family", 2000, 2016, 0.01)
+dat6 <- prep_2016_PPonly_relabund_WTU(samples_PP, reads_family, totals, OTU_WTU_key, "family", 2000, 2016, 0.05)
+dat7 <- prep_2016_PPonly_relabund_WTU(samples_PP, reads_family, totals, OTU_WTU_key, "family", 2000, 2016, 0.005)
+dat8 <- prep_2016_PPonly_relabund_WTU(samples_PP, reads_family, totals, OTU_WTU_key, "family", 2000, 2016, 0.001)
+
+df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
+                dat7, dat8)
+
+(plot4 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+    geom_point(aes(color = group), size = 0.5) +
+    geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
+              size = 0.5) +
+    facet_wrap(sum_taxa ~ min_rel_abund, scales = "free", nrow = 2, ncol = 4) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "Krat",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 1) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_control",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_exclosure",],
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df %>% select(F.model, pval, sum_taxa, min_rel_abund) %>% distinct(), 
+              aes(x = Inf, y = Inf,
+                  label = paste("F.model = ", round(.data$F.model, 2),
+                                "\n p = ", round(.data$pval, 4))),
+              hjust = 1.1, vjust= 1.2, size = 2) +
+    scale_color_manual(values = cbPalette) +
+    ggtitle("trnL: Spring 2017, WTU") +
+    theme_bw() +
+    theme(legend.position = 'bottom',
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank())) 
+
+ggsave("Plots/trnL_2016_PPonly_relabund_WTU.png", plot4)
 
 # WORKING AREA ================================================================#
-# 
 
-data <- filter_reads_data_WeeTU_trnL(samples, 
-                                     reads_family, 
+data <- filter_reads_data_WeeTU_trnL(samples_PP, 
+                                     reads_genus, 
                                      totals,
                                      OTU_WTU_key,
-                                     yr = 2017, 
+                                     yr = 2016, 
                                      reads_min = 2000, 
                                      rel_reads_min = 0.01) %>% 
   data_prep_multivariate_WTU()
-data[[1]] <- binarize(data[[1]])
+#data[[1]] <- binarize(data[[1]])
 
 # remove outliers
 # group 1: "S008810", "S010014", "S013043"
 # group 2: group 1 + "S010063", "S010044", "S010012"
-data[[1]] <-
-  data[[1]][!(row.names(data[[1]]) %in% c("S013025", "S013017", "S010074", "S008804")),]
-data[[2]] <-
-  data[[2]][!data[[2]] %in% c("S013025", "S013017", "S010074", "S008804")]
-data[[3]] <-
-  data[[3]][!(data[[3]]$vial_barcode) %in% c("S013025", "S013017", "S010074", "S008804"),]
+# data[[1]] <-
+#   data[[1]][!(row.names(data[[1]]) %in% c("S008804", "S013025", "S013017",
+#                                           "S010029", "S010068")),]
+# data[[2]] <-
+#   data[[2]][!data[[2]] %in% c("S008804", "S013025", "S013017",
+#                               "S010029", "S010068")]
+# data[[3]] <-
+#   data[[3]][!(data[[3]]$vial_barcode) %in% c("S008804", "S013025", "S013017",
+#                                              "S010029", "S010068"),]
 
 dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
 dist_trnL$points

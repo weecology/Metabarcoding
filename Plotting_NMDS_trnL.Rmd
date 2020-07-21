@@ -59,3 +59,33 @@ include_graphics("Plots/trnL_2016_PPonly_totalreads_relabund.png")
 ```{r figure1_WTU}
 include_graphics("Plots/trnL_2017_allsp_relabund_WTU.png")
 ```
+
+### Plot 2
+* 2017 data
+* PP only = proportions
+* all potential millet removed
+* minimum total reads = 2000
+
+```{r figure2_WTU}
+include_graphics("Plots/trnL_2017_PPonly_relabund_WTU.png")
+```
+
+### Plot 3
+* 2016 data
+* all species
+* all potential millet removed
+* minimum total reads = 2000
+
+```{r figure3_WTU}
+include_graphics("Plots/trnL_2016_allsp_relabund_WTU.png")
+```
+
+### Plot 4
+* 2016 data
+* PP only = proportions
+* all potential millet removed
+* minimum total reads = 2000
+
+```{r figure4_WTU}
+include_graphics("Plots/trnL_2016_PPonly_relabund_WTU.png")
+```
