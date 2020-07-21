@@ -307,7 +307,7 @@ NMDS_plotting_prep <- function(data_list, dist_matrix) {
 
 # COMBINE DATA, REMOVE OUTLIERS, & PREP FOR PLOTTING #==========================
 
-# TRNL# 
+# TRNL # 
 
 prep_2017_allsp_relabund <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
   
