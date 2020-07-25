@@ -42,11 +42,11 @@ add_plotting_group <- function(data){
   data$group = NA                     
   for (i in 1:length(data$species)) {
     if (data$species[i] %in% c('DO', 'DM')) {
-      data$group[i] = 'Krat'
+      data$group[i] = 'K-Rat'
     } else if (data$plot[i] %in% c(4, 11, 14, 17)) {
-      data$group[i] = 'PP_control'
+      data$group[i] = 'PP: Control'
     } else {
-      data$group[i] = 'PP_exclosure'
+      data$group[i] = 'PP: KR_Exclosure'
     }
   }
   return(data)
