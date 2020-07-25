@@ -5,6 +5,7 @@
 library(tidyverse)
 library(patchwork)
 library(vegan)
+library(EcolUtils)
 source('Scripts/functions.R')
 
 # colorblind friendly palette
@@ -20,7 +21,8 @@ samples <- read_csv("Data/CollectionData/fecal_sample_collection.csv")
 samples_PP <- samples %>% filter(species == 'PP')
 
 # plot 1
-df <- prep_2016_allsp_relabund(samples, reads, totals, 2000, 2016, 0.01)
+list1 <- prep_2016_allsp_relabund(samples, reads, totals, 2000, 2016, 0.01)
+df <- list1[[1]]
 (plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
@@ -54,11 +56,13 @@ df <- prep_2016_allsp_relabund(samples, reads, totals, 2000, 2016, 0.01)
           axis.title.x = element_blank())) 
 
 legend <- cowplot::get_legend(plot1)
-
 plot1 <- plot1 + theme(legend.position = "none")
 
+list1[[2]]
+
 # plot 2
-df <- prep_2017_allsp_relabund(samples, reads, totals, 2000, 2017, 0.01)
+list2 <- prep_2017_allsp_relabund(samples, reads, totals, 2000, 2017, 0.01)
+df <- list2[[1]]
 (plot2 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
   geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
   geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
@@ -92,8 +96,11 @@ df <- prep_2017_allsp_relabund(samples, reads, totals, 2000, 2017, 0.01)
         axis.title.y = element_blank(),
         axis.title.x = element_blank())) 
 
+list2[[2]]
+
 # plot 3
-df <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 2000, 2016, 0.01)
+list3 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 2000, 2016, 0.01)
+df <- list3[[1]]
 (plot3 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
@@ -120,8 +127,11 @@ df <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 2000, 2016, 0.01)
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
+list3[[2]]
+
 # plot 4
-df <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 2000, 2017, 0.01)
+list4 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 2000, 2017, 0.01)
+df <- list4[[1]]
 (plot4 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
@@ -149,6 +159,8 @@ df <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 2000, 2017, 0.01)
           panel.grid.minor = element_blank(),
           axis.title.y = element_blank())) 
 
+list4[[2]]
+
 # multipanel plot
 
 col1 <- ggplot() + annotate(geom = 'text', x = 1, y = 1, 
@@ -173,6 +185,11 @@ wrap_plots(plotlist, design = layoutplot)
 
 #ggsave("Plots/trnL_OTUs.png")
 
+list1[[2]]
+list2[[2]]
+list3[[2]]
+list4[[2]]
+
 # ITS2 OTUS #-------------------------------------------------------------------
 
 reads <- read_csv("Data/SequencedData/Plants/ProcessedData/ITS2_reads_WeeTU.csv")
@@ -187,7 +204,8 @@ reads <- filter(reads, WTU.clade1 == 4) %>%
 samples_PP <- samples %>% filter(species == 'PP')
 
 # plot 1
-df <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 2000, 2016, 0.01)
+list5 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 2000, 2016, 0.01)
+df <- list5[[1]]
 (plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
@@ -224,8 +242,11 @@ legend <- cowplot::get_legend(plot1)
 
 plot1 <- plot1 + theme(legend.position = "none")
 
+list5[[2]]
+
 # plot 2
-df <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 2000, 2017, 0.01)
+list6 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 2000, 2017, 0.01)
+df <- list6[[1]]
 (plot2 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
@@ -259,8 +280,11 @@ df <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 2000, 2017, 0.01)
           axis.title.y = element_blank(),
           axis.title.x = element_blank())) 
 
+list6[[2]]
+
 # plot 3
-df <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2016, 0.01)
+list7 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2016, 0.01)
+df <- list7[[1]]
 (plot3 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
@@ -287,7 +311,10 @@ df <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2016, 0.01
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
+list7[[2]]
+
 # plot 4
+# the pairwise perMANOVA has broken this function. probably best to remove it
 df <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2017, 0.01)
 (plot4 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
@@ -339,3 +366,7 @@ plotlist <- list(c = col1, d = col2, e = plot1, f = plot2,
 wrap_plots(plotlist, design = layoutplot) 
 
 #ggsave("Plots/ITS2_OTUs.png")
+
+list5[[2]]
+list6[[2]]
+list7[[2]]
