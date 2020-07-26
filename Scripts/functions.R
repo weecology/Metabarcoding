@@ -150,7 +150,7 @@ summarize_ITS2_by_WeeTU <- function(data,
 filter_reads_data_trnL <- function(samples,
                                    reads,
                                    totals,
-                                   yr = c(2016, 2017),
+                                   period_code = c(454, 460, 466),
                                    reads_min = 2000,
                                    rel_reads_min = 0.001){
   
@@ -159,7 +159,7 @@ filter_reads_data_trnL <- function(samples,
   # and remove samples that were part of the trap/bait test
   samples <- add_plot_type(samples) %>% 
     add_plotting_group() %>% 
-    filter(is.na(notes), year %in% yr) 
+    filter(is.na(notes), period %in% period_code) 
   
   # select only fecal samples
   fecal_id <- samples$vial_barcode
@@ -185,7 +185,7 @@ filter_reads_data_trnL <- function(samples,
 filter_reads_data_ITS2 <- function(samples,
                                    reads,
                                    totals,
-                                   yr = c(2016, 2017),
+                                   period_code = c(454, 460, 466),
                                    reads_min = 2000,
                                    rel_reads_min = 0.001){
   
@@ -194,7 +194,7 @@ filter_reads_data_ITS2 <- function(samples,
   # and remove samples that were part of the trap/bait test
   samples <- add_plot_type(samples) %>% 
     add_plotting_group() %>% 
-    filter(is.na(notes), year %in% yr) 
+    filter(is.na(notes), period %in% period_code) 
   
   # select only fecal samples
   fecal_id <- samples$vial_barcode
@@ -309,24 +309,24 @@ NMDS_plotting_prep <- function(data_list, dist_matrix) {
 
 # TRNL # 
 
-prep_2017_allsp_relabund <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
+prep_460_allsp_relabund <- function(samples, reads, totals, reads_min, period_code, rel_reads_min){
   
   data <- filter_reads_data_trnL(samples, 
                                  reads, 
                                  totals, 
                                  reads_min = reads_min, 
-                                 yr = yr, 
+                                 period_code = period_code, 
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate()
   data[[1]] <- binarize(data[[1]])
   
   # remove outliers
   data[[1]] <- 
-    data[[1]][!(row.names(data[[1]]) %in% c("S010049", "S013067")),]
+    data[[1]][!(row.names(data[[1]]) %in% c("S010049")),]
   data[[2]] <- 
-    data[[2]][!data[[2]] %in% c("S010049", "S013067")]
+    data[[2]][!data[[2]] %in% c("S010049")]
   data[[3]] <- 
-    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010049", "S013067"),]
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010049"),]
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
@@ -354,23 +354,24 @@ prep_2017_allsp_relabund <- function(samples, reads, totals, reads_min, yr, rel_
   
 }
 
-prep_2017_PPonly_relabund <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
+prep_466_allsp_relabund <- function(samples, reads, totals, reads_min, period_code, rel_reads_min){
   
   data <- filter_reads_data_trnL(samples, 
                                  reads, 
                                  totals, 
                                  reads_min = reads_min, 
-                                 yr = yr, 
+                                 period_code = period_code, 
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate()
+  data[[1]] <- binarize(data[[1]])
   
   # remove outliers
   data[[1]] <- 
-    data[[1]][!(row.names(data[[1]]) %in% c("S010049", "S013067")),]
+    data[[1]][!(row.names(data[[1]]) %in% c("S013067")),]
   data[[2]] <- 
-    data[[2]][!data[[2]] %in% c("S010049", "S013067")]
+    data[[2]][!data[[2]] %in% c("S013067")]
   data[[3]] <- 
-    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010049", "S013067"),]
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013067"),]
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
@@ -398,13 +399,101 @@ prep_2017_PPonly_relabund <- function(samples, reads, totals, reads_min, yr, rel
   
 }
 
-prep_2016_PPonly_relabund <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
+prep_460_PPonly_relabund <- function(samples, reads, totals, reads_min, period_code, rel_reads_min){
   
   data <- filter_reads_data_trnL(samples, 
                                  reads, 
                                  totals, 
                                  reads_min = reads_min, 
-                                 yr = yr, 
+                                 period_code = period_code, 
+                                 rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate()
+  
+  #remove outliers
+  data[[1]] <-
+    data[[1]][!(row.names(data[[1]]) %in% c("S010049")),]
+  data[[2]] <-
+    data[[2]][!data[[2]] %in% c("S010049")]
+  data[[3]] <-
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010049"),]
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  dist_matrix <- metaMDSredist(dist_trnL)
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  
+  pairwise_perMANOVA <- EcolUtils::adonis.pair(dist.mat = dist_matrix, 
+                                               Factor = as.factor(data[[3]]$group),
+                                               nper = 10000)
+  
+  # list of objects to return
+  return_list <- list(df, pairwise_perMANOVA)
+  names(return_list) <- c("df", "pairwise_perMANOVA")
+  return(return_list)
+  
+}
+
+prep_466_PPonly_relabund <- function(samples, reads, totals, reads_min, period_code, rel_reads_min){
+  
+  data <- filter_reads_data_trnL(samples, 
+                                 reads, 
+                                 totals, 
+                                 reads_min = reads_min, 
+                                 period_code = period_code, 
+                                 rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate()
+  
+  #remove outliers
+  data[[1]] <-
+    data[[1]][!(row.names(data[[1]]) %in% c("S013067")),]
+  data[[2]] <-
+    data[[2]][!data[[2]] %in% c("S013067")]
+  data[[3]] <-
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013067"),]
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  dist_matrix <- metaMDSredist(dist_trnL)
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  
+  pairwise_perMANOVA <- EcolUtils::adonis.pair(dist.mat = dist_matrix, 
+                                               Factor = as.factor(data[[3]]$group),
+                                               nper = 10000)
+  
+  # list of objects to return
+  return_list <- list(df, pairwise_perMANOVA)
+  names(return_list) <- c("df", "pairwise_perMANOVA")
+  return(return_list)
+  
+}
+
+prep_454_PPonly_relabund <- function(samples, reads, totals, reads_min, period_code, rel_reads_min){
+  
+  data <- filter_reads_data_trnL(samples, 
+                                 reads, 
+                                 totals, 
+                                 reads_min = reads_min, 
+                                 period_code = period_code, 
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate()
 
@@ -434,13 +523,13 @@ prep_2016_PPonly_relabund <- function(samples, reads, totals, reads_min, yr, rel
   
 }
 
-prep_2016_allsp_relabund <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
+prep_454_allsp_relabund <- function(samples, reads, totals, reads_min, period_code, rel_reads_min){
   
   data <- filter_reads_data_trnL(samples, 
                                  reads, 
                                  totals, 
                                  reads_min = reads_min, 
-                                 yr = yr, 
+                                 period_code = period_code, 
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate()
   data[[1]] <- binarize(data[[1]])
@@ -474,33 +563,24 @@ prep_2016_allsp_relabund <- function(samples, reads, totals, reads_min, yr, rel_
 
 # ITS2 #
 
-prep_2017_allsp_relabund_ITS2 <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
+prep_460_allsp_relabund_ITS2 <- function(samples, reads, totals, reads_min, period_code, rel_reads_min){
   
   data <- filter_reads_data_ITS2(samples, 
                                  reads, 
                                  totals, 
                                  reads_min = reads_min, 
-                                 yr = yr, 
+                                 period_code = period_code, 
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate()
   data[[1]] <- binarize(data[[1]])
   
   # remove outliers
-  # group 1: "S010044"
-  # group 2: "S010044", "S010014", "S013043", "S008810"
-  # group 3: group 2 + "S010063", "S010031", "S010012"
-  data[[1]] <-
-    data[[1]][!(row.names(data[[1]]) %in% c("S010044", "S010014", "S013043", 
-                                            "S008810", "S010063", "S010031", 
-                                            "S010012", "S013041")),]
-  data[[2]] <-
-    data[[2]][!data[[2]] %in% c("S010044", "S010014", "S013043", 
-                                "S008810", "S010063", "S010031", 
-                                "S010012", "S013041")]
-  data[[3]] <-
-    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010044", "S010014", "S013043",
-                                               "S008810", "S010063", "S010031", 
-                                               "S010012", "S013041"),]
+  data[[1]] <- 
+    data[[1]][!(row.names(data[[1]]) %in% c("S010044", "S010014", "S008810")),]
+  data[[2]] <- 
+    data[[2]][!data[[2]] %in% c("S010044", "S010014", "S008810")]
+  data[[3]] <- 
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010044", "S010014", "S008810"),]
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
@@ -528,25 +608,69 @@ prep_2017_allsp_relabund_ITS2 <- function(samples, reads, totals, reads_min, yr,
   
 }
 
-prep_2017_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
+prep_466_allsp_relabund_ITS2 <- function(samples, reads, totals, reads_min, period_code, rel_reads_min){
   
   data <- filter_reads_data_ITS2(samples, 
                                  reads, 
                                  totals, 
                                  reads_min = reads_min, 
-                                 yr = yr, 
+                                 period_code = period_code, 
+                                 rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate()
+  data[[1]] <- binarize(data[[1]])
+  
+  # remove outliers
+  data[[1]] <- 
+    data[[1]][!(row.names(data[[1]]) %in% c("S013043")),]
+  data[[2]] <- 
+    data[[2]][!data[[2]] %in% c("S013043")]
+  data[[3]] <- 
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013043"),]
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  dist_matrix <- metaMDSredist(dist_trnL)
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  
+  pairwise_perMANOVA <- EcolUtils::adonis.pair(dist.mat = dist_matrix, 
+                                               Factor = as.factor(data[[3]]$group),
+                                               nper = 10000)
+  
+  # list of objects to return
+  return_list <- list(df, pairwise_perMANOVA)
+  names(return_list) <- c("df", "pairwise_perMANOVA")
+  return(return_list)
+  
+}
+
+prep_460_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, period_code, rel_reads_min){
+  
+  data <- filter_reads_data_ITS2(samples, 
+                                 reads, 
+                                 totals, 
+                                 reads_min = reads_min, 
+                                 period_code = period_code, 
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate()
   
   # remove outliers
-  # group 1: "S008810", "S010014", "S013043"
-  # group 2: group 1 + "S010063", "S010044", "S010012"
-  data[[1]] <-
-    data[[1]][!(row.names(data[[1]]) %in% c("S013067", "S012859")),]
-  data[[2]] <-
-    data[[2]][!data[[2]] %in% c("S013067", "S012859")]
-  data[[3]] <-
-    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013067", "S012859"),]
+  data[[1]] <- 
+    data[[1]][!(row.names(data[[1]]) %in% c("S010044", "S010014", "S008810", "S010074")),]
+  data[[2]] <- 
+    data[[2]][!data[[2]] %in% c("S010044", "S010014", "S008810", "S010074")]
+  data[[3]] <- 
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010044", "S010014", "S008810", "S010074"),]
+  
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
@@ -566,13 +690,49 @@ prep_2017_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, yr
   
 }
 
-prep_2016_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
+prep_466_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, period_code, rel_reads_min){
   
   data <- filter_reads_data_ITS2(samples, 
                                  reads, 
                                  totals, 
                                  reads_min = reads_min, 
-                                 yr = yr, 
+                                 period_code = period_code, 
+                                 rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate()
+  
+  # remove outliers
+  data[[1]] <- 
+    data[[1]][!(row.names(data[[1]]) %in% c("S013043")),]
+  data[[2]] <- 
+    data[[2]][!data[[2]] %in% c("S013043")]
+  data[[3]] <- 
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013043"),]
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  
+  return(df)
+  
+}
+
+prep_454_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, period_code, rel_reads_min){
+  
+  data <- filter_reads_data_ITS2(samples, 
+                                 reads, 
+                                 totals, 
+                                 reads_min = reads_min, 
+                                 period_code = period_code, 
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate()
   
@@ -602,13 +762,13 @@ prep_2016_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, yr
   
 }
 
-prep_2016_allsp_relabund_ITS2 <- function(samples, reads, totals, reads_min, yr, rel_reads_min){
+prep_454_allsp_relabund_ITS2 <- function(samples, reads, totals, reads_min, period_code, rel_reads_min){
   
   data <- filter_reads_data_ITS2(samples, 
                                  reads, 
                                  totals, 
                                  reads_min = reads_min, 
-                                 yr = yr, 
+                                 period_code = period_code, 
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate()
   data[[1]] <- binarize(data[[1]])
@@ -689,7 +849,7 @@ filter_reads_data_WeeTU_trnL <- function(samples,
                                          reads,
                                          totals,
                                          OTU_WTU_key,
-                                         yr = c(2016, 2017),
+                                         period_code = c(454, 460, 466),
                                          reads_min = 2000,
                                          rel_reads_min = 0.001){
   
@@ -698,7 +858,7 @@ filter_reads_data_WeeTU_trnL <- function(samples,
   # and remove samples that were part of the trap/bait test
   samples <- add_plot_type(samples) %>% 
     add_plotting_group() %>% 
-    filter(is.na(notes), year %in% yr) 
+    filter(is.na(notes), period %in% period_code) 
   
   # select only fecal samples
   fecal_id <- samples$vial_barcode
@@ -732,13 +892,13 @@ filter_reads_data_WeeTU_trnL <- function(samples,
   
 }
 
-prep_2017_allsp_relabund_WTU_genus <- function(samples, 
+prep_466_allsp_relabund_WTU_genus <- function(samples, 
                                                reads, 
                                                totals, 
                                                OTU_WTU_key, 
                                                sum_taxa, 
                                                reads_min, 
-                                               yr, 
+                                               period_code, 
                                                rel_reads_min){
   
   data <- filter_reads_data_WeeTU_trnL(samples, 
@@ -746,20 +906,10 @@ prep_2017_allsp_relabund_WTU_genus <- function(samples,
                                  totals, 
                                  OTU_WTU_key,
                                  reads_min = reads_min, 
-                                 yr = yr, 
+                                 period_code = period_code, 
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate_WTU()
   data[[1]] <- binarize(data[[1]])
-  
-  # remove outliers
-  # group 1: "S008810", "S010014", "S013043"
-  # group 2: group 1 + "S010063", "S010044", "S010012"
-  data[[1]] <-
-    data[[1]][!(row.names(data[[1]]) %in% c("S010049")),]
-  data[[2]] <-
-    data[[2]][!data[[2]] %in% c("S010049")]
-  data[[3]] <-
-    data[[3]][!(data[[3]]$vial_barcode) %in% c("S010049"),]
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
@@ -780,13 +930,13 @@ prep_2017_allsp_relabund_WTU_genus <- function(samples,
   
 }
 
-prep_2017_allsp_relabund_WTU_family <- function(samples, 
+prep_466_allsp_relabund_WTU_family <- function(samples, 
                                                 reads, 
                                                 totals, 
                                                 OTU_WTU_key, 
                                                 sum_taxa, 
                                                 reads_min, 
-                                                yr, 
+                                                period_code, 
                                                 rel_reads_min){
   
   data <- filter_reads_data_WeeTU_trnL(samples, 
@@ -794,19 +944,18 @@ prep_2017_allsp_relabund_WTU_family <- function(samples,
                                        totals, 
                                        OTU_WTU_key,
                                        reads_min = reads_min, 
-                                       yr = yr, 
+                                       period_code = period_code, 
                                        rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate_WTU()
   data[[1]] <- binarize(data[[1]])
   
   # remove outliers
   data[[1]] <-
-    data[[1]][!(row.names(data[[1]]) %in% c("S013025", "S013017", "S010074", "S008804")),]
+    data[[1]][!(row.names(data[[1]]) %in% c("S013017", "S013025")),]
   data[[2]] <-
-    data[[2]][!data[[2]] %in% c("S013025", "S013017", "S010074", "S008804")]
+    data[[2]][!data[[2]] %in% c("S013017", "S013025")]
   data[[3]] <-
-    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013025", "S013017", "S010074", "S008804"),]
-  
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013017", "S013025"),]
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
@@ -827,13 +976,13 @@ prep_2017_allsp_relabund_WTU_family <- function(samples,
   
 }
 
-prep_2017_PPonly_relabund_WTU_genus <- function(samples, 
+prep_466_PPonly_relabund_WTU_genus <- function(samples, 
                                           reads, 
                                           totals, 
                                           OTU_WTU_key, 
                                           sum_taxa, 
                                           reads_min, 
-                                          yr, 
+                                          period_code, 
                                           rel_reads_min){
   
   data <- filter_reads_data_WeeTU_trnL(samples, 
@@ -841,10 +990,177 @@ prep_2017_PPonly_relabund_WTU_genus <- function(samples,
                                  totals, 
                                  OTU_WTU_key,
                                  reads_min = reads_min, 
-                                 yr = yr, 
+                                 period_code = period_code, 
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate_WTU()
   
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  df$sum_taxa <- sum_taxa
+  
+  return(df)
+  
+}
+
+prep_466_PPonly_relabund_WTU_family <- function(samples, 
+                                                reads, 
+                                                totals, 
+                                                OTU_WTU_key, 
+                                                sum_taxa, 
+                                                reads_min, 
+                                                period_code, 
+                                                rel_reads_min){
+  
+  data <- filter_reads_data_WeeTU_trnL(samples, 
+                                       reads, 
+                                       totals, 
+                                       OTU_WTU_key,
+                                       reads_min = reads_min, 
+                                       period_code = period_code, 
+                                       rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate_WTU()
+  
+  # remove outliers
+  data[[1]] <-
+    data[[1]][!(row.names(data[[1]]) %in% c("S013017", "S013025")),]
+  data[[2]] <-
+    data[[2]][!data[[2]] %in% c("S013017", "S013025")]
+  data[[3]] <-
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013017", "S013025"),]
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  df$sum_taxa <- sum_taxa
+  
+  return(df)
+  
+}
+
+prep_460_allsp_relabund_WTU_genus <- function(samples, 
+                                              reads, 
+                                              totals, 
+                                              OTU_WTU_key, 
+                                              sum_taxa, 
+                                              reads_min, 
+                                              period_code, 
+                                              rel_reads_min){
+  
+  data <- filter_reads_data_WeeTU_trnL(samples, 
+                                       reads, 
+                                       totals, 
+                                       OTU_WTU_key,
+                                       reads_min = reads_min, 
+                                       period_code = period_code, 
+                                       rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate_WTU()
+  data[[1]] <- binarize(data[[1]])
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  df$sum_taxa <- sum_taxa
+  
+  return(df)
+  
+}
+
+prep_460_allsp_relabund_WTU_family <- function(samples, 
+                                               reads, 
+                                               totals, 
+                                               OTU_WTU_key, 
+                                               sum_taxa, 
+                                               reads_min, 
+                                               period_code, 
+                                               rel_reads_min){
+  
+  data <- filter_reads_data_WeeTU_trnL(samples, 
+                                       reads, 
+                                       totals, 
+                                       OTU_WTU_key,
+                                       reads_min = reads_min, 
+                                       period_code = period_code, 
+                                       rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate_WTU()
+  data[[1]] <- binarize(data[[1]])
+  
+  # remove outliers
+  data[[1]] <-
+    data[[1]][!(row.names(data[[1]]) %in% c("S013017", "S013025")),]
+  data[[2]] <-
+    data[[2]][!data[[2]] %in% c("S013017", "S013025")]
+  data[[3]] <-
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013017", "S013025"),]
+  
+  dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
+  plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
+  
+  plotting_data[[1]]$df <- "NMDS"
+  plotting_data[[2]]$df <- "NMDS.mean"
+  plotting_data[[3]]$df <- "df_ell"
+  plotting_data[[3]] <- plotting_data[[3]] %>% 
+    rename("MDS1" = NMDS1, "MDS2" = NMDS2)
+  df <- bind_rows(plotting_data[[1]], plotting_data[[2]], plotting_data[[3]])
+  df$F.model <- plotting_data[[4]]$aov.tab$F.Model[1]
+  df$pval <- plotting_data[[4]]$aov.tab$`Pr(>F)`[1]
+  df$min_total <- reads_min
+  df$min_rel_abund <- rel_reads_min
+  df$sum_taxa <- sum_taxa
+  
+  return(df)
+  
+}
+
+prep_460_PPonly_relabund_WTU_genus <- function(samples, 
+                                               reads, 
+                                               totals, 
+                                               OTU_WTU_key, 
+                                               sum_taxa, 
+                                               reads_min, 
+                                               period_code, 
+                                               rel_reads_min){
+  
+  data <- filter_reads_data_WeeTU_trnL(samples, 
+                                       reads, 
+                                       totals, 
+                                       OTU_WTU_key,
+                                       reads_min = reads_min, 
+                                       period_code = period_code, 
+                                       rel_reads_min = rel_reads_min) %>% 
+    data_prep_multivariate_WTU()
+  
+  # remove outliers
   data[[1]] <-
     data[[1]][!(row.names(data[[1]]) %in% c("S010049")),]
   data[[2]] <-
@@ -871,13 +1187,13 @@ prep_2017_PPonly_relabund_WTU_genus <- function(samples,
   
 }
 
-prep_2017_PPonly_relabund_WTU_family <- function(samples, 
+prep_460_PPonly_relabund_WTU_family <- function(samples, 
                                                 reads, 
                                                 totals, 
                                                 OTU_WTU_key, 
                                                 sum_taxa, 
                                                 reads_min, 
-                                                yr, 
+                                                period_code, 
                                                 rel_reads_min){
   
   data <- filter_reads_data_WeeTU_trnL(samples, 
@@ -885,19 +1201,9 @@ prep_2017_PPonly_relabund_WTU_family <- function(samples,
                                        totals, 
                                        OTU_WTU_key,
                                        reads_min = reads_min, 
-                                       yr = yr, 
+                                       period_code = period_code, 
                                        rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate_WTU()
-  
-  data[[1]] <-
-    data[[1]][!(row.names(data[[1]]) %in% c("S008804", "S013025", "S013017",
-                                            "S010029", "S010068")),]
-  data[[2]] <-
-    data[[2]][!data[[2]] %in% c("S008804", "S013025", "S013017",
-                                "S010029", "S010068")]
-  data[[3]] <-
-    data[[3]][!(data[[3]]$vial_barcode) %in% c("S008804", "S013025", "S013017",
-                                               "S010029", "S010068"),]
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
@@ -918,13 +1224,13 @@ prep_2017_PPonly_relabund_WTU_family <- function(samples,
   
 }
 
-prep_2016_PPonly_relabund_WTU <- function(samples, 
+prep_454_PPonly_relabund_WTU <- function(samples, 
                                           reads, 
                                           totals, 
                                           OTU_WTU_key, 
                                           sum_taxa,
                                           reads_min, 
-                                          yr, 
+                                          period_code, 
                                           rel_reads_min){
   
   data <- filter_reads_data_WeeTU_trnL(samples, 
@@ -932,7 +1238,7 @@ prep_2016_PPonly_relabund_WTU <- function(samples,
                                  totals, 
                                  OTU_WTU_key,
                                  reads_min = reads_min, 
-                                 yr = yr, 
+                                 period_code = period_code, 
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate_WTU()
   
@@ -955,13 +1261,13 @@ prep_2016_PPonly_relabund_WTU <- function(samples,
   
 }
 
-prep_2016_allsp_relabund_WTU <- function(samples, 
+prep_454_allsp_relabund_WTU <- function(samples, 
                                          reads, 
                                          totals, 
                                          OTU_WTU_key, 
                                          sum_taxa,
                                          reads_min, 
-                                         yr, 
+                                         period_code, 
                                          rel_reads_min){
   
   data <- filter_reads_data_WeeTU_trnL(samples, 
@@ -969,7 +1275,7 @@ prep_2016_allsp_relabund_WTU <- function(samples,
                                  totals, 
                                  OTU_WTU_key,
                                  reads_min = reads_min, 
-                                 yr = yr, 
+                                 period_code = period_code, 
                                  rel_reads_min = rel_reads_min) %>% 
     data_prep_multivariate_WTU()
   data[[1]] <- binarize(data[[1]])
@@ -999,7 +1305,7 @@ filter_reads_data_WeeTU_ITS2 <- function(samples,
                                          reads,
                                          totals,
                                          OTU_WTU_key,
-                                         yr = c(2016, 2017),
+                                         period_code = c(454, 460, 466),
                                          reads_min = 2000,
                                          rel_reads_min = 0.001){
   
@@ -1008,7 +1314,7 @@ filter_reads_data_WeeTU_ITS2 <- function(samples,
   # and remove samples that were part of the trap/bait test
   samples <- add_plot_type(samples) %>% 
     add_plotting_group() %>% 
-    filter(is.na(notes), year %in% yr) 
+    filter(is.na(notes), period %in% period_code) 
   
   # select only fecal samples
   fecal_id <- samples$vial_barcode
@@ -1029,7 +1335,7 @@ filter_reads_data_WeeTU_ITS2 <- function(samples,
   # and make relative reads column
   reads <- full_join(reads, totals)
   reads <- reads %>% 
-    filter(SampleID %in% fecal_id, !WTU %in% millet_WTU$WTU) %>% 
+    filter(SampleID %in% fecal_id, !WTU %in% millet_WTUs$WTU) %>% 
     mutate(Rel_Reads = Reads/Total_Reads)
   
   # filter data by minimum total reads and/or minimum relative reads

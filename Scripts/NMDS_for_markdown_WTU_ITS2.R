@@ -138,11 +138,11 @@ df <- bind_rows(dat01, dat02, dat03, dat04, dat05, dat06,
 summarize_ITS2_by_WeeTU(reads, "WTU.subfamily", WTU.subfamily)
 
 
-data <- filter_reads_data_WeeTU_trnL(samples, 
-                                     reads_genus, 
+data <- filter_reads_data_WeeTU_ITS2(samples, 
+                                     reads_species, 
                                      totals,
                                      OTU_WTU_key,
-                                     yr = 2017, 
+                                     period_code = 454, 
                                      reads_min = 2000, 
                                      rel_reads_min = 0.01) %>% 
   data_prep_multivariate_WTU()

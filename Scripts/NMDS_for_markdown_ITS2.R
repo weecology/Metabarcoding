@@ -25,81 +25,28 @@ reads <- filter(reads, WTU.clade1 == 4) %>%
 samples_PP <- samples %>% filter(species == 'PP')
 
 
-# Plot 1 #
-# OTUs, 2017 ------------------------------------------------------------------#
+# OTUS #========================================================================
 
-# outliers are proving to be confusing
-
-dat1 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.01)
-dat2 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.05)
-dat3 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.005)
-dat4 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 1000, 2017, 0.001)
-dat5 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 2000, 2017, 0.01)
-dat6 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 2000, 2017, 0.05)
-dat7 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 2000, 2017, 0.005)
-dat8 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 2000, 2017, 0.001)
-dat9 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 5000, 2017, 0.01)
-dat10 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 5000, 2017, 0.05)
-dat11 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 5000, 2017, 0.005)
-dat12 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 5000, 2017, 0.001)
-
-df<- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
-               dat7, dat8, dat9, dat10, dat11, dat12)
-
-(plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
-  geom_point(aes(color = group), size = 0.5) +
-  geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
-            size = 0.5) +
-  facet_wrap(min_total ~ min_rel_abund, scales = "free") +
-  geom_text(data = df[df$df == "NMDS.mean" & df$group == "Krat",], 
-            aes(x = MDS1, y = MDS2,  
-                label = .data$group[1], 
-                color = .data$group[1]),
-            size = 1) +
-  geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_control",], 
-            aes(x = MDS1, y = MDS2,  
-                label = .data$group[1], 
-                color = .data$group[1]),
-            size = 1) +
-  geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_exclosure",],
-            aes(x = MDS1, y = MDS2,  
-                label = .data$group[1], 
-                color = .data$group[1]),
-            size = 1) +
-  geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
-            aes(x = Inf, y = Inf,
-                label = paste("F.model = ", round(.data$F.model, 2),
-                              "\n p = ", round(.data$pval, 4))),
-            hjust = 1.1, vjust= 1.2, size = 2) +
-  scale_color_manual(values = cbPalette) +
-  ggtitle("ITS2: Spring 2017") +
-  theme_bw() +
-  theme(legend.position = 'bottom',
-        panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank())) 
-
-#ggsave("Plots/ITS2_2017_allsp_totalreads_relabund.png", plot1, device = "png")
-
-# PLOT 2 #
+# PLOT 1 #
 # OTUs, 2016 ------------------------------------------------------------------#
 
-dat1 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 1000, 2016, 0.025)
-dat2 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 1000, 2016, 0.01)
-dat3 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 1000, 2016, 0.005)
-dat4 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 1000, 2016, 0.001)
-dat5 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 2000, 2016, 0.01)
-dat6 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 2000, 2016, 0.025)
-dat7 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 2000, 2016, 0.005)
-dat8 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 2000, 2016, 0.001)
-dat9 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 5000, 2016, 0.01)
-dat10 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 5000, 2016, 0.025)
-dat11 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 5000, 2016, 0.005)
-dat12 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 5000, 2016, 0.001)
+dat1 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 1000, 454, 0.01)
+dat2 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 1000, 454, 0.05)
+dat3 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 1000, 454, 0.005)
+dat4 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 1000, 454, 0.001)
+dat5 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 2000, 454, 0.01)
+dat6 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 2000, 454, 0.05)
+dat7 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 2000, 454, 0.005)
+dat8 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 2000, 454, 0.001)
+dat9 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 5000, 454, 0.01)
+dat10 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 5000, 454, 0.05)
+dat11 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 5000, 454, 0.005)
+dat12 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 5000, 454, 0.001)
 
 df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
                 dat7, dat8, dat9, dat10, dat11, dat12)
 
-(plot2 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+(plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
@@ -131,39 +78,35 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
-#ggsave("Plots/ITS2_2016_allsp_totalreads_relabund.png", plot2, device = "png")
+#ggsave("Plots/ITS2_454_allsp_totalreads_relabund.png", plot1, device = "png")
 
+# PLOT 2 #
+# OTUs, 454, PPs only ------------------------------------------------------------------#
 
-# PLOT 3 #
-# OTUs, 2016, PPs only ------------------------------------------------------------------#
+dat1 <- prep_454_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 454, 0.01)
+dat3 <- prep_454_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 454, 0.005)
+dat4 <- prep_454_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 454, 0.001)
+dat5 <- prep_454_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 454, 0.01)
+dat7 <- prep_454_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 454, 0.005)
+dat8 <- prep_454_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 454, 0.001)
+dat9 <- prep_454_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 454, 0.01)
+dat11 <- prep_454_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 454, 0.005)
+dat12 <- prep_454_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 454, 0.001)
 
-dat1 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2016, 0.01)
-dat2 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2016, 0.05)
-dat3 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2016, 0.005)
-dat4 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2016, 0.001)
-dat5 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2016, 0.01)
-dat6 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2016, 0.05)
-dat7 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2016, 0.005)
-dat8 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2016, 0.001)
-dat9 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2016, 0.01)
-dat10 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2016, 0.05)
-dat11 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2016, 0.005)
-dat12 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2016, 0.001)
+df <- bind_rows(dat1, dat3, dat4, dat5,
+                dat7, dat8, dat9, dat11, dat12)
 
-df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
-                dat7, dat8, dat9, dat10, dat11, dat12)
-
-(plot3 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+(plot2 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
     facet_wrap(min_total ~ min_rel_abund, scales = "free") +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_control",], 
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
               size = 1) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_exclosure",],
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_exclosure",],
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
@@ -180,38 +123,85 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
-#ggsave("Plots/ITS2_2016_PPonly_totalreads_relabund.png", plot3, device = "png")
+#ggsave("Plots/ITS2_2016_PPonly_totalreads_relabund.png", plot2, device = "png")
+
+# Plot 3 #
+# OTUs, 460 ------------------------------------------------------------------#
+
+dat1 <- prep_460_allsp_relabund_ITS2(samples, reads, totals, 1000, 460, 0.01)
+dat3 <- prep_460_allsp_relabund_ITS2(samples, reads, totals, 1000, 460, 0.005)
+dat4 <- prep_460_allsp_relabund_ITS2(samples, reads, totals, 1000, 460, 0.001)
+dat5 <- prep_460_allsp_relabund_ITS2(samples, reads, totals, 2000, 460, 0.01)
+dat7 <- prep_460_allsp_relabund_ITS2(samples, reads, totals, 2000, 460, 0.005)
+dat8 <- prep_460_allsp_relabund_ITS2(samples, reads, totals, 2000, 460, 0.001)
+dat9 <- prep_460_allsp_relabund_ITS2(samples, reads, totals, 5000, 460, 0.01)
+dat11 <- prep_460_allsp_relabund_ITS2(samples, reads, totals, 5000, 460, 0.005)
+dat12 <- prep_460_allsp_relabund_ITS2(samples, reads, totals, 5000, 460, 0.001)
+
+df<- bind_rows(dat1, dat3, dat4, dat5,
+               dat7, dat8, dat9, dat11, dat12)
+
+(plot3 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+    geom_point(aes(color = group), size = 0.5) +
+    geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
+              size = 0.5) +
+    facet_wrap(min_total ~ min_rel_abund, scales = "free", ncol = 3) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "K-Rat",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+              aes(x = MDS1, y = MDS2,
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+              aes(x = Inf, y = Inf,
+                  label = paste("F.model = ", round(.data$F.model, 2),
+                                "\n p = ", round(.data$pval, 4))),
+              hjust = 1.1, vjust= 1.2, size = 2) +
+    scale_color_manual(values = cbPalette) +
+    ggtitle("ITS2: Spring 2017") +
+    theme_bw() +
+    theme(legend.position = 'bottom',
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank())) 
+
+#ggsave("Plots/ITS2_460_allsp_totalreads_relabund.png", plot3, device = "png")
 
 # PLOT 4 #
-# OTUs, 2017, PPs only ------------------------------------------------------------------#
+# OTUs, 460, PPs only ------------------------------------------------------------------#
 
-dat1 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2017, 0.01)
-dat2 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2017, 0.05)
-dat3 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2017, 0.005)
-dat4 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 2017, 0.001)
-dat5 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2017, 0.01)
-dat6 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2017, 0.05)
-dat7 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2017, 0.005)
-dat8 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2017, 0.001)
-dat9 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2017, 0.01)
-dat10 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2017, 0.05)
-dat11 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2017, 0.005)
-dat12 <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 2017, 0.001)
+dat1 <- prep_460_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 460, 0.01)
+dat3 <- prep_460_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 460, 0.005)
+dat4 <- prep_460_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 460, 0.001)
+dat5 <- prep_460_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 460, 0.01)
+dat7 <- prep_460_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 460, 0.005)
+dat8 <- prep_460_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 460, 0.001)
+dat9 <- prep_460_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 460, 0.01)
+dat11 <- prep_460_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 460, 0.005)
+dat12 <- prep_460_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 460, 0.001)
 
-df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
-                dat7, dat8, dat9, dat10, dat11, dat12)
+df <- bind_rows(dat1, dat3, dat4, dat5,
+                dat7, dat8, dat9, dat11, dat12)
 
 (plot4 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
     facet_wrap(min_total ~ min_rel_abund, scales = "free") +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_control",], 
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
               size = 1) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_exclosure",],
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
@@ -228,37 +218,128 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
-#ggsave("Plots/ITS2_2017_PPonly_totalreads_relabund.png", plot4, device = "png")
+#ggsave("Plots/ITS2_460_PPonly_totalreads_relabund.png", plot4, device = "png")
 
+# Plot 5 #
+# OTUs, 466 ------------------------------------------------------------------#
 
+dat1 <- prep_466_allsp_relabund_ITS2(samples, reads, totals, 1000, 466, 0.01)
+dat3 <- prep_466_allsp_relabund_ITS2(samples, reads, totals, 1000, 466, 0.005)
+dat4 <- prep_466_allsp_relabund_ITS2(samples, reads, totals, 1000, 466, 0.001)
+dat5 <- prep_466_allsp_relabund_ITS2(samples, reads, totals, 2000, 466, 0.01)
+dat7 <- prep_466_allsp_relabund_ITS2(samples, reads, totals, 2000, 466, 0.005)
+dat8 <- prep_466_allsp_relabund_ITS2(samples, reads, totals, 2000, 466, 0.001)
+dat9 <- prep_466_allsp_relabund_ITS2(samples, reads, totals, 5000, 466, 0.01)
+dat11 <- prep_466_allsp_relabund_ITS2(samples, reads, totals, 5000, 466, 0.005)
+dat12 <- prep_466_allsp_relabund_ITS2(samples, reads, totals, 5000, 466, 0.001)
 
+df<- bind_rows(dat1, dat3, dat4, dat5,
+               dat7, dat8, dat9, dat11, dat12)
+
+(plot5 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+    geom_point(aes(color = group), size = 0.5) +
+    geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
+              size = 0.5) +
+    facet_wrap(min_total ~ min_rel_abund, scales = "free", ncol = 3) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "K-Rat",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+              aes(x = MDS1, y = MDS2,
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+              aes(x = Inf, y = Inf,
+                  label = paste("F.model = ", round(.data$F.model, 2),
+                                "\n p = ", round(.data$pval, 4))),
+              hjust = 1.1, vjust= 1.2, size = 2) +
+    scale_color_manual(values = cbPalette) +
+    ggtitle("ITS2: Fall 2017") +
+    theme_bw() +
+    theme(legend.position = 'bottom',
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank())) 
+
+#ggsave("Plots/ITS2_466_allsp_totalreads_relabund.png", plot5, device = "png")
+
+# PLOT 6#
+# OTUs, 466, PPs only ------------------------------------------------------------------#
+
+dat1 <- prep_466_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 466, 0.01)
+dat3 <- prep_466_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 466, 0.005)
+dat4 <- prep_466_PPonly_relabund_ITS2(samples_PP, reads, totals, 1000, 466, 0.001)
+dat5 <- prep_466_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 466, 0.01)
+dat7 <- prep_466_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 466, 0.005)
+dat8 <- prep_466_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 466, 0.001)
+dat9 <- prep_466_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 466, 0.01)
+dat11 <- prep_466_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 466, 0.005)
+dat12 <- prep_466_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 466, 0.001)
+
+df <- bind_rows(dat1, dat3, dat4, dat5,
+                dat7, dat8, dat9, dat11, dat12)
+
+(plot6 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+    geom_point(aes(color = group), size = 0.5) +
+    geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
+              size = 0.5) +
+    facet_wrap(min_total ~ min_rel_abund, scales = "free") +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 1) +
+    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+              aes(x = Inf, y = Inf,
+                  label = paste("F.model = ", round(.data$F.model, 2),
+                                "\n p = ", round(.data$pval, 4))),
+              hjust = 1.1, vjust= 1.2, size = 2) +
+    scale_color_manual(values = cbPalette) +
+    ggtitle("ITS2: Fall 2017, PP only") +
+    theme_bw() +
+    theme(legend.position = 'bottom',
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank())) 
+
+#ggsave("Plots/ITS2_466_PPonly_totalreads_relabund.png", plot6, device = "png")
 
 
 # WORKING AREA ================================================================#
 
 # for finding outliers
 
-data <- filter_reads_data_ITS2(samples_PP,
+data <- filter_reads_data_ITS2(samples,
                                reads,
                                totals,
                                reads_min = 2000,
-                               yr = 2017,
+                               period_code = 466,
                                rel_reads_min = 0.01) %>%
   data_prep_multivariate()
-#data[[1]] <- binarize(data[[1]])
+data[[1]] <- binarize(data[[1]])
 
 # remove outliers
 data[[1]] <- 
-  data[[1]][!(row.names(data[[1]]) %in% c("S013043","S010044", "S010014", "S008810", "S010012", "S010063")),]
+  data[[1]][!(row.names(data[[1]]) %in% c("S013043")),]
 data[[2]] <- 
-  data[[2]][!data[[2]] %in% c("S013043","S010044", "S010014", "S008810", "S010012", "S010063")]
+  data[[2]][!data[[2]] %in% c("S013043")]
 data[[3]] <- 
-  data[[3]][!(data[[3]]$vial_barcode) %in% c("S013043","S010044", "S010014", "S008810", "S010012", "S010063"),]
+  data[[3]][!(data[[3]]$vial_barcode) %in% c("S013043"),]
 
 dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
-#dist_matrix <- metaMDSredist(dist_trnL)
+dist_matrix <- metaMDSredist(dist_trnL)
 dist_trnL$points
-
 
 groups <- data[[3]]
 
@@ -303,6 +384,4 @@ ggplot(data = NMDS, aes(x = MDS1, y = MDS2)) +
 group = as.matrix(groups$group)
 perMANOVA_output <- adonis(data[[1]] ~ group, permutations = 10000)
 pairwise_perMANOVA <- adonis.pair(dist.mat = dist_matrix, Factor = as.factor(groups$group))
-
-# scree plot
-goeveg::dimcheckMDS(data[[1]], distance = "bray", k = 6, trymax = 50)
+pairwise_perMANOVA
