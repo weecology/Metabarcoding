@@ -27,10 +27,10 @@ samples_PP <- samples %>% filter(species == 'PP')
 # trnL, 2017, all species 
 
 reads_genus <- summarize_trnL_by_WeeTU(reads, "WTU.genus", WTU.genus)
-dat1 <- prep_2017_allsp_relabund_WTU_genus(samples, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2017, 0.01)
-dat2 <- prep_2017_allsp_relabund_WTU_genus(samples, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2017, 0.05)
-dat3 <- prep_2017_allsp_relabund_WTU_genus(samples, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2017, 0.005)
-dat4 <- prep_2017_allsp_relabund_WTU_genus(samples, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2017, 0.001)
+dat1 <- prep_460_allsp_relabund_WTU_genus(samples, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2017, 0.01)
+dat2 <- prep_460_allsp_relabund_WTU_genus(samples, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2017, 0.05)
+dat3 <- prep_460_allsp_relabund_WTU_genus(samples, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2017, 0.005)
+dat4 <- prep_460_allsp_relabund_WTU_genus(samples, reads_genus, totals, OTU_WTU_key, "genus", 2000, 2017, 0.001)
 
 reads_family <- summarize_trnL_by_WeeTU(reads, "WTU.family", WTU.family)
 dat5 <- prep_2017_allsp_relabund_WTU_family(samples, reads_family, totals, OTU_WTU_key, "family", 2000, 2017, 0.01)
@@ -232,28 +232,23 @@ ggsave("Plots/trnL_2016_PPonly_relabund_WTU.png", plot4)
 
 # WORKING AREA ================================================================#
 
-data <- filter_reads_data_WeeTU_trnL(samples_PP, 
-                                     reads_genus, 
+data <- filter_reads_data_WeeTU_trnL(samples, 
+                                     reads_family, 
                                      totals,
                                      OTU_WTU_key,
-                                     yr = 2016, 
+                                     period_code = 460, 
                                      reads_min = 2000, 
                                      rel_reads_min = 0.01) %>% 
   data_prep_multivariate_WTU()
-#data[[1]] <- binarize(data[[1]])
+data[[1]] <- binarize(data[[1]])
 
 # remove outliers
-# group 1: "S008810", "S010014", "S013043"
-# group 2: group 1 + "S010063", "S010044", "S010012"
-# data[[1]] <-
-#   data[[1]][!(row.names(data[[1]]) %in% c("S008804", "S013025", "S013017",
-#                                           "S010029", "S010068")),]
-# data[[2]] <-
-#   data[[2]][!data[[2]] %in% c("S008804", "S013025", "S013017",
-#                               "S010029", "S010068")]
-# data[[3]] <-
-#   data[[3]][!(data[[3]]$vial_barcode) %in% c("S008804", "S013025", "S013017",
-#                                              "S010029", "S010068"),]
+data[[1]] <-
+  data[[1]][!(row.names(data[[1]]) %in% c("S010049")),]
+data[[2]] <-
+  data[[2]][!data[[2]] %in% c("S010049")]
+data[[3]] <-
+  data[[3]][!(data[[3]]$vial_barcode) %in% c("S010049"),]
 
 dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
 dist_trnL$points
