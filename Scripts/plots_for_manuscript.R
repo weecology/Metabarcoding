@@ -21,7 +21,7 @@ samples <- read_csv("Data/CollectionData/fecal_sample_collection.csv")
 samples_PP <- samples %>% filter(species == 'PP')
 
 # plot 1
-list1 <- prep_2016_allsp_relabund(samples, reads, totals, 2000, 2016, 0.01)
+list1 <- prep_454_allsp_relabund(samples, reads, totals, 2000, 454, 0.01)
 df <- list1[[1]]
 (plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
@@ -61,7 +61,7 @@ plot1 <- plot1 + theme(legend.position = "none")
 list1[[2]]
 
 # plot 2
-list2 <- prep_2017_allsp_relabund(samples, reads, totals, 2000, 2017, 0.01)
+list2 <- prep_460_allsp_relabund(samples, reads, totals, 2000, 460, 0.01)
 df <- list2[[1]]
 (plot2 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
   geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
@@ -99,40 +99,9 @@ df <- list2[[1]]
 list2[[2]]
 
 # plot 3
-list3 <- prep_2016_PPonly_relabund(samples_PP, reads, totals, 2000, 2016, 0.01)
+list3 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 2000, 454, 0.01)
 df <- list3[[1]]
 (plot3 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
-    geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
-    geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
-              size = 0.5) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
-    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
-              aes(x = Inf, y = Inf,
-                  label = paste("F.model = ", round(.data$F.model, 2),
-                                "\n p = ", round(.data$pval, 4))),
-              hjust = 1.1, vjust= 1.2, size = 2) +
-    scale_color_manual(values = c("#E69F00", "#56B4E9")) +
-    labs(tag = "C") +
-    theme_bw() +
-    theme(legend.position = "none",
-          panel.grid.major = element_blank(), 
-          panel.grid.minor = element_blank())) 
-
-list3[[2]]
-
-# plot 4
-list4 <- prep_2017_PPonly_relabund(samples_PP, reads, totals, 2000, 2017, 0.01)
-df <- list4[[1]]
-(plot4 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
@@ -156,10 +125,113 @@ df <- list4[[1]]
     theme_bw() +
     theme(legend.position = "none",
           panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank())) 
+
+list3[[2]]
+
+# plot 4
+list4 <- prep_460_PPonly_relabund(samples_PP, reads, totals, 2000, 460, 0.01)
+df <- list4[[1]]
+(plot4 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+    geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
+    geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
+              size = 0.5) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 2) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 2) +
+    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+              aes(x = Inf, y = Inf,
+                  label = paste("F.model = ", round(.data$F.model, 2),
+                                "\n p = ", round(.data$pval, 4))),
+              hjust = 1.1, vjust= 1.2, size = 2) +
+    scale_color_manual(values = c("#E69F00", "#56B4E9")) +
+    labs(tag = "E") +
+    theme_bw() +
+    theme(legend.position = "none",
+          panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank(),
           axis.title.y = element_blank())) 
 
 list4[[2]]
+
+# plot 2
+list5 <- prep_466_allsp_relabund(samples, reads, totals, 2000, 466, 0.01)
+df <- list5[[1]]
+(plot5 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+    geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
+    geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
+              size = 0.5) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "K-Rat",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 2) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 2) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 2) +
+    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+              aes(x = Inf, y = Inf,
+                  label = paste("F.model = ", round(.data$F.model, 2),
+                                "\n p = ", round(.data$pval, 4))),
+              hjust = 1.1, vjust= 1.2, size = 2) +
+    scale_color_manual(values = c("#009E73", "#E69F00", "#56B4E9")) +
+    labs(tag = "C") +  
+    theme_bw() +
+    theme(legend.position = "none",
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank())) 
+
+list5[[2]]
+
+# plot 6
+list6 <- prep_466_PPonly_relabund(samples_PP, reads, totals, 2000, 466, 0.01)
+df <- list6[[1]]
+(plot6 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+    geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
+    geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
+              size = 0.5) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 2) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 2) +
+    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+              aes(x = Inf, y = Inf,
+                  label = paste("F.model = ", round(.data$F.model, 2),
+                                "\n p = ", round(.data$pval, 4))),
+              hjust = 1.1, vjust= 1.2, size = 2) +
+    scale_color_manual(values = c("#E69F00", "#56B4E9")) +
+    labs(tag = "F") +
+    theme_bw() +
+    theme(legend.position = "none",
+          axis.title.y = element_blank(),
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank())) 
+
+list6[[2]]
+
+
 
 # multipanel plot
 
@@ -169,18 +241,24 @@ col1 <- ggplot() + annotate(geom = 'text', x = 1, y = 1,
 col2 <- ggplot() + annotate(geom = 'text', x = 1, y = 1, 
                             label = "Spring 2017", size = 5, fontface = "bold") + 
   theme_void() 
+col3 <- ggplot() + annotate(geom = 'text', x = 1, y = 1, 
+                            label = "Fall 2017", size = 5, fontface = "bold") + 
+  theme_void() 
+
 
 layoutplot <- "
-cccddd##
-eeefff##
-eeefffjj
-ggghhhjj
-ggghhh##
+cccdddaaa##
+eeefffbbb##
+eeefffbbbjj
+ggghhhiiijj
+ggghhhiii##
 "
 plot1 <- plot1 + theme(plot.margin = unit(c(0,20,0,0), "pt"))
+plot3 <- plot3 + theme(plot.margin = unit(c(0, 20, 0, 0), "pt"))
 
-plotlist <- list(c = col1, d = col2, e = plot1, f = plot2, 
-                 g = plot3, h = plot4, j = legend)
+plotlist <- list(c = col1, d = col2, a = col3,
+                 e = plot1, f = plot2, b = plot5,
+                 g = plot3, h = plot4, i = plot6, j = legend)
 wrap_plots(plotlist, design = layoutplot) 
 
 #ggsave("Plots/trnL_OTUs.png")
@@ -189,6 +267,8 @@ list1[[2]]
 list2[[2]]
 list3[[2]]
 list4[[2]]
+list5[[2]]
+list6[[2]]
 
 # ITS2 OTUS #-------------------------------------------------------------------
 
@@ -204,9 +284,9 @@ reads <- filter(reads, WTU.clade1 == 4) %>%
 samples_PP <- samples %>% filter(species == 'PP')
 
 # plot 1
-list5 <- prep_2016_allsp_relabund_ITS2(samples, reads, totals, 2000, 2016, 0.01)
-df <- list5[[1]]
-(plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+list7 <- prep_454_allsp_relabund_ITS2(samples, reads, totals, 2000, 454, 0.01)
+df <- list7[[1]]
+(plot7 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
@@ -238,16 +318,16 @@ df <- list5[[1]]
           panel.grid.minor = element_blank(),
           axis.title.x = element_blank())) 
 
-legend <- cowplot::get_legend(plot1)
+legend <- cowplot::get_legend(plot7)
 
-plot1 <- plot1 + theme(legend.position = "none")
+plot7 <- plot7 + theme(legend.position = "none")
 
-list5[[2]]
+list7[[2]]
 
 # plot 2
-list6 <- prep_2017_allsp_relabund_ITS2(samples, reads, totals, 2000, 2017, 0.01)
-df <- list6[[1]]
-(plot2 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+list8 <- prep_460_allsp_relabund_ITS2(samples, reads, totals, 2000, 460, 0.01)
+df <- list8[[1]]
+(plot8 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
@@ -280,15 +360,20 @@ df <- list6[[1]]
           axis.title.y = element_blank(),
           axis.title.x = element_blank())) 
 
-list6[[2]]
+list8[[2]]
 
-# plot 3
-list7 <- prep_2016_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2016, 0.01)
-df <- list7[[1]]
-(plot3 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+# plot 9
+list9 <- prep_466_allsp_relabund_ITS2(samples, reads, totals, 2000, 466, 0.01)
+df <- list9[[1]]
+(plot9 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "K-Rat",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 2) +
     geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
@@ -304,19 +389,21 @@ df <- list7[[1]]
                   label = paste("F.model = ", round(.data$F.model, 2),
                                 "\n p = ", round(.data$pval, 4))),
               hjust = 1.1, vjust= 1.2, size = 2) +
-    scale_color_manual(values = c("#E69F00", "#56B4E9")) +
-    labs(tag = "C") +
+    scale_color_manual(values = c("#009E73", "#E69F00", "#56B4E9")) +
+    labs(tag = "C") +  
     theme_bw() +
     theme(legend.position = "none",
           panel.grid.major = element_blank(), 
-          panel.grid.minor = element_blank())) 
+          panel.grid.minor = element_blank(),
+          axis.title.y = element_blank(),
+          axis.title.x = element_blank())) 
 
-list7[[2]]
+list9[[2]]
 
-# plot 4
-# the pairwise perMANOVA has broken this function. probably best to remove it
-df <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2017, 0.01)
-(plot4 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+# plot 10
+list10 <- prep_454_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 454, 0.01)
+df <- list10[[1]]
+(plot10 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
@@ -340,8 +427,74 @@ df <- prep_2017_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 2017, 0.01
     theme_bw() +
     theme(legend.position = "none",
           panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank())) 
+
+list10[[2]]
+
+# plot 11
+# the pairwise perMANOVA has broken this function. probably best to remove it
+list11 <- prep_460_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 460, 0.01)
+df <- list11[[1]]
+(plot11 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+    geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
+    geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
+              size = 0.5) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 2) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 2) +
+    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+              aes(x = Inf, y = Inf,
+                  label = paste("F.model = ", round(.data$F.model, 2),
+                                "\n p = ", round(.data$pval, 4))),
+              hjust = 1.1, vjust= 1.2, size = 2) +
+    scale_color_manual(values = c("#E69F00", "#56B4E9")) +
+    labs(tag = "E") +
+    theme_bw() +
+    theme(legend.position = "none",
+          panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank(),
           axis.title.y = element_blank())) 
+
+list11[[2]]
+
+# plot 12
+list12 <- prep_466_PPonly_relabund_ITS2(samples_PP, reads, totals, 2000, 466, 0.01)
+df <- list12[[1]]
+(plot12 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
+    geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
+    geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
+              size = 0.5) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 2) +
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+              aes(x = MDS1, y = MDS2,  
+                  label = .data$group[1], 
+                  color = .data$group[1]),
+              size = 2) +
+    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+              aes(x = Inf, y = Inf,
+                  label = paste("F.model = ", round(.data$F.model, 2),
+                                "\n p = ", round(.data$pval, 4))),
+              hjust = 1.1, vjust= 1.2, size = 2) +
+    scale_color_manual(values = c("#E69F00", "#56B4E9")) +
+    labs(tag = "F") +
+    theme_bw() +
+    theme(legend.position = "none",
+          axis.title.y = element_blank(),
+          panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank())) 
+
+list12[[2]]
 
 # multipanel plot
 
@@ -351,22 +504,31 @@ col1 <- ggplot() + annotate(geom = 'text', x = 1, y = 1,
 col2 <- ggplot() + annotate(geom = 'text', x = 1, y = 1, 
                             label = "Spring 2017", size = 5, fontface = "bold") + 
   theme_void() 
+col3 <- ggplot() + annotate(geom = 'text', x = 1, y = 1, 
+                            label = "Fall 2017", size = 5, fontface = "bold") + 
+  theme_void() 
+
 
 layoutplot <- "
-cccddd##
-eeefff##
-eeefffjj
-ggghhhjj
-ggghhh##
+cccdddaaa##
+eeefffbbb##
+eeefffbbbjj
+ggghhhiiijj
+ggghhhiii##
 "
-plot1 <- plot1 + theme(plot.margin = unit(c(0,20,0,0), "pt"))
+plot7 <- plot7 + theme(plot.margin = unit(c(0,20,0,0), "pt"))
+plot8 <- plot8 + theme(plot.margin = unit(c(0,20,0,0), "pt"))
 
-plotlist <- list(c = col1, d = col2, e = plot1, f = plot2, 
-                 g = plot3, h = plot4, j = legend)
+plotlist <- list(c = col1, d = col2, a = col3,
+                 e = plot7, f = plot8, b = plot9,
+                 g = plot10, h = plot11, i = plot12, j = legend)
 wrap_plots(plotlist, design = layoutplot) 
 
 #ggsave("Plots/ITS2_OTUs.png")
 
-list5[[2]]
-list6[[2]]
 list7[[2]]
+list8[[2]]
+list9[[2]]
+list10[[2]]
+list11[[2]]
+list12[[2]]
