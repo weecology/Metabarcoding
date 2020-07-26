@@ -674,7 +674,6 @@ prep_460_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, per
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
-  dist_matrix <- metaMDSredist(dist_trnL)
   
   plotting_data[[1]]$df <- "NMDS"
   plotting_data[[2]]$df <- "NMDS.mean"
@@ -687,14 +686,7 @@ prep_460_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, per
   df$min_total <- reads_min
   df$min_rel_abund <- rel_reads_min
   
-  pairwise_perMANOVA <- EcolUtils::adonis.pair(dist.mat = dist_matrix, 
-                                               Factor = as.factor(data[[3]]$group),
-                                               nper = 10000)
-  
-  # list of objects to return
-  return_list <- list(df, pairwise_perMANOVA)
-  names(return_list) <- c("df", "pairwise_perMANOVA")
-  return(return_list)
+  return(df)
   
 }
 
@@ -718,7 +710,6 @@ prep_466_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, per
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
-  dist_matrix <- metaMDSredist(dist_trnL)
   
   plotting_data[[1]]$df <- "NMDS"
   plotting_data[[2]]$df <- "NMDS.mean"
@@ -731,14 +722,7 @@ prep_466_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, per
   df$min_total <- reads_min
   df$min_rel_abund <- rel_reads_min
   
-  pairwise_perMANOVA <- EcolUtils::adonis.pair(dist.mat = dist_matrix, 
-                                               Factor = as.factor(data[[3]]$group),
-                                               nper = 10000)
-  
-  # list of objects to return
-  return_list <- list(df, pairwise_perMANOVA)
-  names(return_list) <- c("df", "pairwise_perMANOVA")
-  return(return_list)
+  return(df)
   
 }
 
