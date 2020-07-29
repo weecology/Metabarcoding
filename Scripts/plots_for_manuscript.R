@@ -44,22 +44,22 @@ df <- list1[[1]]
     #           size = 2) +
   geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                    label = paste0("KR \u2194 CP:C",
-                                                  ", psudeo F = ", round(list1[[2]]$F.Model[2], 2),
+                                                  ", pseudo F = ", round(list1[[2]]$F.Model[2], 2),
                                                   ", R^2 = ", round(list1[[2]]$R2[2], 2),
-                                                  ", p = ", round(list1[[2]]$P.value[2], 4))),
-            hjust = -0.035, vjust = -4, size = 2, fontface = "bold") +
+                                                  ", p = ", round(list1[[2]]$P.value.corrected[2], 3))),
+            hjust = -0.035, vjust = -4, size = 3, fontface = "bold") +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:Ex",
-                                                    ", psudeo F = ", round(list1[[2]]$F.Model[1], 2),
-                                                    ", R^2 = ", round(list1[[2]]$R2[1], 2),
-                                                    ", p = ", round(list1[[2]]$P.value[1], 4))),
-              hjust = -0.035, vjust = -2.25, size = 2) +
+                                                    ", pseudo F = ", round(list1[[2]]$F.Model[3], 2),
+                                                    ", R^2 = ", round(list1[[2]]$R2[3], 2),
+                                                    ", p = ", round(list1[[2]]$P.value.corrected[3], 3))),
+              hjust = -0.035, vjust = -2.25, size = 3) +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("CP:C \u2194 CP:Ex",
-                                                    ", psudeo F = ", round(list1[[2]]$F.Model[3], 2),
-                                                    ", R^2 = ", round(list1[[2]]$R2[3], 2),
-                                                    ", p = ", round(list1[[2]]$P.value[3], 4))),
-              hjust = -0.03, vjust = -0.75, size = 2, fontface = "bold") + 
+                                                    ", pseudo F = ", round(list1[[2]]$F.Model[1], 2),
+                                                    ", R^2 = ", round(list1[[2]]$R2[1], 2),
+                                                    ", p = ", round(list1[[2]]$P.value.corrected[1], 3))),
+              hjust = -0.03, vjust = -0.75, size = 3, fontface = "bold") + 
     scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
     labs(tag = "A") +
     theme_bw() +
@@ -82,22 +82,22 @@ df <- list2[[1]]
             size = 0.5) +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:C",
-                                                    ", psudeo F = ", round(list2[[2]]$F.Model[2], 2),
+                                                    ", pseudo F = ", round(list2[[2]]$F.Model[2], 2),
                                                     ", R^2 = ", round(list2[[2]]$R2[2], 2),
-                                                    ", p = ", round(list2[[2]]$P.value[2], 4))),
-              hjust = -0.035, vjust = -4, size = 2, fontface = "bold") +
+                                                    ", p < 0.001")),
+              hjust = -0.035, vjust = -4, size = 3, fontface = "bold") +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:Ex",
-                                                    ", psudeo F = ", round(list2[[2]]$F.Model[1], 2),
-                                                    ", R^2 = ", round(list2[[2]]$R2[1], 2),
-                                                    ", p = ", round(list2[[2]]$P.value[1], 4))),
-              hjust = -0.035, vjust = -2.25, size = 2, fontface = "bold") +
+                                                    ", pseudo F = ", round(list2[[2]]$F.Model[3], 2),
+                                                    ", R^2 = ", round(list2[[2]]$R2[3], 2),
+                                                    ", p = ", round(list2[[2]]$P.value.corrected[3], 3))),
+              hjust = -0.035, vjust = -2.25, size = 3, fontface = "bold") +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("CP:C \u2194 CP:Ex",
-                                                    ", psudeo F = ", round(list2[[2]]$F.Model[3], 2),
-                                                    ", R^2 = ", round(list2[[2]]$R2[3], 2),
-                                                    ", p = ", round(list2[[2]]$P.value[3], 4))),
-              hjust = -0.03, vjust = -0.75, size = 2) + 
+                                                    ", pseudo F = ", round(list2[[2]]$F.Model[1], 2),
+                                                    ", R^2 = ", round(list2[[2]]$R2[1], 2),
+                                                    ", p = ", round(list2[[2]]$P.value.corrected[1], 3))),
+              hjust = -0.03, vjust = -0.75, size = 3) + 
   scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
   labs(tag = "B") +  
   theme_bw() +
@@ -133,22 +133,22 @@ df <- list3[[1]]
     #           size = 2) +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:C",
-                                                    ", psudeo F = ", round(list3[[2]]$F.Model[2], 2),
+                                                    ", pseudo F = ", round(list3[[2]]$F.Model[2], 2),
                                                     ", R^2 = ", round(list3[[2]]$R2[2], 2),
-                                                    ", p = ", round(list3[[2]]$P.value[2], 4))),
-              hjust = -0.035, vjust = -4, size = 2, fontface = "bold") +
+                                                    ", p < 0.001")),
+              hjust = -0.035, vjust = -4, size = 3, fontface = "bold") +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:Ex",
-                                                    ", psudeo F = ", round(list3[[2]]$F.Model[1], 2),
-                                                    ", R^2 = ", round(list3[[2]]$R2[1], 2),
-                                                    ", p = ", round(list3[[2]]$P.value[1], 4))),
-              hjust = -0.035, vjust = -2.25, size = 2) +
+                                                    ", pseudo F = ", round(list3[[2]]$F.Model[3], 2),
+                                                    ", R^2 = ", round(list3[[2]]$R2[3], 2),
+                                                    ", p < 0.001")),
+              hjust = -0.035, vjust = -2.25, size = 3, fontface = "bold") +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("CP:C \u2194 CP:Ex",
-                                                    ", psudeo F = ", round(list3[[2]]$F.Model[3], 2),
-                                                    ", R^2 = ", round(list3[[2]]$R2[3], 2),
-                                                    ", p = ", round(list3[[2]]$P.value[3], 4))),
-              hjust = -0.03, vjust = -0.75, size = 2, fontface = "bold") + 
+                                                    ", pseudo F = ", round(list3[[2]]$F.Model[1], 2),
+                                                    ", R^2 = ", round(list3[[2]]$R2[1], 2),
+                                                    ", p = ", round(list3[[2]]$P.value.corrected[1], 3))),
+              hjust = -0.03, vjust = -0.75, size = 3) + 
     scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
     labs(tag = "C") +  
     theme_bw() +
@@ -178,10 +178,10 @@ df <- list4[[1]]
     #               color = .data$group[1]),
     #           size = 2) +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
-                  label = paste0("psudeo F = ", round(list4[[2]]$F.Model, 2),
+                  label = paste0("pseudo F = ", round(list4[[2]]$F.Model, 2),
                                 ", R^2 = ", round(list4[[2]]$R2, 2),
-                                ", p = ", round(list4[[2]]$P.value, 3))),
-              hjust = -0.05, vjust = -0.75, size = 2, fontface = "bold") +
+                                ", p = ", round(list4[[2]]$P.value.corrected, 3))),
+              hjust = -0.05, vjust = -0.75, size = 3, fontface = "bold") +
     scale_color_manual(values = c("#E69F00", "#56B4E9")) +
     labs(tag = "D") +
     theme_bw() +
@@ -210,10 +210,10 @@ df <- list5[[1]]
     #           size = 2) +
     geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
               aes(x = -Inf, y = -Inf,
-                  label = paste0("psudeo F = ", round(list5[[2]]$F.Model, 2),
+                  label = paste0("pseudo F = ", round(list5[[2]]$F.Model, 2),
                                  ", R^2 = ", round(list5[[2]]$R2, 2),
-                                 ", p = ", round(list5[[2]]$P.value, 3))),
-              hjust = -0.05, vjust = -0.75, size = 2) +
+                                 ", p = ", round(list5[[2]]$P.value.corrected, 3))),
+              hjust = -0.05, vjust = -0.75, size = 3) +
     scale_color_manual(values = c("#E69F00", "#56B4E9")) +
     labs(tag = "E") +
     theme_bw() +
@@ -243,10 +243,10 @@ df <- list6[[1]]
     #           size = 2) +
     geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
               aes(x = -Inf, y = -Inf,
-                  label = paste0("psudeo F = ", round(list5[[2]]$F.Model, 2),
+                  label = paste0("pseudo F = ", round(list5[[2]]$F.Model, 2),
                                  ", R^2 = ", round(list5[[2]]$R2, 2),
-                                 ", p = ", round(list5[[2]]$P.value, 3))),
-              hjust = -0.05, vjust = -0.75, size = 2) +
+                                 ", p = ", round(list5[[2]]$P.value.corrected, 3))),
+              hjust = -0.05, vjust = -0.75, size = 3) +
     scale_color_manual(values = c("#E69F00", "#56B4E9")) +
     labs(tag = "F") +
     theme_bw() +
@@ -285,7 +285,7 @@ plotlist1 <- list(c = col1, d = col2, i = col3,
                  g = plot4, h = plot5, b = plot6, j = legend)
 wrap_plots(plotlist1, design = layoutplot) 
 
-#ggsave("Plots/trnL_OTUs_pvalues.png")
+#ggsave("Plots/trnL_OTUs_pvalues.png", dpi = 600)
 
 list1[[2]]
 list2[[2]]
@@ -316,22 +316,22 @@ df <- list7[[1]]
               size = 0.5) +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:C",
-                                                    ", psudeo F = ", round(list7[[2]]$F.Model[2], 2),
+                                                    ", pseudo F = ", round(list7[[2]]$F.Model[2], 2),
                                                     ", R^2 = ", round(list7[[2]]$R2[2], 2),
-                                                    ", p = ", round(list7[[2]]$P.value[2], 4))),
-              hjust = -0.035, vjust = -4, size = 2, fontface = "bold") +
+                                                    ", p < 0.001")),
+              hjust = -0.035, vjust = -4, size = 3, fontface = "bold") +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:Ex",
-                                                    ", psudeo F = ", round(list7[[2]]$F.Model[1], 2),
-                                                    ", R^2 = ", round(list7[[2]]$R2[1], 2),
-                                                    ", p = ", round(list7[[2]]$P.value[1], 4))),
-              hjust = -0.035, vjust = -2.25, size = 2, fontface = "bold") +
+                                                    ", pseudo F = ", round(list7[[2]]$F.Model[3], 2),
+                                                    ", R^2 = ", round(list7[[2]]$R2[3], 2),
+                                                    ", p < 0.001")),
+              hjust = -0.035, vjust = -2.25, size = 3, fontface = "bold") +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("CP:C \u2194 CP:Ex",
-                                                    ", psudeo F = ", round(list7[[2]]$F.Model[3], 2),
-                                                    ", R^2 = ", round(list7[[2]]$R2[3], 2),
-                                                    ", p = ", round(list7[[2]]$P.value[3], 4))),
-              hjust = -0.03, vjust = -0.75, size = 2) + 
+                                                    ", pseudo F = ", round(list7[[2]]$F.Model[1], 2),
+                                                    ", R^2 = ", round(list7[[2]]$R2[1], 2),
+                                                    ", p = ", round(list7[[2]]$P.value.corrected[1], 3))),
+              hjust = -0.03, vjust = -0.75, size = 3) + 
     scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
     labs(tag = "A") +
     theme_bw() +
@@ -354,22 +354,22 @@ df <- list8[[1]]
               size = 0.5) +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:C",
-                                                    ", psudeo F = ", round(list8[[2]]$F.Model[2], 2),
+                                                    ", pseudo F = ", round(list8[[2]]$F.Model[2], 2),
                                                     ", R^2 = ", round(list8[[2]]$R2[2], 2),
-                                                    ", p = ", round(list8[[2]]$P.value[2], 4))),
-              hjust = -0.035, vjust = -4, size = 2, fontface = "bold") +
+                                                    ", p = ", round(list8[[2]]$P.value.corrected[2], 3))),
+              hjust = -0.035, vjust = -4, size = 3, fontface = "bold") +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:Ex",
-                                                    ", psudeo F = ", round(list8[[2]]$F.Model[1], 2),
-                                                    ", R^2 = ", round(list8[[2]]$R2[1], 2),
-                                                    ", p = ", round(list8[[2]]$P.value[1], 4))),
-              hjust = -0.035, vjust = -2.25, size = 2) +
+                                                    ", pseudo F = ", round(list8[[2]]$F.Model[3], 2),
+                                                    ", R^2 = ", round(list8[[2]]$R2[3], 2),
+                                                    ", p = ", round(list8[[2]]$P.value.corrected[3], 3))),
+              hjust = -0.035, vjust = -2.25, size = 3) +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("CP:C \u2194 CP:Ex",
-                                                    ", psudeo F = ", round(list8[[2]]$F.Model[3], 2),
-                                                    ", R^2 = ", round(list8[[2]]$R2[3], 2),
-                                                    ", p = ", round(list8[[2]]$P.value[3], 4))),
-              hjust = -0.03, vjust = -0.75, size = 2) + 
+                                                    ", pseudo F = ", round(list8[[2]]$F.Model[1], 2),
+                                                    ", R^2 = ", round(list8[[2]]$R2[1], 2),
+                                                    ", p = ", round(list8[[2]]$P.value.corrected[1], 3))),
+              hjust = -0.03, vjust = -0.75, size = 3) + 
     scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
     labs(tag = "B") +  
     theme_bw() +
@@ -390,22 +390,22 @@ df <- list9[[1]]
               size = 0.5) +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:C",
-                                                    ", psudeo F = ", round(list9[[2]]$F.Model[2], 2),
+                                                    ", pseudo F = ", round(list9[[2]]$F.Model[2], 2),
                                                     ", R^2 = ", round(list9[[2]]$R2[2], 2),
-                                                    ", p = ", round(list9[[2]]$P.value[2], 4))),
-              hjust = -0.035, vjust = -4, size = 2, fontface = "bold") +
+                                                    ", p = ", round(list9[[2]]$P.value.corrected[2], 3))),
+              hjust = -0.035, vjust = -4, size = 3, fontface = "bold") +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:Ex",
-                                                    ", psudeo F = ", round(list9[[2]]$F.Model[1], 2),
-                                                    ", R^2 = ", round(list9[[2]]$R2[1], 2),
-                                                    ", p = ", round(list9[[2]]$P.value[1], 4))),
-              hjust = -0.035, vjust = -2.25, size = 2, fontface = "bold") +
+                                                    ", pseudo F = ", round(list9[[2]]$F.Model[3], 2),
+                                                    ", R^2 = ", round(list9[[2]]$R2[3], 2),
+                                                    ", p < 0.001")),
+              hjust = -0.035, vjust = -2.25, size = 3, fontface = "bold") +
     geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("CP:C \u2194 CP:Ex",
-                                                    ", psudeo F = ", round(list9[[2]]$F.Model[3], 2),
-                                                    ", R^2 = ", round(list9[[2]]$R2[3], 2),
-                                                    ", p = ", round(list9[[2]]$P.value[3], 4))),
-              hjust = -0.03, vjust = -0.75, size = 2) + 
+                                                    ", pseudo F = ", round(list9[[2]]$F.Model[1], 2),
+                                                    ", R^2 = ", round(list9[[2]]$R2[1], 2),
+                                                    ", p = ", round(list9[[2]]$P.value.corrected[1], 3))),
+              hjust = -0.03, vjust = -0.75, size = 3) + 
     scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
     labs(tag = "C") +  
     theme_bw() +
@@ -426,10 +426,10 @@ df <- list10[[1]]
               size = 0.5) +
     geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
               aes(x = -Inf, y = -Inf,
-                  label = paste0("psudeo F = ", round(list10[[2]]$F.Model, 2),
+                  label = paste0("pseudo F = ", round(list10[[2]]$F.Model, 2),
                                  ", R^2 = ", round(list10[[2]]$R2, 2),
-                                 ", p = ", round(list10[[2]]$P.value, 3))),
-              hjust = -0.05, vjust = -0.75, size = 2) +
+                                 ", p = ", round(list10[[2]]$P.value.corrected, 3))),
+              hjust = -0.05, vjust = -0.75, size = 3) +
     scale_color_manual(values = c("#E69F00", "#56B4E9")) +
     labs(tag = "D") +
     theme_bw() +
@@ -448,10 +448,10 @@ df <- list11[[1]]
               size = 0.5) +
     geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
               aes(x = -Inf, y = -Inf,
-                  label = paste0("psudeo F = ", round(list11[[2]]$F.Model, 2),
+                  label = paste0("pseudo F = ", round(list11[[2]]$F.Model, 2),
                                  ", R^2 = ", round(list11[[2]]$R2, 2),
-                                 ", p = ", round(list11[[2]]$P.value, 3))),
-              hjust = -0.05, vjust = -0.75, size = 2) +
+                                 ", p = ", round(list11[[2]]$P.value.corrected, 3))),
+              hjust = -0.05, vjust = -0.75, size = 3) +
     scale_color_manual(values = c("#E69F00", "#56B4E9")) +
     labs(tag = "E") +
     theme_bw() +
@@ -471,10 +471,10 @@ df <- list12[[1]]
               size = 0.5) +
     geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
               aes(x = -Inf, y = -Inf,
-                  label = paste0("psudeo F = ", round(list12[[2]]$F.Model, 2),
+                  label = paste0("pseudo F = ", round(list12[[2]]$F.Model, 2),
                                  ", R^2 = ", round(list12[[2]]$R2, 2),
-                                 ", p = ", round(list12[[2]]$P.value, 3))),
-              hjust = -0.05, vjust = -0.75, size = 2) +
+                                 ", p = ", round(list12[[2]]$P.value.corrected, 3))),
+              hjust = -0.05, vjust = -0.75, size = 3) +
     scale_color_manual(values = c("#E69F00", "#56B4E9")) +
     labs(tag = "F") +
     theme_bw() +
@@ -513,7 +513,7 @@ plotlist2 <- list(c = col1, d = col2, i = col3,
                  g = plot10, h = plot11, b = plot12, j = legend)
 wrap_plots(plotlist2, design = layoutplot) 
 
-#ggsave("Plots/ITS2_OTUs_pvalues.png")
+#ggsave("Plots/ITS2_OTUs_pvalues.png", dpi = 600)
 
 list7[[2]]
 list8[[2]]
