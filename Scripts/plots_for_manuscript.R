@@ -27,27 +27,27 @@ df <- list1[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "K-Rat",], 
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "K-Rat",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: Control",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: KR Exclosure",],
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 2) +
     geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
               aes(x = Inf, y = Inf,
                   label = paste("F.model = ", round(.data$F.model, 2),
                                 "\n p = ", round(.data$pval, 4))),
               hjust = 1.1, vjust= 1.2, size = 2) +
-    scale_color_manual(values = cbPalette) +
+    scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
     labs(tag = "A") +
     theme_bw() +
     theme(legend.title = element_blank(),
@@ -72,12 +72,12 @@ df <- list2[[1]]
                 label = .data$group[1], 
                 color = .data$group[1]),
             size = 2) +
-  geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+  geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: Control",], 
             aes(x = MDS1, y = MDS2,  
                 label = .data$group[1], 
                 color = .data$group[1]),
             size = 2) +
-  geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+  geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: KR Exclosure",],
             aes(x = MDS1, y = MDS2,  
                 label = .data$group[1], 
                 color = .data$group[1]),
@@ -87,7 +87,7 @@ df <- list2[[1]]
                 label = paste("F.model = ", round(.data$F.model, 2),
                               "\n p = ", round(.data$pval, 4))),
             hjust = 1.1, vjust= 1.2, size = 2) +
-  scale_color_manual(values = c("#009E73", "#E69F00", "#56B4E9")) +
+  scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
   labs(tag = "B") +  
   theme_bw() +
   theme(legend.position = "none",
@@ -105,27 +105,38 @@ df <- list3[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "K-Rat",], 
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
-    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
-              aes(x = Inf, y = Inf,
-                  label = paste("F.model = ", round(.data$F.model, 2),
-                                "\n p = ", round(.data$pval, 4))),
-              hjust = 1.1, vjust= 1.2, size = 2) +
-    scale_color_manual(values = c("#009E73", "#E69F00", "#56B4E9")) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "K-Rat",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: Control",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: KR Exclosure",],
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 2) +
+    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+                                     label = paste0("psudeo F = ", round(list3[[2]]$F.Model[1], 2),
+                                                    ", R^2 = ", round(list3[[2]]$R2[1], 2),
+                                                    ", p = ", round(list3[[2]]$P.value[1], 3))),
+              hjust = -0.05, vjust = -4, size = 3) +
+    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+                                     label = paste0("psudeo F = ", round(list3[[2]]$F.Model[2], 2),
+                                                    ", R^2 = ", round(list3[[2]]$R2[2], 2),
+                                                    ", p = ", round(list3[[2]]$P.value[2], 3))),
+              hjust = -0.05, vjust = -2.25, size = 3) +
+    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+                                     label = paste0("KR \u2194 CP:C",
+                                                    ", psudeo F = ", round(list3[[2]]$F.Model[3], 2),
+                                                    ", R^2 = ", round(list3[[2]]$R2[3], 2),
+                                                    ", p = ", round(list3[[2]]$P.value[3], 3))),
+              hjust = -0.03, vjust = -0.75, size = 3) + 
+    scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
     labs(tag = "C") +  
     theme_bw() +
     theme(legend.position = "none",
@@ -134,7 +145,7 @@ df <- list3[[1]]
           axis.title.y = element_blank(),
           axis.title.x = element_blank())) 
 
-list3[[2]]
+list3[[2]]$F.Model[2]
 
 # plot 4
 list4 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 2000, 454, 0.01)
@@ -143,21 +154,21 @@ df <- list4[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
-    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
-              aes(x = Inf, y = Inf,
-                  label = paste("F.model = ", round(.data$F.model, 2),
-                                "\n p = ", round(.data$pval, 4))),
-              hjust = 1.1, vjust= 1.2, size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: Control",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: KR Exclosure",],
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 2) +
+    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+                  label = paste0("psudeo F = ", round(list4[[2]]$F.Model, 2),
+                                ", R^2 = ", round(list4[[2]]$R2, 2),
+                                ", p = ", round(list4[[2]]$P.value, 3))),
+              hjust = -0.05, vjust = -0.75, size = 3) +
     scale_color_manual(values = c("#E69F00", "#56B4E9")) +
     labs(tag = "D") +
     theme_bw() +
@@ -165,7 +176,7 @@ df <- list4[[1]]
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
-list4[[2]]
+round(list4[[2]]$F.Model, 2)
 
 # plot 5
 list5 <- prep_460_PPonly_relabund(samples_PP, reads, totals, 2000, 460, 0.01)
@@ -174,21 +185,22 @@ df <- list5[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: Control",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: KR Exclosure",],
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 2) +
     geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
-              aes(x = Inf, y = Inf,
-                  label = paste("F.model = ", round(.data$F.model, 2),
-                                "\n p = ", round(.data$pval, 4))),
-              hjust = 1.1, vjust= 1.2, size = 2) +
+              aes(x = -Inf, y = -Inf,
+                  label = paste0("psudeo F = ", round(list5[[2]]$F.Model, 2),
+                                 ", R^2 = ", round(list5[[2]]$R2, 2),
+                                 ", p = ", round(list5[[2]]$P.value, 3))),
+              hjust = -0.05, vjust = -0.75, size = 3) +
     scale_color_manual(values = c("#E69F00", "#56B4E9")) +
     labs(tag = "E") +
     theme_bw() +
@@ -206,21 +218,22 @@ df <- list6[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: Control",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: KR Exclosure",],
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 2) +
     geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
-              aes(x = Inf, y = Inf,
-                  label = paste("F.model = ", round(.data$F.model, 2),
-                                "\n p = ", round(.data$pval, 4))),
-              hjust = 1.1, vjust= 1.2, size = 2) +
+              aes(x = -Inf, y = -Inf,
+                  label = paste0("psudeo F = ", round(list5[[2]]$F.Model, 2),
+                                 ", R^2 = ", round(list5[[2]]$R2, 2),
+                                 ", p = ", round(list5[[2]]$P.value, 3))),
+              hjust = -0.05, vjust = -0.75, size = 3) +
     scale_color_manual(values = c("#E69F00", "#56B4E9")) +
     labs(tag = "F") +
     theme_bw() +
@@ -293,12 +306,12 @@ df <- list7[[1]]
                   label = .data$group[1], 
                   color = .data$group[1]),
               size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: Control",], 
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
               size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: KR Exclosure",],
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
@@ -308,7 +321,7 @@ df <- list7[[1]]
                   label = paste("F.model = ", round(.data$F.model, 2),
                                 "\n p = ", round(.data$pval, 4))),
               hjust = 1.1, vjust= 1.2, size = 2) +
-    scale_color_manual(values = cbPalette) +
+    scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
     labs(tag = "A") +
     theme_bw() +
     theme(legend.title = element_blank(),
@@ -333,12 +346,12 @@ df <- list8[[1]]
                   label = .data$group[1], 
                   color = .data$group[1]),
               size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: Control",], 
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
               size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: KR Exclosure",],
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
@@ -348,7 +361,7 @@ df <- list8[[1]]
                   label = paste("F.model = ", round(.data$F.model, 2),
                                 "\n p = ", round(.data$pval, 4))),
               hjust = 1.1, vjust= 1.2, size = 2) +
-    scale_color_manual(values = c("#009E73", "#E69F00", "#56B4E9")) +
+    scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
     labs(tag = "B") +  
     theme_bw() +
     theme(legend.position = "none",
@@ -371,12 +384,12 @@ df <- list9[[1]]
                   label = .data$group[1], 
                   color = .data$group[1]),
               size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: Control",], 
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
               size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: KR Exclosure",],
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
@@ -386,7 +399,7 @@ df <- list9[[1]]
                   label = paste("F.model = ", round(.data$F.model, 2),
                                 "\n p = ", round(.data$pval, 4))),
               hjust = 1.1, vjust= 1.2, size = 2) +
-    scale_color_manual(values = c("#009E73", "#E69F00", "#56B4E9")) +
+    scale_color_manual(values = c("#E69F00", "#56B4E9", "#009E73")) +
     labs(tag = "C") +  
     theme_bw() +
     theme(legend.position = "none",
@@ -404,12 +417,12 @@ df <- list10[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: Control",], 
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
               size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: KR Exclosure",],
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
@@ -435,12 +448,12 @@ df <- list11[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: Control",], 
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
               size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: KR Exclosure",],
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
@@ -467,12 +480,12 @@ df <- list12[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: Control",], 
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
               size = 2) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+    geom_text(data = df[df$df == "NMDS.mean" & df$group == "CP: KR Exclosure",],
               aes(x = MDS1, y = MDS2,  
                   label = .data$group[1], 
                   color = .data$group[1]),
