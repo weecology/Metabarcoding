@@ -42,19 +42,19 @@ df <- list1[[1]]
     #               label = .data$group[1], 
     #               color = .data$group[1]),
     #           size = 2) +
-  geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+  geom_text(data = list1[[2]], aes(x = -Inf, y = -Inf,
                                    label = paste0("KR \u2194 CP:C",
                                                   ", pseudo F = ", round(list1[[2]]$F.Model[2], 2),
                                                   ", R^2 = ", round(list1[[2]]$R2[2], 2),
                                                   ", p = ", round(list1[[2]]$P.value.corrected[2], 3))),
             hjust = -0.035, vjust = -4, size = 3, fontface = "bold") +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list1[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:Ex",
                                                     ", pseudo F = ", round(list1[[2]]$F.Model[3], 2),
                                                     ", R^2 = ", round(list1[[2]]$R2[3], 2),
                                                     ", p = ", round(list1[[2]]$P.value.corrected[3], 3))),
               hjust = -0.035, vjust = -2.25, size = 3) +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list1[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("CP:C \u2194 CP:Ex",
                                                     ", pseudo F = ", round(list1[[2]]$F.Model[1], 2),
                                                     ", R^2 = ", round(list1[[2]]$R2[1], 2),
@@ -80,19 +80,19 @@ df <- list2[[1]]
   geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
   geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
             size = 0.5) +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list2[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:C",
                                                     ", pseudo F = ", round(list2[[2]]$F.Model[2], 2),
                                                     ", R^2 = ", round(list2[[2]]$R2[2], 2),
                                                     ", p < 0.001")),
               hjust = -0.035, vjust = -4, size = 3, fontface = "bold") +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list2[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:Ex",
                                                     ", pseudo F = ", round(list2[[2]]$F.Model[3], 2),
                                                     ", R^2 = ", round(list2[[2]]$R2[3], 2),
                                                     ", p = ", round(list2[[2]]$P.value.corrected[3], 3))),
               hjust = -0.035, vjust = -2.25, size = 3, fontface = "bold") +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list2[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("CP:C \u2194 CP:Ex",
                                                     ", pseudo F = ", round(list2[[2]]$F.Model[1], 2),
                                                     ", R^2 = ", round(list2[[2]]$R2[1], 2),
@@ -131,19 +131,19 @@ df <- list3[[1]]
     #               label = .data$group[1], 
     #               color = .data$group[1]),
     #           size = 2) +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list3[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:C",
                                                     ", pseudo F = ", round(list3[[2]]$F.Model[2], 2),
                                                     ", R^2 = ", round(list3[[2]]$R2[2], 2),
                                                     ", p < 0.001")),
               hjust = -0.035, vjust = -4, size = 3, fontface = "bold") +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list3[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:Ex",
                                                     ", pseudo F = ", round(list3[[2]]$F.Model[3], 2),
                                                     ", R^2 = ", round(list3[[2]]$R2[3], 2),
                                                     ", p < 0.001")),
               hjust = -0.035, vjust = -2.25, size = 3, fontface = "bold") +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list3[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("CP:C \u2194 CP:Ex",
                                                     ", pseudo F = ", round(list3[[2]]$F.Model[1], 2),
                                                     ", R^2 = ", round(list3[[2]]$R2[1], 2),
@@ -208,7 +208,7 @@ df <- list5[[1]]
     #               label = .data$group[1], 
     #               color = .data$group[1]),
     #           size = 2) +
-    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+    geom_text(data = list5[[2]], 
               aes(x = -Inf, y = -Inf,
                   label = paste0("pseudo F = ", round(list5[[2]]$F.Model, 2),
                                  ", R^2 = ", round(list5[[2]]$R2, 2),
@@ -241,7 +241,7 @@ df <- list6[[1]]
     #               label = .data$group[1], 
     #               color = .data$group[1]),
     #           size = 2) +
-    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+    geom_text(data = list6[[2]], 
               aes(x = -Inf, y = -Inf,
                   label = paste0("pseudo F = ", round(list5[[2]]$F.Model, 2),
                                  ", R^2 = ", round(list5[[2]]$R2, 2),
@@ -314,19 +314,19 @@ df <- list7[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list7[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:C",
                                                     ", pseudo F = ", round(list7[[2]]$F.Model[2], 2),
                                                     ", R^2 = ", round(list7[[2]]$R2[2], 2),
                                                     ", p < 0.001")),
               hjust = -0.035, vjust = -4, size = 3, fontface = "bold") +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list7[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:Ex",
                                                     ", pseudo F = ", round(list7[[2]]$F.Model[3], 2),
                                                     ", R^2 = ", round(list7[[2]]$R2[3], 2),
                                                     ", p < 0.001")),
               hjust = -0.035, vjust = -2.25, size = 3, fontface = "bold") +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list7[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("CP:C \u2194 CP:Ex",
                                                     ", pseudo F = ", round(list7[[2]]$F.Model[1], 2),
                                                     ", R^2 = ", round(list7[[2]]$R2[1], 2),
@@ -352,19 +352,19 @@ df <- list8[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list8[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:C",
                                                     ", pseudo F = ", round(list8[[2]]$F.Model[2], 2),
                                                     ", R^2 = ", round(list8[[2]]$R2[2], 2),
                                                     ", p = ", round(list8[[2]]$P.value.corrected[2], 3))),
               hjust = -0.035, vjust = -4, size = 3, fontface = "bold") +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list8[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:Ex",
                                                     ", pseudo F = ", round(list8[[2]]$F.Model[3], 2),
                                                     ", R^2 = ", round(list8[[2]]$R2[3], 2),
                                                     ", p = ", round(list8[[2]]$P.value.corrected[3], 3))),
               hjust = -0.035, vjust = -2.25, size = 3) +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list8[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("CP:C \u2194 CP:Ex",
                                                     ", pseudo F = ", round(list8[[2]]$F.Model[1], 2),
                                                     ", R^2 = ", round(list8[[2]]$R2[1], 2),
@@ -388,19 +388,19 @@ df <- list9[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list9[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:C",
                                                     ", pseudo F = ", round(list9[[2]]$F.Model[2], 2),
                                                     ", R^2 = ", round(list9[[2]]$R2[2], 2),
                                                     ", p = ", round(list9[[2]]$P.value.corrected[2], 3))),
               hjust = -0.035, vjust = -4, size = 3, fontface = "bold") +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list9[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("KR \u2194 CP:Ex",
                                                     ", pseudo F = ", round(list9[[2]]$F.Model[3], 2),
                                                     ", R^2 = ", round(list9[[2]]$R2[3], 2),
                                                     ", p < 0.001")),
               hjust = -0.035, vjust = -2.25, size = 3, fontface = "bold") +
-    geom_text(data = list4[[2]], aes(x = -Inf, y = -Inf,
+    geom_text(data = list9[[2]], aes(x = -Inf, y = -Inf,
                                      label = paste0("CP:C \u2194 CP:Ex",
                                                     ", pseudo F = ", round(list9[[2]]$F.Model[1], 2),
                                                     ", R^2 = ", round(list9[[2]]$R2[1], 2),
@@ -424,7 +424,7 @@ df <- list10[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+    geom_text(data = list10[[2]], 
               aes(x = -Inf, y = -Inf,
                   label = paste0("pseudo F = ", round(list10[[2]]$F.Model, 2),
                                  ", R^2 = ", round(list10[[2]]$R2, 2),
@@ -446,7 +446,7 @@ df <- list11[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+    geom_text(data = list11[[2]], 
               aes(x = -Inf, y = -Inf,
                   label = paste0("pseudo F = ", round(list11[[2]]$F.Model, 2),
                                  ", R^2 = ", round(list11[[2]]$R2, 2),
@@ -469,7 +469,7 @@ df <- list12[[1]]
     geom_point(aes(color = group), size = 0.5, alpha = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
-    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+    geom_text(data = list12[[2]], 
               aes(x = -Inf, y = -Inf,
                   label = paste0("pseudo F = ", round(list12[[2]]$F.Model, 2),
                                  ", R^2 = ", round(list12[[2]]$R2, 2),
