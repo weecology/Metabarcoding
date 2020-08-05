@@ -189,7 +189,7 @@ dat11 <- prep_460_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 460, 0.0
 dat12 <- prep_460_PPonly_relabund_ITS2(samples_PP, reads, totals, 5000, 460, 0.001)
 
 df<- bind_rows(dat1[[1]], dat3[[1]], dat4[[1]], dat5[[1]],
-               dat7[[1]], dat8[[1]], dat9[[1]], dat11[[1]], dat12[[1]])
+               dat7[[1]], dat8[[1]], dat9, dat11, dat12)
 
 (plot4 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5) +
