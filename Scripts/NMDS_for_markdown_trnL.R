@@ -121,7 +121,7 @@ df<- bind_rows(dat1[[1]], dat3[[1]], dat4[[1]], dat5[[1]],
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
-#ggsave("Plots/trnL_2016_PPonly_totalreads_relabund.png", plot2, device = "png")
+#ggsave("Plots/trnL_454_PPonly_totalreads_relabund.png", plot2, device = "png")
 
 # Plot 3 #
 # OTUs, 460 ------------------------------------------------------------------#
