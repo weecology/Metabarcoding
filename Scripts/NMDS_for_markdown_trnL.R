@@ -26,11 +26,11 @@ samples_PP <- samples %>% filter(species == 'PP')
 # OTUs, 2016 ------------------------------------------------------------------#
 
 dat1 <- prep_454_allsp_relabund(samples, reads, totals, 1000, 454, 0.01)
-dat2 <- prep_454_allsp_relabund(samples, reads, totals, 1000, 454, 0.05)
+#dat2 <- prep_454_allsp_relabund(samples, reads, totals, 1000, 454, 0.05)
 dat3 <- prep_454_allsp_relabund(samples, reads, totals, 1000, 454, 0.005)
 dat4 <- prep_454_allsp_relabund(samples, reads, totals, 1000, 454, 0.001)
 dat5 <- prep_454_allsp_relabund(samples, reads, totals, 2000, 454, 0.01)
-dat6 <- prep_454_allsp_relabund(samples, reads, totals, 2000, 454, 0.05)
+#dat6 <- prep_454_allsp_relabund(samples, reads, totals, 2000, 454, 0.05)
 dat7 <- prep_454_allsp_relabund(samples, reads, totals, 2000, 454, 0.005)
 dat8 <- prep_454_allsp_relabund(samples, reads, totals, 2000, 454, 0.001)
 dat9 <- prep_454_allsp_relabund(samples, reads, totals, 5000, 454, 0.01)
@@ -38,38 +38,38 @@ dat10 <- prep_454_allsp_relabund(samples, reads, totals, 5000, 454, 0.05)
 dat11 <- prep_454_allsp_relabund(samples, reads, totals, 5000, 454, 0.005)
 dat12 <- prep_454_allsp_relabund(samples, reads, totals, 5000, 454, 0.001)
 
-df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
-               dat7, dat8, dat9, dat10, dat11, dat12)
+df<- bind_rows(dat1[[1]], dat3[[1]], dat4[[1]], dat5[[1]],
+               dat7[[1]], dat8[[1]], dat9[[1]], dat11[[1]], dat12[[1]])
 
 (plot1 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
   geom_point(aes(color = group), size = 0.5) +
   geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
             size = 0.5) +
   facet_wrap(min_total ~ min_rel_abund, scales = "free") +
-  geom_text(data = df[df$df == "NMDS.mean" & df$group == "Krat",], 
-            aes(x = MDS1, y = MDS2,  
-                label = .data$group[1], 
-                color = .data$group[1]),
-            size = 1) +
-  geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_control",], 
-            aes(x = MDS1, y = MDS2,  
-                label = .data$group[1], 
-                color = .data$group[1]),
-            size = 1) +
-  geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_exclosure",],
-            aes(x = MDS1, y = MDS2,  
-                label = .data$group[1], 
-                color = .data$group[1]),
-            size = 1) +
-  geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
-            aes(x = Inf, y = Inf,
-                label = paste("F.model = ", round(.data$F.model, 2),
-                              "\n p = ", round(.data$pval, 4))),
-            hjust = 1.1, vjust= 1.2, size = 2) +
+  # geom_text(data = df[df$df == "NMDS.mean" & df$group == "Krat",], 
+  #           aes(x = MDS1, y = MDS2,  
+  #               label = .data$group[1], 
+  #               color = .data$group[1]),
+  #           size = 1) +
+  # geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_control",], 
+  #           aes(x = MDS1, y = MDS2,  
+  #               label = .data$group[1], 
+  #               color = .data$group[1]),
+  #           size = 1) +
+  # geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP_exclosure",],
+  #           aes(x = MDS1, y = MDS2,  
+  #               label = .data$group[1], 
+  #               color = .data$group[1]),
+  #           size = 1) +
+  # geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+  #           aes(x = Inf, y = Inf,
+  #               label = paste("F.model = ", round(.data$F.model, 2),
+  #                             "\n p = ", round(.data$pval, 4))),
+  #           hjust = 1.1, vjust= 1.2, size = 2) +
   scale_color_manual(values = cbPalette) +
   ggtitle("trnL: Fall 2016") +
   theme_bw() +
-  theme(legend.position = 'bottom',
+  theme(legend.title = element_blank(),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank())) 
 
@@ -79,45 +79,45 @@ df <- bind_rows(dat1, dat2, dat3, dat4, dat5, dat6,
 # OTUs, 454, PPs only ------------------------------------------------------------------#
 
 dat1 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 1000, 454, 0.01)
-dat2 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 1000, 454, 0.05)
+#dat2 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 1000, 454, 0.05)
 dat3 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 1000, 454, 0.005)
 dat4 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 1000, 454, 0.001)
 dat5 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 2000, 454, 0.01)
-dat6 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 2000, 454, 0.05)
+#dat6 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 2000, 454, 0.05)
 dat7 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 2000, 454, 0.005)
 dat8 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 2000, 454, 0.001)
 dat9 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 5000, 454, 0.01)
-dat10 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 5000, 454, 0.05)
+#dat10 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 5000, 454, 0.05)
 dat11 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 5000, 454, 0.005)
 dat12 <- prep_454_PPonly_relabund(samples_PP, reads, totals, 5000, 454, 0.001)
 
-df <- bind_rows(dat1, dat3, dat4, dat5,
-                dat7, dat8, dat9, dat11, dat12)
+df<- bind_rows(dat1[[1]], dat3[[1]], dat4[[1]], dat5[[1]],
+               dat7[[1]], dat8[[1]], dat9[[1]], dat11[[1]], dat12[[1]])
 
 (plot2 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
     facet_wrap(min_total ~ min_rel_abund, scales = "free") +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 1) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_exclosure",],
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 1) +
-    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
-              aes(x = Inf, y = Inf,
-                  label = paste("F.model = ", round(.data$F.model, 2),
-                                "\n p = ", round(.data$pval, 4))),
-              hjust = 1.1, vjust= 1.2, size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 1) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_exclosure",],
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 1) +
+    # geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+    #           aes(x = Inf, y = Inf,
+    #               label = paste("F.model = ", round(.data$F.model, 2),
+    #                             "\n p = ", round(.data$pval, 4))),
+    #           hjust = 1.1, vjust= 1.2, size = 2) +
     scale_color_manual(values = cbPalette) +
-    ggtitle("trnL: Fall 2016, PP only") +
+    ggtitle("trnL: Fall 2016") +
     theme_bw() +
-    theme(legend.position = 'bottom',
+    theme(legend.title = element_blank(),
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
@@ -136,38 +136,38 @@ dat9 <- prep_460_allsp_relabund(samples, reads, totals, 5000, 460, 0.01)
 dat11 <- prep_460_allsp_relabund(samples, reads, totals, 5000, 460, 0.005)
 dat12 <- prep_460_allsp_relabund(samples, reads, totals, 5000, 460, 0.001)
 
-df<- bind_rows(dat1, dat3, dat4, dat5,
-               dat7, dat8, dat9, dat11, dat12)
+df<- bind_rows(dat1[[1]], dat3[[1]], dat4[[1]], dat5[[1]],
+               dat7[[1]], dat8[[1]], dat9[[1]], dat11[[1]], dat12[[1]])
 
 (plot3 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
   geom_point(aes(color = group), size = 0.5) +
   geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
             size = 0.5) +
   facet_wrap(min_total ~ min_rel_abund, scales = "free", ncol = 3) +
-  geom_text(data = df[df$df == "NMDS.mean" & df$group == "K-Rat",], 
-            aes(x = MDS1, y = MDS2,  
-                label = .data$group[1], 
-                color = .data$group[1]),
-            size = 1) +
-  geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
-            aes(x = MDS1, y = MDS2,
-                label = .data$group[1], 
-                color = .data$group[1]),
-            size = 1) +
-  geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
-            aes(x = MDS1, y = MDS2,  
-                label = .data$group[1], 
-                color = .data$group[1]),
-            size = 1) +
-  geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
-            aes(x = Inf, y = Inf,
-                label = paste("F.model = ", round(.data$F.model, 2),
-                              "\n p = ", round(.data$pval, 4))),
-            hjust = 1.1, vjust= 1.2, size = 2) +
+  # geom_text(data = df[df$df == "NMDS.mean" & df$group == "K-Rat",], 
+  #           aes(x = MDS1, y = MDS2,  
+  #               label = .data$group[1], 
+  #               color = .data$group[1]),
+  #           size = 1) +
+  # geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+  #           aes(x = MDS1, y = MDS2,
+  #               label = .data$group[1], 
+  #               color = .data$group[1]),
+  #           size = 1) +
+  # geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+  #           aes(x = MDS1, y = MDS2,  
+  #               label = .data$group[1], 
+  #               color = .data$group[1]),
+  #           size = 1) +
+  # geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+  #           aes(x = Inf, y = Inf,
+  #               label = paste("F.model = ", round(.data$F.model, 2),
+  #                             "\n p = ", round(.data$pval, 4))),
+  #           hjust = 1.1, vjust= 1.2, size = 2) +
   scale_color_manual(values = cbPalette) +
   ggtitle("trnL: Spring 2017") +
   theme_bw() +
-  theme(legend.position = 'bottom',
+  theme(legend.title = element_blank(),
         panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank())) 
 
@@ -186,33 +186,33 @@ dat9 <- prep_460_PPonly_relabund(samples_PP, reads, totals, 5000, 460, 0.01)
 dat11 <- prep_460_PPonly_relabund(samples_PP, reads, totals, 5000, 460, 0.005)
 dat12 <- prep_460_PPonly_relabund(samples_PP, reads, totals, 5000, 460, 0.001)
 
-df <- bind_rows(dat1, dat3, dat4, dat5,
-                dat7, dat8, dat9, dat11, dat12)
+df<- bind_rows(dat1[[1]], dat3[[1]], dat4[[1]], dat5[[1]],
+               dat7[[1]], dat8[[1]], dat9[[1]], dat11[[1]], dat12[[1]])
 
 (plot4 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
     facet_wrap(min_total ~ min_rel_abund, scales = "free") +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 1) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 1) +
-    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
-              aes(x = Inf, y = Inf,
-                  label = paste("F.model = ", round(.data$F.model, 2),
-                                "\n p = ", round(.data$pval, 4))),
-              hjust = 1.1, vjust= 1.2, size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 1) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 1) +
+    # geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+    #           aes(x = Inf, y = Inf,
+    #               label = paste("F.model = ", round(.data$F.model, 2),
+    #                             "\n p = ", round(.data$pval, 4))),
+    #           hjust = 1.1, vjust= 1.2, size = 2) +
     scale_color_manual(values = cbPalette) +
-    ggtitle("trnL: Spring 2017, PP only") +
+    ggtitle("trnL: Spring 2017") +
     theme_bw() +
-    theme(legend.position = 'bottom',
+    theme(legend.title = element_blank(),
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
@@ -231,38 +231,38 @@ dat9 <- prep_466_allsp_relabund(samples, reads, totals, 5000, 466, 0.01)
 dat11 <- prep_466_allsp_relabund(samples, reads, totals, 5000, 466, 0.005)
 dat12 <- prep_466_allsp_relabund(samples, reads, totals, 5000, 466, 0.001)
 
-df<- bind_rows(dat1, dat3, dat4, dat5,
-               dat7, dat8, dat9, dat11, dat12)
+df<- bind_rows(dat1[[1]], dat3[[1]], dat4[[1]], dat5[[1]],
+               dat7[[1]], dat8[[1]], dat9[[1]], dat11[[1]], dat12[[1]])
 
 (plot5 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
     facet_wrap(min_total ~ min_rel_abund, scales = "free", ncol = 3) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "K-Rat",], 
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 1) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
-              aes(x = MDS1, y = MDS2,
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 1) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 1) +
-    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
-              aes(x = Inf, y = Inf,
-                  label = paste("F.model = ", round(.data$F.model, 2),
-                                "\n p = ", round(.data$pval, 4))),
-              hjust = 1.1, vjust= 1.2, size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "K-Rat",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 1) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+    #           aes(x = MDS1, y = MDS2,
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 1) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 1) +
+    # geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+    #           aes(x = Inf, y = Inf,
+    #               label = paste("F.model = ", round(.data$F.model, 2),
+    #                             "\n p = ", round(.data$pval, 4))),
+    #           hjust = 1.1, vjust= 1.2, size = 2) +
     scale_color_manual(values = cbPalette) +
     ggtitle("trnL: Spring 2017") +
     theme_bw() +
-    theme(legend.position = 'bottom',
+    theme(legend.title = element_blank(),
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 
@@ -281,33 +281,33 @@ dat9 <- prep_466_PPonly_relabund(samples_PP, reads, totals, 5000, 466, 0.01)
 dat11 <- prep_466_PPonly_relabund(samples_PP, reads, totals, 5000, 466, 0.005)
 dat12 <- prep_466_PPonly_relabund(samples_PP, reads, totals, 5000, 466, 0.001)
 
-df <- bind_rows(dat1, dat3, dat4, dat5,
-                dat7, dat8, dat9, dat11, dat12)
+df<- bind_rows(dat1[[1]], dat3[[1]], dat4[[1]], dat5[[1]],
+               dat7[[1]], dat8[[1]], dat9[[1]], dat11[[1]], dat12[[1]])
 
 (plot6 <- ggplot(data = df[df$df == 'NMDS',], aes(x = MDS1, y = MDS2)) + 
     geom_point(aes(color = group), size = 0.5) +
     geom_path(data = df[df$df == "df_ell",], aes(x = MDS1, y = MDS2, colour = group), 
               size = 0.5) +
     facet_wrap(min_total ~ min_rel_abund, scales = "free") +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 1) +
-    geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
-              aes(x = MDS1, y = MDS2,  
-                  label = .data$group[1], 
-                  color = .data$group[1]),
-              size = 1) +
-    geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
-              aes(x = Inf, y = Inf,
-                  label = paste("F.model = ", round(.data$F.model, 2),
-                                "\n p = ", round(.data$pval, 4))),
-              hjust = 1.1, vjust= 1.2, size = 2) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: Control",], 
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 1) +
+    # geom_text(data = df[df$df == "NMDS.mean" & df$group == "PP: KR_Exclosure",],
+    #           aes(x = MDS1, y = MDS2,  
+    #               label = .data$group[1], 
+    #               color = .data$group[1]),
+    #           size = 1) +
+    # geom_text(data = df %>% select(F.model, pval, min_total, min_rel_abund) %>% distinct(), 
+    #           aes(x = Inf, y = Inf,
+    #               label = paste("F.model = ", round(.data$F.model, 2),
+    #                             "\n p = ", round(.data$pval, 4))),
+    #           hjust = 1.1, vjust= 1.2, size = 2) +
     scale_color_manual(values = cbPalette) +
-    ggtitle("trnL: Spring 2017, PP only") +
+    ggtitle("trnL: Spring 2017") +
     theme_bw() +
-    theme(legend.position = 'bottom',
+    theme(legend.title = element_blank(),
           panel.grid.major = element_blank(), 
           panel.grid.minor = element_blank())) 
 

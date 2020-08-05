@@ -621,11 +621,11 @@ prep_466_allsp_relabund_ITS2 <- function(samples, reads, totals, reads_min, peri
   
   # remove outliers
   data[[1]] <- 
-    data[[1]][!(row.names(data[[1]]) %in% c("S013043")),]
+    data[[1]][!(row.names(data[[1]]) %in% c("S013043", "S013041")),]
   data[[2]] <- 
-    data[[2]][!data[[2]] %in% c("S013043")]
+    data[[2]][!data[[2]] %in% c("S013043", "S013041")]
   data[[3]] <- 
-    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013043"),]
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013043", "S013041"),]
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
@@ -642,10 +642,10 @@ prep_466_allsp_relabund_ITS2 <- function(samples, reads, totals, reads_min, peri
   df$min_total <- reads_min
   df$min_rel_abund <- rel_reads_min
   
-  pairwise_perMANOVA <- EcolUtils::adonis.pair(dist.mat = dist_matrix, 
+  pairwise_perMANOVA <- EcolUtils::adonis.pair(dist.mat = dist_matrix,
                                                Factor = as.factor(data[[3]]$group),
                                                nper = 10000)
-  
+
   # list of objects to return
   return_list <- list(df, pairwise_perMANOVA)
   names(return_list) <- c("df", "pairwise_perMANOVA")
@@ -710,11 +710,11 @@ prep_466_PPonly_relabund_ITS2 <- function(samples, reads, totals, reads_min, per
   
   # remove outliers
   data[[1]] <- 
-    data[[1]][!(row.names(data[[1]]) %in% c("S013043")),]
+    data[[1]][!(row.names(data[[1]]) %in% c("S013043", "S013041")),]
   data[[2]] <- 
-    data[[2]][!data[[2]] %in% c("S013043")]
+    data[[2]][!data[[2]] %in% c("S013043", "S013041")]
   data[[3]] <- 
-    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013043"),]
+    data[[3]][!(data[[3]]$vial_barcode) %in% c("S013043", "S013041"),]
   
   dist_trnL <- metaMDS(data[[1]], distance = "bray", trymax = 250, k = 3)
   plotting_data <- NMDS_plotting_prep(data, dist_trnL) 
