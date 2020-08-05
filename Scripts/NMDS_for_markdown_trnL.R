@@ -260,7 +260,7 @@ df<- bind_rows(dat1[[1]], dat3[[1]], dat4[[1]], dat5[[1]],
     #                             "\n p = ", round(.data$pval, 4))),
     #           hjust = 1.1, vjust= 1.2, size = 2) +
     scale_color_manual(values = cbPalette) +
-    ggtitle("trnL: Spring 2017") +
+    ggtitle("trnL: Fall 2017") +
     theme_bw() +
     theme(legend.title = element_blank(),
           panel.grid.major = element_blank(), 
@@ -305,7 +305,7 @@ df<- bind_rows(dat1[[1]], dat3[[1]], dat4[[1]], dat5[[1]],
     #                             "\n p = ", round(.data$pval, 4))),
     #           hjust = 1.1, vjust= 1.2, size = 2) +
     scale_color_manual(values = cbPalette) +
-    ggtitle("trnL: Spring 2017") +
+    ggtitle("trnL: Fall 2017") +
     theme_bw() +
     theme(legend.title = element_blank(),
           panel.grid.major = element_blank(), 
