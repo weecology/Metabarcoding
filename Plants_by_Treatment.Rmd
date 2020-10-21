@@ -1,0 +1,419 @@
+---
+title: "Plants by Treatment"
+author: "Ellen Bledsoe"
+date: "10/21/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(portalr)
+library(tidyverse)
+library(vegan)
+
+cbbPalette <- c("#000000", "#009E73", "#e79f00", "#9ad0f3", "#0072B2", "#D55E00", 
+                "#CC79A7", "#F0E442")
+theme_set(theme_bw())
+```
+
+## Annuals by Sampling Period and Treatment
+
+Running CCA (from Supp et al., 2012 and Portal-LTREB) to see if there are significant differences in plant communities between controls and KR exclosures for each season of diet sampling.
+
+``` {r annuals_data, echo=FALSE, include=FALSE}
+summerannuals_2016 <- portalr::plant_abundance(type = 'Summer Annuals',
+                                               level = 'plot',
+                                               shape = 'crosstab') %>% 
+  filter(year == '2016',
+         season == 'summer',
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21)) 
+summerannuals_2016[, colSums(summerannuals_2016 != 0) > 0]
+
+
+winterannuals_2017 <- portalr::plant_abundance(type = 'Winter Annuals',
+                                               level = 'plot',
+                                               shape = 'crosstab') %>% 
+  filter(year == '2017',
+         season == 'winter',
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21))
+winterannuals_2017[, colSums(winterannuals_2017 != 0) > 0]
+
+summerannuals_2017 <- portalr::plant_abundance(type = 'Summer Annuals',
+                                               level = 'plot',
+                                               shape = 'crosstab') %>% 
+  filter(year == '2017',
+         season == 'summer',
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21))
+summerannuals_2017[, colSums(summerannuals_2017 != 0) > 0]
+
+# summer annuals since plot switch
+summerannuals <- portalr::plant_abundance(type = 'Summer Annuals',
+                                          level = 'plot',
+                                          shape = 'crosstab') %>% 
+  filter(year > 2014,
+         season == 'summer',
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21)) 
+
+# winter annuals since plots switch
+winterannuals <- portalr::plant_abundance(type = 'Winter Annuals',
+                                          level = 'plot',
+                                          shape = 'crosstab') %>% 
+  filter(year > 2014,
+         season == 'winter',
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21))
+winterannuals[, colSums(winterannuals != 0) > 0]
+```
+
+```{r annuals_pcca_prep, echo=FALSE, include=FALSE}
+# sqrt transform abundance data to account for huge differences in abundance year to year
+summerannuals_2016_sp = sqrt(as.matrix(summerannuals_2016[,c(6:ncol(summerannuals_2016))]))
+summerannuals_2017_sp = sqrt(as.matrix(summerannuals_2017[,c(6:ncol(summerannuals_2017))]))
+winterannuals_2017_sp = sqrt(as.matrix(winterannuals_2017[,c(6:ncol(winterannuals_2017))]))
+summerannuals_sp = sqrt(as.matrix(summerannuals[,c(6:ncol(summerannuals))]))
+winterannuals_sp = sqrt(as.matrix(winterannuals[,c(6:ncol(winterannuals))]))
+
+summerannuals_2016_trt = as.factor(summerannuals_2016$treatment)
+summerannuals_2017_trt = as.factor(summerannuals_2017$treatment)
+winterannuals_2017_trt = as.factor(winterannuals_2017$treatment)
+summerannuals_trt = as.factor(summerannuals$treatment)
+winterannuals_trt = as.factor(winterannuals$treatment)
+
+summerannuals_year = as.factor(summerannuals$year)
+winterannuals_year = as.factor(winterannuals$year)
+```
+
+### Summer Annuals 2016
+```{r annual_summer2016, echo=FALSE, cache=TRUE}
+# cca
+sum.ann.2016.cca <- cca(summerannuals_2016_sp ~ summerannuals_2016_trt)
+
+# plotting from Erica's
+results=data.frame(scores(sum.ann.2016.cca, display = "sites", scaling = "sites"),
+                   treatment = summerannuals_2016_trt)
+centroids = aggregate(cbind(CCA1, CA1) ~ treatment, data = results, FUN = mean)
+
+plotobj = ggplot(results, aes(CCA1, CA1)) + 
+    stat_ellipse(aes(color = treatment)) +
+    geom_point(aes(colour = treatment), data = centroids, size = 3, stroke = 1, shape = 3) +
+    geom_point(aes(color = treatment), size=.5) +
+    #geom_text(aes(label = plot, color = as.factor(year))) +
+    #coord_equal() +                     # biplots only work with equal scaling
+    scale_shape_discrete(guide=F) +
+    theme(legend.title=element_blank(), legend.position = "bottom",
+          legend.key.height = unit(.5, "cm"), legend.spacing = unit(1, "cm"),
+          legend.key.width = unit(.5, "cm"), legend.text = element_text(size=8),
+          plot.title = element_blank(),
+          #plot.title = element_text(size=11),
+          axis.title = element_text(size=10)) +
+    #scale_color_discrete(direction=-1) +
+    scale_colour_manual(values = cbbPalette,
+                        breaks=c("control","exclosure"),
+                        labels=c("Control", "KR Exclsoure"))
+
+plotobj
+
+# check variance inflation factor (>10 is bad)
+print("Variance Inflation Factor (<10 is fine)")
+print(vif.cca(sum.ann.2016.cca))
+# proportion of variance explained
+print("Variance explained:")
+print(sum.ann.2016.cca$CCA$tot.chi/sum.ann.2016.cca$tot.chi)
+# significance test for individual predictors (type 3 test) (Not Applicable here because I only have one predictor)
+print(anova(sum.ann.2016.cca, by="margin"))
+# significance test for entire model
+#anova(win.cca)
+```
+
+### Winter Annuals 2017
+```{r annual_winter2017, echo=FALSE, cache=TRUE}
+# cca
+wint.ann.2017.cca <- cca(winterannuals_2017_sp ~ winterannuals_2017_trt)
+
+# plotting from Erica's
+results=data.frame(scores(wint.ann.2017.cca, display = "sites", scaling = "sites"),
+                   treatment = winterannuals_2017_trt)
+centroids = aggregate(cbind(CCA1, CA1) ~ treatment, data = results, FUN = mean)
+
+plotobj = ggplot(results, aes(CCA1, CA1)) + 
+    stat_ellipse(aes(color = treatment)) +
+    geom_point(aes(colour = treatment), data = centroids, size = 3, stroke = 1, shape = 3) +
+    geom_point(aes(color = treatment), size=.5) +
+    #geom_text(aes(label = plot, color = as.factor(year))) +
+    #coord_equal() +                     # biplots only work with equal scaling
+    scale_shape_discrete(guide=F) +
+    theme(legend.title=element_blank(), legend.position = "bottom",
+          legend.key.height = unit(.5, "cm"), legend.spacing = unit(1, "cm"),
+          legend.key.width = unit(.5, "cm"), legend.text = element_text(size=8),
+          plot.title = element_blank(),
+          #plot.title = element_text(size=11),
+          axis.title = element_text(size=10)) +
+    #scale_color_discrete(direction=-1) +
+    scale_colour_manual(values = cbbPalette,
+                        breaks=c("control","exclosure"),
+                        labels=c("Control", "KR Exclsoure"))
+
+plotobj
+
+# check variance inflation factor (>10 is bad)
+print("Variance Inflation Factor (<10 is fine)")
+print(vif.cca(wint.ann.2017.cca))
+# proportion of variance explained
+print("Variance explained:")
+print(wint.ann.2017.cca$CCA$tot.chi/wint.ann.2017.cca$tot.chi)
+# significance test for individual predictors (type 3 test) (Not Applicable here because I only have one predictor)
+print(anova(wint.ann.2017.cca, by="margin"))
+# significance test for entire model
+#anova(win.cca)
+```
+
+### Summer Annuals 2017
+```{r annual_summer2017, echo=FALSE, cache=TRUE}
+# cca
+sum.ann.2017.cca <- cca(summerannuals_2017_sp ~ summerannuals_2017_trt)
+
+# plotting from Erica's
+results=data.frame(scores(sum.ann.2017.cca, display = "sites", scaling = "sites"),
+                   treatment = summerannuals_2017_trt)
+centroids = aggregate(cbind(CCA1, CA1) ~ treatment, data = results, FUN = mean)
+
+plotobj = ggplot(results, aes(CCA1, CA1)) + 
+    stat_ellipse(aes(color = treatment)) +
+    geom_point(aes(colour = treatment), data = centroids, size = 3, stroke = 1, shape = 3) +
+    geom_point(aes(color = treatment), size=.5) +
+    #geom_text(aes(label = plot, color = as.factor(year))) +
+    #coord_equal() +                     # biplots only work with equal scaling
+    scale_shape_discrete(guide=F) +
+    theme(legend.title=element_blank(), legend.position = "bottom",
+          legend.key.height = unit(.5, "cm"), legend.spacing = unit(1, "cm"),
+          legend.key.width = unit(.5, "cm"), legend.text = element_text(size=8),
+          plot.title = element_blank(),
+          #plot.title = element_text(size=11),
+          axis.title = element_text(size=10)) +
+    #scale_color_discrete(direction=-1) +
+    scale_colour_manual(values = cbbPalette,
+                        breaks=c("control","exclosure"),
+                        labels=c("Control", "KR Exclsoure"))
+
+plotobj
+
+# check variance inflation factor (>10 is bad)
+print("Variance Inflation Factor (<10 is fine)")
+print(vif.cca(sum.ann.2017.cca))
+# proportion of variance explained
+print("Variance explained:")
+print(sum.ann.2017.cca$CCA$tot.chi/sum.ann.2017.cca$tot.chi)
+# significance test for individual predictors (type 3 test) (Not Applicable here because I only have one predictor)
+print(anova(sum.ann.2017.cca, by="margin"))
+# significance test for entire model
+#anova(win.cca)
+```
+
+```{r annual_summer_since_flip, echo=FALSE, cache=TRUE}
+# # cca
+# sum.ann.cca <- cca(summerannuals_sp ~ summerannuals_trt + Condition(summerannuals_year))
+# 
+# # plotting from Erica's
+# results=data.frame(scores(wint.ann.2017.cca, display = "sites", scaling = "sites"),
+#                    treatment = summerannuals_2016_trt)
+# centroids = aggregate(cbind(CCA1, CA1) ~ treatment, data = results, FUN = mean)
+# 
+# plotobj = ggplot(results, aes(CCA1, CA1)) + 
+#     stat_ellipse(aes(color = treatment)) +
+#     geom_point(aes(colour = treatment), data = centroids, size = 3, stroke = 1, shape = 3) +
+#     geom_point(aes(color = treatment), size=.5) +
+#     #geom_text(aes(label = plot, color = as.factor(year))) +
+#     #coord_equal() +                     # biplots only work with equal scaling
+#     scale_shape_discrete(guide=F) +
+#     theme(legend.title=element_blank(), legend.position = "bottom",
+#           legend.key.height = unit(.5, "cm"), legend.spacing = unit(1, "cm"),
+#           legend.key.width = unit(.5, "cm"), legend.text = element_text(size=8),
+#           plot.title = element_blank(),
+#           #plot.title = element_text(size=11),
+#           axis.title = element_text(size=10)) +
+#     #scale_color_discrete(direction=-1) +
+#     scale_colour_manual(values = cbbPalette,
+#                         breaks=c("control","exclosure"),
+#                         labels=c("Control", "KR Exclsoure"))
+# 
+# plotobj
+# 
+# # check variance inflation factor (>10 is bad)
+# print("Variance Inflation Factor (<10 is fine)")
+# print(vif.cca(wint.ann.2017.cca))
+# # proportion of variance explained
+# print("Variance explained:")
+# print(wint.ann.2017.cca$CCA$tot.chi/wint.ann.2017.cca$tot.chi)
+# # significance test for individual predictors (type 3 test) (Not Applicable here because I only have one predictor)
+# print(anova(wint.ann.2017.cca, by="margin"))
+# # significance test for entire model
+# #anova(win.cca)
+```
+
+## All Plants by Sampling Period and Treatment
+
+```{r all_plants, echo=FALSE, include=FALSE}
+summer_2016 <- portalr::plant_abundance(level = 'plot',
+                                        shape = 'crosstab') %>% 
+  filter(year == '2016',
+         season == 'summer',
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21))
+
+winter_2017 <- portalr::plant_abundance(level = 'plot',
+                                        shape = 'crosstab') %>% 
+  filter(year == '2017',
+         season == 'winter',
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21))
+
+summer_2017 <- portalr::plant_abundance(level = 'plot',
+                                        shape = 'crosstab') %>% 
+  filter(year == '2017',
+         season == 'summer',
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21))
+
+all <- portalr::plant_abundance(level = 'plot',
+                                shape = 'crosstab') %>% 
+  filter(year > 2014,
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21))
+```
+
+```{r all_plants_cca_prep, echo=FALSE, include=FALSE}
+# sqrt transform abundance data to account for huge differences in abundance year to year
+summer_2016_sp = sqrt(as.matrix(summer_2016[,c(6:ncol(summer_2016))]))
+summer_2017_sp = sqrt(as.matrix(summer_2017[,c(6:ncol(summer_2017))]))
+winter_2017_sp = sqrt(as.matrix(winter_2017[,c(6:ncol(winter_2017))]))
+all_sp = sqrt(as.matrix(all[,c(6:ncol(all))]))
+
+summer_2016_trt = as.factor(summer_2016$treatment)
+summer_2017_trt = as.factor(summer_2017$treatment)
+winter_2017_trt = as.factor(winter_2017$treatment)
+
+all_trt = as.factor(all$treatment)
+all_year = as.factor(all$year)
+```
+
+### Summer All Plants 2016
+```{r all_summer2016, echo=FALSE, cache=TRUE}
+# cca
+sum.all.2016.cca <- cca(summer_2016_sp ~ summer_2016_trt)
+
+# plotting from Erica's
+results=data.frame(scores(sum.all.2016.cca, display = "sites", scaling = "sites"),
+                   treatment = summer_2016_trt)
+centroids = aggregate(cbind(CCA1, CA1) ~ treatment, data = results, FUN = mean)
+
+plotobj = ggplot(results, aes(CCA1, CA1)) + 
+    stat_ellipse(aes(color = treatment)) +
+    geom_point(aes(colour = treatment), data = centroids, size = 3, stroke = 1, shape = 3) +
+    geom_point(aes(color = treatment), size=.5) +
+    #geom_text(aes(label = plot, color = as.factor(year))) +
+    #coord_equal() +                     # biplots only work with equal scaling
+    scale_shape_discrete(guide=F) +
+    theme(legend.title=element_blank(), legend.position = "bottom",
+          legend.key.height = unit(.5, "cm"), legend.spacing = unit(1, "cm"),
+          legend.key.width = unit(.5, "cm"), legend.text = element_text(size=8),
+          plot.title = element_blank(),
+          #plot.title = element_text(size=11),
+          axis.title = element_text(size=10)) +
+    #scale_color_discrete(direction=-1) +
+    scale_colour_manual(values = cbbPalette,
+                        breaks=c("control","exclosure"),
+                        labels=c("Control", "KR Exclsoure"))
+
+plotobj
+
+# check variance inflation factor (>10 is bad)
+print("Variance Inflation Factor (<10 is fine)")
+print(vif.cca(sum.all.2016.cca))
+# proportion of variance explained
+print("Variance explained:")
+print(sum.all.2016.cca$CCA$tot.chi/sum.all.2016.cca$tot.chi)
+# significance test for individual predictors (type 3 test) (Not Applicable here because I only have one predictor)
+print(anova(sum.all.2016.cca, by="margin"))
+# significance test for entire model
+#anova(win.cca)
+```
+
+### Winter All Plants 2017
+```{r all_winter2017, echo=FALSE, cache=TRUE}
+# cca
+wint.all.2017.cca <- cca(winter_2017_sp ~ winter_2017_trt)
+
+# plotting from Erica's
+results=data.frame(scores(wint.all.2017.cca, display = "sites", scaling = "sites"),
+                   treatment = winter_2017_trt)
+centroids = aggregate(cbind(CCA1, CA1) ~ treatment, data = results, FUN = mean)
+
+plotobj = ggplot(results, aes(CCA1, CA1)) + 
+    stat_ellipse(aes(color = treatment)) +
+    geom_point(aes(colour = treatment), data = centroids, size = 3, stroke = 1, shape = 3) +
+    geom_point(aes(color = treatment), size=.5) +
+    #geom_text(aes(label = plot, color = as.factor(year))) +
+    #coord_equal() +                     # biplots only work with equal scaling
+    scale_shape_discrete(guide=F) +
+    theme(legend.title=element_blank(), legend.position = "bottom",
+          legend.key.height = unit(.5, "cm"), legend.spacing = unit(1, "cm"),
+          legend.key.width = unit(.5, "cm"), legend.text = element_text(size=8),
+          plot.title = element_blank(),
+          #plot.title = element_text(size=11),
+          axis.title = element_text(size=10)) +
+    #scale_color_discrete(direction=-1) +
+    scale_colour_manual(values = cbbPalette,
+                        breaks=c("control","exclosure"),
+                        labels=c("Control", "KR Exclsoure"))
+
+plotobj
+
+# check variance inflation factor (>10 is bad)
+print("Variance Inflation Factor (<10 is fine)")
+print(vif.cca(wint.all.2017.cca))
+# proportion of variance explained
+print("Variance explained:")
+print(wint.all.2017.cca$CCA$tot.chi/wint.all.2017.cca$tot.chi)
+# significance test for individual predictors (type 3 test) (Not Applicable here because I only have one predictor)
+print(anova(wint.all.2017.cca, by="margin"))
+# significance test for entire model
+#anova(win.cca)
+```
+
+### Summer All Plants 2017
+```{r all_summer2017, echo=FALSE, cache=TRUE}
+# cca
+sum.all.2017.cca <- cca(summer_2017_sp ~ summer_2017_trt)
+
+# plotting from Erica's
+results=data.frame(scores(sum.all.2017.cca, display = "sites", scaling = "sites"),
+                   treatment = summer_2017_trt)
+centroids = aggregate(cbind(CCA1, CA1) ~ treatment, data = results, FUN = mean)
+
+plotobj = ggplot(results, aes(CCA1, CA1)) + 
+    stat_ellipse(aes(color = treatment)) +
+    geom_point(aes(colour = treatment), data = centroids, size = 3, stroke = 1, shape = 3) +
+    geom_point(aes(color = treatment), size=.5) +
+    #geom_text(aes(label = plot, color = as.factor(year))) +
+    #coord_equal() +                     # biplots only work with equal scaling
+    scale_shape_discrete(guide=F) +
+    theme(legend.title=element_blank(), legend.position = "bottom",
+          legend.key.height = unit(.5, "cm"), legend.spacing = unit(1, "cm"),
+          legend.key.width = unit(.5, "cm"), legend.text = element_text(size=8),
+          plot.title = element_blank(),
+          #plot.title = element_text(size=11),
+          axis.title = element_text(size=10)) +
+    #scale_color_discrete(direction=-1) +
+    scale_colour_manual(values = cbbPalette,
+                        breaks=c("control","exclosure"),
+                        labels=c("Control", "KR Exclsoure"))
+
+plotobj
+
+# check variance inflation factor (>10 is bad)
+print("Variance Inflation Factor (<10 is fine)")
+print(vif.cca(sum.all.2017.cca))
+# proportion of variance explained
+print("Variance explained:")
+print(sum.all.2017.cca$CCA$tot.chi/sum.all.2017.cca$tot.chi)
+# significance test for individual predictors (type 3 test) (Not Applicable here because I only have one predictor)
+print(anova(sum.all.2017.cca, by="margin"))
+# significance test for entire model
+#anova(win.cca)
+```
