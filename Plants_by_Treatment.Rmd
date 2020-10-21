@@ -2,7 +2,7 @@
 title: "Plants by Treatment"
 author: "Ellen Bledsoe"
 date: "10/21/2020"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
@@ -21,7 +21,7 @@ theme_set(theme_bw())
 
 Running CCA (from Supp et al., 2012 and Portal-LTREB) to see if there are significant differences in plant communities between controls and KR exclosures for each season of diet sampling.
 
-``` {r annuals_data, echo=FALSE, include=FALSE}
+``` {r annuals_data, echo=FALSE, include=FALSE, cache = TRUE}
 summerannuals_2016 <- portalr::plant_abundance(type = 'Summer Annuals',
                                                level = 'plot',
                                                shape = 'crosstab') %>% 
@@ -252,7 +252,7 @@ print(anova(sum.ann.2017.cca, by="margin"))
 
 ## All Plants by Sampling Period and Treatment
 
-```{r all_plants, echo=FALSE, include=FALSE}
+```{r all_plants, echo=FALSE, include=FALSE, cache=TRUE}
 summer_2016 <- portalr::plant_abundance(level = 'plot',
                                         shape = 'crosstab') %>% 
   filter(year == '2016',
