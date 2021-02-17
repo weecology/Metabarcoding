@@ -19,13 +19,13 @@
         
 #######################   Main Code
 
-library(dplyr)
+library(tidyverse)
 # to run this script, you will need to download bioconductor first:
 
-setwd("/Users/bleds22e/Documents/Git/Metagenomics")
+setwd("/Users/bleds22e/Documents/Git/Metabarcoding")
 
 ### Reads no blast file, extracts the OTU.IDs
-noblast = read.csv("./Plants/ITS_no_blast.csv", stringsAsFactors = FALSE)
+noblast = read.csv("./Data/SequencedData/Plants/RawData/FNA_Files/correctedOTUs_Spring2017.csv", stringsAsFactors = FALSE)
 OTUs = noblast %>% dplyr::select(OTU.ID)
 
 ### Reads the .csv of the .fna file and extracts
@@ -53,8 +53,7 @@ OTUs_forBLAST = noblast_OTUs %>% filter(!(OTU_its %in% completed_OTUs))
 ###   so I don't load them until I need them
 
 #Run the two commented lines if annotate not installed yet
-# source("https://bioconductor.org/biocLite.R")
-# biocLite("annotate")
+#BiocManager::install("annotate")
 library(annotate)
 
 ### Queries BLAST
