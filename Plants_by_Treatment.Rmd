@@ -1,7 +1,7 @@
 ---
 title: "Plants by Treatment"
-author: "Ellen Bledsoe"
-date: "10/21/2020"
+author: "Ellen Bledsoe," 
+date: "`r format(Sys.time(), '%B %Y')`"
 output: github_document
 ---
 
@@ -27,7 +27,8 @@ summerannuals_2016 <- portalr::plant_abundance(type = 'Summer Annuals',
                                                shape = 'crosstab') %>% 
   filter(year == '2016',
          season == 'summer',
-         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21)) 
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21)) %>% 
+  arrange(treatment)
 summerannuals_2016[, colSums(summerannuals_2016 != 0) > 0]
 
 
@@ -36,7 +37,8 @@ winterannuals_2017 <- portalr::plant_abundance(type = 'Winter Annuals',
                                                shape = 'crosstab') %>% 
   filter(year == '2017',
          season == 'winter',
-         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21))
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21)) %>% 
+  arrange(treatment)
 winterannuals_2017[, colSums(winterannuals_2017 != 0) > 0]
 
 summerannuals_2017 <- portalr::plant_abundance(type = 'Summer Annuals',
@@ -44,7 +46,8 @@ summerannuals_2017 <- portalr::plant_abundance(type = 'Summer Annuals',
                                                shape = 'crosstab') %>% 
   filter(year == '2017',
          season == 'summer',
-         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21))
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21)) %>% 
+  arrange(treatment)
 summerannuals_2017[, colSums(summerannuals_2017 != 0) > 0]
 
 # summer annuals since plot switch
@@ -53,7 +56,9 @@ summerannuals <- portalr::plant_abundance(type = 'Summer Annuals',
                                           shape = 'crosstab') %>% 
   filter(year > 2014,
          season == 'summer',
-         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21)) 
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21)) %>% 
+  arrange(treatment)
+summerannuals[, colSums(summerannuals != 0) > 0]
 
 # winter annuals since plots switch
 winterannuals <- portalr::plant_abundance(type = 'Winter Annuals',
@@ -61,7 +66,8 @@ winterannuals <- portalr::plant_abundance(type = 'Winter Annuals',
                                           shape = 'crosstab') %>% 
   filter(year > 2014,
          season == 'winter',
-         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21))
+         plot %in% c(3, 4, 11, 14, 15, 17, 19, 20, 21)) %>% 
+  arrange(treatment)
 winterannuals[, colSums(winterannuals != 0) > 0]
 ```
 
@@ -84,7 +90,24 @@ winterannuals_year = as.factor(winterannuals$year)
 ```
 
 ### Summer Annuals 2016
-```{r annual_summer2016, echo=FALSE, cache=TRUE}
+
+#### Bray-Curtis Distances & Heatmap
+```{r annual_summer2016_heatmap, echo=FALSE, cache=TRUE}
+
+# distance matrix
+sum.ann.2016.vegdist <- as.matrix(vegdist(summerannuals_2016_sp))
+colnames(sum.ann.2016.vegdist) <- c("control.4", "control.11", "control.14", "control.17", 
+                                    "ex.3", "ex.15", "ex.19", "ex.20", "ex.21")
+(sum.ann.2016.vegdist.df <- cbind(summerannuals_2016[,1:5], as.data.frame(as.matrix(sum.ann.2016.vegdist))))
+heatmap(sum.ann.2016.vegdist)
+
+# sums
+
+
+```
+
+#### CCA by Treatment
+```{r annual_summer2016_cca, echo=FALSE, cache=TRUE}
 # cca
 sum.ann.2016.cca <- cca(summerannuals_2016_sp ~ summerannuals_2016_trt)
 
@@ -126,6 +149,20 @@ print(anova(sum.ann.2016.cca, by="margin"))
 ```
 
 ### Winter Annuals 2017
+
+#### Bray-Curtis Distances & Heatmap
+```{r annual_winter2017_heatmap, echo=FALSE, cache=TRUE}
+
+# distance matrix
+wint.ann.2017.vegdist <- as.matrix(vegdist(winterannuals_2017_sp))
+colnames(wint.ann.2017.vegdist) <- c("control.4", "control.11", "control.14", "control.17", 
+                                    "ex.3", "ex.15", "ex.19", "ex.20", "ex.21")
+(wint.ann.2017.vegdist.df <- cbind(winterannuals_2017[,1:5], as.data.frame(as.matrix(wint.ann.2017.vegdist))))
+heatmap(wint.ann.2017.vegdist)
+
+```
+
+#### CCA by Treatment
 ```{r annual_winter2017, echo=FALSE, cache=TRUE}
 # cca
 wint.ann.2017.cca <- cca(winterannuals_2017_sp ~ winterannuals_2017_trt)
@@ -168,6 +205,20 @@ print(anova(wint.ann.2017.cca, by="margin"))
 ```
 
 ### Summer Annuals 2017
+
+#### Bray-Curtis Distances & Heatmap
+```{r annual_summer2017_heatmap, echo=FALSE, cache=TRUE}
+
+# distance matrix
+sum.ann.2017.vegdist <- as.matrix(vegdist(summerannuals_2017_sp))
+colnames(sum.ann.2017.vegdist) <- c("control.4", "control.11", "control.14", "control.17", 
+                                    "ex.3", "ex.15", "ex.19", "ex.20", "ex.21")
+sum.ann.2017.vegdist.df <- cbind(summerannuals_2017[,1:5], as.data.frame(as.matrix(sum.ann.2017.vegdist)))
+heatmap(sum.ann.2017.vegdist)
+
+```
+
+#### CCA by Treatment
 ```{r annual_summer2017, echo=FALSE, cache=TRUE}
 # cca
 sum.ann.2017.cca <- cca(summerannuals_2017_sp ~ summerannuals_2017_trt)
