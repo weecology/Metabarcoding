@@ -1,41 +1,46 @@
 Plants by Treatment
 ================
 Ellen Bledsoe,
-March 2021
+April 2021
 
 ## Annuals by Sampling Period and Treatment
 
 Running CCA (from Supp et al., 2012 and Portal-LTREB) to see if there
 are significant differences in plant communities between controls and KR
 exclosures for each season of diet
-    sampling.
+sampling.
 
 ### Summer Annuals 2016
 
 #### Bray-Curtis Distances & Heatmap
 
-    ##   year season plot quads treatment control.4 control.11 control.14 control.17
-    ## 1 2016 summer    4    16   control 0.0000000  0.4835996  0.3536797  0.2378190
-    ## 2 2016 summer   11    16   control 0.4835996  0.0000000  0.4506154  0.3317974
-    ## 3 2016 summer   14    16   control 0.3536797  0.4506154  0.0000000  0.2740507
-    ## 4 2016 summer   17    16   control 0.2378190  0.3317974  0.2740507  0.0000000
-    ## 5 2016 summer    3    16 exclosure 0.2332703  0.4505304  0.4168591  0.3600123
-    ## 6 2016 summer   15    16 exclosure 0.4170132  0.1966651  0.3624720  0.2551381
-    ## 7 2016 summer   19    16 exclosure 0.3025542  0.4418471  0.4240323  0.3564089
-    ## 8 2016 summer   20    16 exclosure 0.3658103  0.4582654  0.2796710  0.3171195
-    ## 9 2016 summer   21    16 exclosure 0.3086403  0.5235435  0.3734916  0.3580675
-    ##        ex.3     ex.15     ex.19     ex.20     ex.21
-    ## 1 0.2332703 0.4170132 0.3025542 0.3658103 0.3086403
-    ## 2 0.4505304 0.1966651 0.4418471 0.4582654 0.5235435
-    ## 3 0.4168591 0.3624720 0.4240323 0.2796710 0.3734916
-    ## 4 0.3600123 0.2551381 0.3564089 0.3171195 0.3580675
-    ## 5 0.0000000 0.4843415 0.2681849 0.3255163 0.2552856
-    ## 6 0.4843415 0.0000000 0.4602162 0.4049219 0.4612882
-    ## 7 0.2681849 0.4602162 0.0000000 0.2184779 0.2412041
-    ## 8 0.3255163 0.4049219 0.2184779 0.0000000 0.2895958
-    ## 9 0.2552856 0.4612882 0.2412041 0.2895958 0.0000000
-
 ![](Plants_by_Treatment_files/figure-gfm/annual_summer2016_heatmap-1.png)<!-- -->
+
+    ## # A tibble: 3 x 2
+    ##   Label                         mean_dist
+    ##   <fct>                             <dbl>
+    ## 1 Between control and exclosure     0.360
+    ## 2 Within control                    0.355
+    ## 3 Within exclosure                  0.341
+
+    ##             Df  Sum Sq  Mean Sq F value Pr(>F)
+    ## Label        2 0.00246 0.001231    0.15  0.861
+    ## Residuals   33 0.27040 0.008194
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = Distance ~ Label, data = sum.ann.16.group_dist)
+    ## 
+    ## $Label
+    ##                                                        diff        lwr
+    ## Within control-Between control and exclosure   -0.004810298 -0.1082015
+    ## Within exclosure-Between control and exclosure -0.019167352 -0.1051941
+    ## Within exclosure-Within control                -0.014357054 -0.1290593
+    ##                                                       upr     p adj
+    ## Within control-Between control and exclosure   0.09858094 0.9928419
+    ## Within exclosure-Between control and exclosure 0.06685936 0.8488524
+    ## Within exclosure-Within control                0.10034522 0.9494089
 
 #### CCA by Treatment
 
@@ -64,28 +69,33 @@ exclosures for each season of diet
 
 #### Bray-Curtis Distances & Heatmap
 
-    ##   year season plot quads treatment control.4 control.11 control.14 control.17
-    ## 1 2017 winter    4    16   control 0.0000000  0.4287844  0.5515273  0.3958126
-    ## 2 2017 winter   11    16   control 0.4287844  0.0000000  0.3470930  0.2995290
-    ## 3 2017 winter   14    16   control 0.5515273  0.3470930  0.0000000  0.4049866
-    ## 4 2017 winter   17    16   control 0.3958126  0.2995290  0.4049866  0.0000000
-    ## 5 2017 winter    3    16 exclosure 0.3268529  0.4888661  0.5193372  0.5416008
-    ## 6 2017 winter   15    16 exclosure 0.4925699  0.3684930  0.4495784  0.3261664
-    ## 7 2017 winter   19    16 exclosure 0.4290136  0.3654876  0.5450190  0.4302616
-    ## 8 2017 winter   20    16 exclosure 0.4873352  0.4075804  0.3912079  0.3939218
-    ## 9 2017 winter   21    16 exclosure 0.3170895  0.4774594  0.4732551  0.4452816
-    ##        ex.3     ex.15     ex.19     ex.20     ex.21
-    ## 1 0.3268529 0.4925699 0.4290136 0.4873352 0.3170895
-    ## 2 0.4888661 0.3684930 0.3654876 0.4075804 0.4774594
-    ## 3 0.5193372 0.4495784 0.5450190 0.3912079 0.4732551
-    ## 4 0.5416008 0.3261664 0.4302616 0.3939218 0.4452816
-    ## 5 0.0000000 0.5686514 0.4734896 0.4524324 0.3295173
-    ## 6 0.5686514 0.0000000 0.4720061 0.3889509 0.4356436
-    ## 7 0.4734896 0.4720061 0.0000000 0.4424799 0.4020361
-    ## 8 0.4524324 0.3889509 0.4424799 0.0000000 0.3708186
-    ## 9 0.3295173 0.4356436 0.4020361 0.3708186 0.0000000
-
 ![](Plants_by_Treatment_files/figure-gfm/annual_winter2017_heatmap-1.png)<!-- -->
+
+    ## # A tibble: 3 x 2
+    ##   Label                         mean_dist
+    ##   <fct>                             <dbl>
+    ## 1 Between control and exclosure     0.434
+    ## 2 Within control                    0.405
+    ## 3 Within exclosure                  0.434
+
+    ##             Df  Sum Sq  Mean Sq F value Pr(>F)
+    ## Label        2 0.00424 0.002121   0.411  0.666
+    ## Residuals   33 0.17031 0.005161
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = Distance ~ Label, data = wint.ann.2017.group_dist)
+    ## 
+    ## $Label
+    ##                                                         diff         lwr
+    ## Within control-Between control and exclosure   -0.0291967211 -0.11125029
+    ## Within exclosure-Between control and exclosure -0.0002162611 -0.06848896
+    ## Within exclosure-Within control                 0.0289804600 -0.06204980
+    ##                                                       upr     p adj
+    ## Within control-Between control and exclosure   0.05285685 0.6607623
+    ## Within exclosure-Between control and exclosure 0.06805643 0.9999667
+    ## Within exclosure-Within control                0.12001072 0.7170343
 
 #### CCA by Treatment
 
@@ -118,6 +128,32 @@ exclosures for each season of diet
 
 ![](Plants_by_Treatment_files/figure-gfm/annual_summer2017_heatmap-1.png)<!-- -->
 
+    ## # A tibble: 3 x 2
+    ##   Label                         mean_dist
+    ##   <fct>                             <dbl>
+    ## 1 Between control and exclosure     0.323
+    ## 2 Within control                    0.346
+    ## 3 Within exclosure                  0.290
+
+    ##             Df  Sum Sq  Mean Sq F value Pr(>F)
+    ## Label        2 0.01312 0.006560   2.261   0.12
+    ## Residuals   33 0.09577 0.002902
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = Distance ~ Label, data = sum.ann.17.group_dist)
+    ## 
+    ## $Label
+    ##                                                       diff         lwr
+    ## Within control-Between control and exclosure    0.02307317 -0.03845620
+    ## Within exclosure-Between control and exclosure -0.03309950 -0.08429504
+    ## Within exclosure-Within control                -0.05617267 -0.12443339
+    ##                                                       upr     p adj
+    ## Within control-Between control and exclosure   0.08460255 0.6316014
+    ## Within exclosure-Between control and exclosure 0.01809603 0.2655666
+    ## Within exclosure-Within control                0.01208804 0.1233952
+
 #### CCA by Treatment
 
 ![](Plants_by_Treatment_files/figure-gfm/annual_summer2017-1.png)<!-- -->
@@ -145,6 +181,38 @@ exclosures for each season of diet
 
 ### Summer All Plants 2016
 
+#### Bray-Curtis Distances & Heatmap
+
+![](Plants_by_Treatment_files/figure-gfm/summer2016_heatmap-1.png)<!-- -->
+
+    ## # A tibble: 3 x 2
+    ##   Label                         mean_dist
+    ##   <fct>                             <dbl>
+    ## 1 Between control and exclosure     0.401
+    ## 2 Within control                    0.406
+    ## 3 Within exclosure                  0.362
+
+    ##             Df Sum Sq  Mean Sq F value Pr(>F)
+    ## Label        2 0.0116 0.005802   0.987  0.383
+    ## Residuals   33 0.1939 0.005876
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = Distance ~ Label, data = sum.all.16.group_dist)
+    ## 
+    ## $Label
+    ##                                                        diff         lwr
+    ## Within control-Between control and exclosure    0.005429066 -0.08212476
+    ## Within exclosure-Between control and exclosure -0.038595862 -0.11144505
+    ## Within exclosure-Within control                -0.044024928 -0.14115718
+    ##                                                       upr     p adj
+    ## Within control-Between control and exclosure   0.09298289 0.9873226
+    ## Within exclosure-Between control and exclosure 0.03425332 0.4052139
+    ## Within exclosure-Within control                0.05310732 0.5134890
+
+#### CCA by Treatment
+
 ![](Plants_by_Treatment_files/figure-gfm/all_summer2016-1.png)<!-- -->
 
     ## [1] "Variance Inflation Factor (<10 is fine)"
@@ -168,6 +236,38 @@ exclosures for each season of diet
 
 ### Winter All Plants 2017
 
+#### Bray-Curtis Distances & Heatmap
+
+![](Plants_by_Treatment_files/figure-gfm/winter2017_heatmap-1.png)<!-- -->
+
+    ## # A tibble: 3 x 2
+    ##   Label                         mean_dist
+    ##   <fct>                             <dbl>
+    ## 1 Between control and exclosure     0.478
+    ## 2 Within control                    0.467
+    ## 3 Within exclosure                  0.457
+
+    ##             Df  Sum Sq  Mean Sq F value Pr(>F)
+    ## Label        2 0.00307 0.001534   0.341  0.714
+    ## Residuals   33 0.14859 0.004503
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = Distance ~ Label, data = wint.all.17.group_dist)
+    ## 
+    ## $Label
+    ##                                                       diff         lwr
+    ## Within control-Between control and exclosure   -0.01097416 -0.08761727
+    ## Within exclosure-Between control and exclosure -0.02118097 -0.08495189
+    ## Within exclosure-Within control                -0.01020681 -0.09523471
+    ##                                                       upr     p adj
+    ## Within control-Between control and exclosure   0.06566896 0.9343539
+    ## Within exclosure-Between control and exclosure 0.04258996 0.6964978
+    ## Within exclosure-Within control                0.07482109 0.9533660
+
+#### CCA by Treatment
+
 ![](Plants_by_Treatment_files/figure-gfm/all_winter2017-1.png)<!-- -->
 
     ## [1] "Variance Inflation Factor (<10 is fine)"
@@ -190,6 +290,40 @@ exclosures for each season of diet
     ## Residual         7   0.85992
 
 ### Summer All Plants 2017
+
+#### Bray-Curtis Distances & Heatmap
+
+![](Plants_by_Treatment_files/figure-gfm/summer2017_heatmap-1.png)<!-- -->
+
+    ## # A tibble: 3 x 2
+    ##   Label                         mean_dist
+    ##   <fct>                             <dbl>
+    ## 1 Between control and exclosure     0.345
+    ## 2 Within control                    0.362
+    ## 3 Within exclosure                  0.306
+
+    ##             Df  Sum Sq  Mean Sq F value Pr(>F)  
+    ## Label        2 0.01463 0.007315   3.119 0.0575 .
+    ## Residuals   33 0.07740 0.002345                 
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+    ##   Tukey multiple comparisons of means
+    ##     95% family-wise confidence level
+    ## 
+    ## Fit: aov(formula = Distance ~ Label, data = sum.all.17.group_dist)
+    ## 
+    ## $Label
+    ##                                                       diff         lwr
+    ## Within control-Between control and exclosure    0.01712198 -0.03819242
+    ## Within exclosure-Between control and exclosure -0.03892331 -0.08494768
+    ## Within exclosure-Within control                -0.05604529 -0.11741111
+    ##                                                        upr     p adj
+    ## Within control-Between control and exclosure   0.072436377 0.7300463
+    ## Within exclosure-Between control and exclosure 0.007101048 0.1106206
+    ## Within exclosure-Within control                0.005320525 0.0790080
+
+#### CCA by Treatment
 
 ![](Plants_by_Treatment_files/figure-gfm/all_summer2017-1.png)<!-- -->
 

@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(portalr)
 library(tidyverse)
 library(vegan)
+library(usedist)
 
 cbbPalette <- c("#000000", "#009E73", "#e79f00", "#9ad0f3", "#0072B2", "#D55E00", 
                 "#CC79A7", "#F0E442")
@@ -98,12 +99,21 @@ winterannuals_year = as.factor(winterannuals$year)
 sum.ann.2016.vegdist <- as.matrix(vegdist(summerannuals_2016_sp))
 colnames(sum.ann.2016.vegdist) <- c("control.4", "control.11", "control.14", "control.17", 
                                     "ex.3", "ex.15", "ex.19", "ex.20", "ex.21")
-(sum.ann.2016.vegdist.df <- cbind(summerannuals_2016[,1:5], as.data.frame(as.matrix(sum.ann.2016.vegdist))))
+sum.ann.2016.vegdist.df <- cbind(summerannuals_2016[,1:5], as.data.frame(as.matrix(sum.ann.2016.vegdist)))
 heatmap(sum.ann.2016.vegdist)
 
 # sums
+sum.ann.16.group_dist <- usedist::dist_groups(d = sum.ann.2016.vegdist, 
+                                              g = summerannuals_2016$treatment)
+sum.ann.16.group.dist.mean <- sum.ann.16.group_dist %>% 
+  select(Label, Distance) %>% 
+  group_by(Label) %>% 
+  summarize(mean_dist = mean(Distance))
+print(sum.ann.16.group.dist.mean)  
 
-
+sum.16.aov <- aov(Distance ~ Label, data = sum.ann.16.group_dist)
+summary(sum.16.aov)
+TukeyHSD(sum.16.aov)
 ```
 
 #### CCA by Treatment
@@ -157,9 +167,21 @@ print(anova(sum.ann.2016.cca, by="margin"))
 wint.ann.2017.vegdist <- as.matrix(vegdist(winterannuals_2017_sp))
 colnames(wint.ann.2017.vegdist) <- c("control.4", "control.11", "control.14", "control.17", 
                                     "ex.3", "ex.15", "ex.19", "ex.20", "ex.21")
-(wint.ann.2017.vegdist.df <- cbind(winterannuals_2017[,1:5], as.data.frame(as.matrix(wint.ann.2017.vegdist))))
+wint.ann.2017.vegdist.df <- cbind(winterannuals_2017[,1:5], as.data.frame(as.matrix(wint.ann.2017.vegdist)))
 heatmap(wint.ann.2017.vegdist)
 
+# sums
+wint.ann.2017.group_dist <- usedist::dist_groups(d = wint.ann.2017.vegdist, 
+                                                 g = winterannuals_2017$treatment)
+wint.ann.2017.group.dist.mean <- wint.ann.2017.group_dist %>% 
+  select(Label, Distance) %>% 
+  group_by(Label) %>% 
+  summarize(mean_dist = mean(Distance))
+print(wint.ann.2017.group.dist.mean)  
+
+wint.17.aov <- aov(Distance ~ Label, data = wint.ann.2017.group_dist)
+summary(wint.17.aov)
+TukeyHSD(wint.17.aov)
 ```
 
 #### CCA by Treatment
@@ -216,6 +238,18 @@ colnames(sum.ann.2017.vegdist) <- c("control.4", "control.11", "control.14", "co
 sum.ann.2017.vegdist.df <- cbind(summerannuals_2017[,1:5], as.data.frame(as.matrix(sum.ann.2017.vegdist)))
 heatmap(sum.ann.2017.vegdist)
 
+# sums
+sum.ann.17.group_dist <- usedist::dist_groups(d = sum.ann.2017.vegdist, 
+                                              g = summerannuals_2017$treatment)
+sum.ann.17.group.dist.mean <- sum.ann.17.group_dist %>% 
+  select(Label, Distance) %>% 
+  group_by(Label) %>% 
+  summarize(mean_dist = mean(Distance))
+print(sum.ann.17.group.dist.mean)  
+
+sum.17.aov <- aov(Distance ~ Label, data = sum.ann.17.group_dist)
+summary(sum.17.aov)
+TukeyHSD(sum.17.aov)
 ```
 
 #### CCA by Treatment
@@ -344,6 +378,33 @@ all_year = as.factor(all$year)
 ```
 
 ### Summer All Plants 2016
+
+#### Bray-Curtis Distances & Heatmap
+```{r summer2016_heatmap, echo=FALSE, cache=TRUE}
+
+# distance matrix
+sum.all.2016.vegdist <- as.matrix(vegdist(summer_2016_sp))
+colnames(sum.all.2016.vegdist) <- c("control.4", "control.11", "control.14", "control.17", 
+                                    "ex.3", "ex.15", "ex.19", "ex.20", "ex.21")
+sum.all.2016.vegdist.df <- cbind(summer_2016[,1:5], as.data.frame(as.matrix(sum.all.2016.vegdist)))
+heatmap(sum.all.2016.vegdist)
+
+# sums
+sum.all.16.group_dist <- usedist::dist_groups(d = sum.all.2016.vegdist, 
+                                              g = summer_2016$treatment)
+sum.all.16.group.dist.mean <- sum.all.16.group_dist %>% 
+  select(Label, Distance) %>% 
+  group_by(Label) %>% 
+  summarize(mean_dist = mean(Distance))
+print(sum.all.16.group.dist.mean)  
+
+sum.all.16.aov <- aov(Distance ~ Label, data = sum.all.16.group_dist)
+summary(sum.all.16.aov)
+TukeyHSD(sum.all.16.aov)
+```
+
+
+#### CCA by Treatment
 ```{r all_summer2016, echo=FALSE, cache=TRUE}
 # cca
 sum.all.2016.cca <- cca(summer_2016_sp ~ summer_2016_trt)
@@ -386,6 +447,32 @@ print(anova(sum.all.2016.cca, by="margin"))
 ```
 
 ### Winter All Plants 2017
+
+#### Bray-Curtis Distances & Heatmap
+```{r winter2017_heatmap, echo=FALSE, cache=TRUE}
+
+# distance matrix
+wint.all.2017.vegdist <- as.matrix(vegdist(winter_2017_sp))
+colnames(wint.all.2017.vegdist) <- c("control.4", "control.11", "control.14", "control.17", 
+                                    "ex.3", "ex.15", "ex.19", "ex.20", "ex.21")
+wint.all.2017.vegdist.df <- cbind(winter_2017[,1:5], as.data.frame(as.matrix(wint.all.2017.vegdist)))
+heatmap(wint.all.2017.vegdist)
+
+# sums
+wint.all.17.group_dist <- usedist::dist_groups(d = wint.all.2017.vegdist, 
+                                              g = winter_2017$treatment)
+wint.all.17.group.dist.mean <- wint.all.17.group_dist %>% 
+  select(Label, Distance) %>% 
+  group_by(Label) %>% 
+  summarize(mean_dist = mean(Distance))
+print(wint.all.17.group.dist.mean)  
+
+wint.all.17.aov <- aov(Distance ~ Label, data = wint.all.17.group_dist)
+summary(wint.all.17.aov)
+TukeyHSD(wint.all.17.aov)
+```
+
+#### CCA by Treatment
 ```{r all_winter2017, echo=FALSE, cache=TRUE}
 # cca
 wint.all.2017.cca <- cca(winter_2017_sp ~ winter_2017_trt)
@@ -428,6 +515,32 @@ print(anova(wint.all.2017.cca, by="margin"))
 ```
 
 ### Summer All Plants 2017
+
+#### Bray-Curtis Distances & Heatmap
+```{r summer2017_heatmap, echo=FALSE, cache=TRUE}
+
+# distance matrix
+sum.all.2017.vegdist <- as.matrix(vegdist(summer_2017_sp))
+colnames(sum.all.2017.vegdist) <- c("control.4", "control.11", "control.14", "control.17", 
+                                    "ex.3", "ex.15", "ex.19", "ex.20", "ex.21")
+sum.all.2017.vegdist.df <- cbind(summer_2017[,1:5], as.data.frame(as.matrix(sum.all.2017.vegdist)))
+heatmap(sum.all.2017.vegdist)
+
+# sums
+sum.all.17.group_dist <- usedist::dist_groups(d = sum.all.2017.vegdist, 
+                                              g = summer_2017$treatment)
+sum.all.17.group.dist.mean <- sum.all.17.group_dist %>% 
+  select(Label, Distance) %>% 
+  group_by(Label) %>% 
+  summarize(mean_dist = mean(Distance))
+print(sum.all.17.group.dist.mean)  
+
+sum.all.17.aov <- aov(Distance ~ Label, data = sum.all.17.group_dist)
+summary(sum.all.17.aov)
+TukeyHSD(sum.all.17.aov)
+```
+
+#### CCA by Treatment
 ```{r all_summer2017, echo=FALSE, cache=TRUE}
 # cca
 sum.all.2017.cca <- cca(summer_2017_sp ~ summer_2017_trt)
